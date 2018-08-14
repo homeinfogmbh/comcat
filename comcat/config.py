@@ -5,4 +5,4 @@ from configlib import INIParser
 __all__ = ['CONFIG']
 
 
-CONFIG = INIParser('/etc/comcat.conf')
+CONFIG = INIParser('/etc/comcat.conf', alert=True)

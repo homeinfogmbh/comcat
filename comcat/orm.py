@@ -1,8 +1,10 @@
 """Object relational mappings."""
 
-from peewee import PrimaryKeyField
+from uuid import uuid4
 
-from peeweeplus import MySQLDatabase, JSONModel, UUID4Field, Argon2Field
+from peewee import UUIDField
+
+from peeweeplus import MySQLDatabase, JSONModel, JSONField, Argon2Field
 
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
@@ -10,16 +12,16 @@ DATABASE = MySQLDatabase.from_config(CONFIG['db'])
 
 class _ComCatModel(JSONModel):
     """Basic comcat model."""
-    
+
     class Meta:
         database = DATABASE
         schema = database.schema
-    
-    id = PrimaryKeyField()
-    
-    
+
+
 class ComCatAccount(_ComCatModel):
     """A ComCat account."""
-    
-    uuid = UUID4Field()
+
+    uuid = JSONField(UUID4Field, default=uuid4)
     passwd = Argon2Field()
+    customer = JSONField(ForeignKeyField, Customer)
+    address = JSONFieldForeignKeyField, Address)
