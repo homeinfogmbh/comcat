@@ -21,7 +21,7 @@ class _ComCatModel(JSONModel):
 class ComCatAccount(_ComCatModel):
     """A ComCat account."""
 
-    uuid = JSONField(UUID4Field, default=uuid4)
+    uuid = JSONField(UUIDField, default=uuid4)
     passwd = Argon2Field()
     customer = JSONField(ForeignKeyField, Customer)
     address = JSONFieldForeignKeyField, Address)
