@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from peewee import UUIDField
 
-from peeweeplus import MySQLDatabase, JSONModel, JSONField, Argon2Field
+from peeweeplus import MySQLDatabase, JSONModel, Argon2Field
 
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
@@ -21,7 +21,7 @@ class _ComCatModel(JSONModel):
 class ComCatAccount(_ComCatModel):
     """A ComCat account."""
 
-    uuid = JSONField(UUIDField, default=uuid4)
+    uuid = UUIDField(default=uuid4)
     passwd = Argon2Field()
-    customer = JSONField(ForeignKeyField, Customer)
-    address = JSONFieldForeignKeyField, Address)
+    customer = ForeignKeyField(Customer)
+    address = ForeignKeyField(Address)
