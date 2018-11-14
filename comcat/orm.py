@@ -31,11 +31,8 @@ class Account(_ComCatModel):
     customer = ForeignKeyField(Customer, column_name='customer')
     rental_unit = CharField(255, null=True)
 
-    def to_json(self, *args, unsafe=False, skip=(), **kwargs):
+    def to_json(self, *args, skip=('uuid',), **kwargs):
         """Converts the account to JSON,
         suppressing the UUID per default.
         """
-        if not unsafe:
-            skip = (tuple(skip) if skip else ()) + ('uuid',)
-
         return super().to_json(*args, skip=skip, **kwargs)
