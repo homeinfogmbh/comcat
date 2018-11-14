@@ -1,10 +1,13 @@
-"""Object relational mappings."""
+"""Object-relational mappings."""
 
 from uuid import uuid4
 
 from peewee import UUIDField
 
-from peeweeplus import MySQLDatabase, JSONModel, Argon2Field
+from peeweeplus import MySQLDatabase, JSONModel
+
+
+__all__= ['Account']
 
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
@@ -18,10 +21,18 @@ class _ComCatModel(JSONModel):
         schema = database.schema
 
 
-class ComCatAccount(_ComCatModel):
+class Account(_ComCatModel):
     """A ComCat account."""
 
     uuid = UUIDField(default=uuid4)
-    passwd = Argon2Field()
-    customer = ForeignKeyField(Customer)
-    address = ForeignKeyField(Address)
+    customer = ForeignKeyField(Customer, column_name='customer')
+    rental_unit = ForeignKeyField(RentalUnit, column_name='rental_unit')
+
+    def to_json(self, *args, unsafe=False, skip=(), **kwargs):
+        """Converts the account to JSON,
+        suppressing the UUID per default.
+        """
+        if not unsafe:
+            skip = (tuple(skip) if skip else ()) + ('uuid',)
+
+        return super().to_json(*args, skip=skip, **kwargs)
