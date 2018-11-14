@@ -2,12 +2,15 @@
 
 from uuid import uuid4
 
-from peewee import UUIDField
+from peewee import CharField, ForeignKeyField, UUIDField
 
+from mdb import Customer
 from peeweeplus import MySQLDatabase, JSONModel
 
+from comcat.config import CONFIG
 
-__all__= ['Account']
+
+__all__ = ['Account']
 
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
@@ -16,7 +19,7 @@ DATABASE = MySQLDatabase.from_config(CONFIG['db'])
 class _ComCatModel(JSONModel):
     """Basic comcat model."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111
         database = DATABASE
         schema = database.schema
 
@@ -26,7 +29,7 @@ class Account(_ComCatModel):
 
     uuid = UUIDField(default=uuid4)
     customer = ForeignKeyField(Customer, column_name='customer')
-    rental_unit = ForeignKeyField(RentalUnit, column_name='rental_unit')
+    rental_unit = CharField(255, null=True)
 
     def to_json(self, *args, unsafe=False, skip=(), **kwargs):
         """Converts the account to JSON,
