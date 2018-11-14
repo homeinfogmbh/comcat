@@ -21,7 +21,7 @@ class _ComCatModel(JSONModel):
 
     class Meta:     # pylint: disable=C0111
         database = DATABASE
-        schema = database.schema
+        schema = database.database
 
 
 class Account(_ComCatModel):
