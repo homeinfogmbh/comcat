@@ -1,9 +1,16 @@
 """HIS interface for account management."""
 
+from uuid import UUID
+
+from his import ACCOUNT, CUSTOMER, authenticated, authorized
 from his.messages.data import InvalidData, MissingData
 from wsgilib import JSON
 
+from comcat.messages import NoSuchAccount
 from comcat.orm import Account
+
+
+__all__ = ['ROUTES', 'get_account']
 
 
 def get_account(uuid):
@@ -18,12 +25,13 @@ def get_account(uuid):
 
     try:
         return Account.get(
-            (Account.uuid = uuid)
-            & (Account.customer == CUSTOMER.id))
+            (Account.uuid == uuid) & (Account.customer == CUSTOMER.id))
     except Account.DoesNotExist:
         raise NoSuchAccount()
 
 
+@authenticated
+@authorized('comcat')
 def list_():
     """Lists accounts."""
 
@@ -35,8 +43,15 @@ def list_():
     return JSON([account.to_json(skip=None) for account in accounts])
 
 
+@authenticated
+@authorized('comcat')
 def get(uuid):
     """Returns the respective account."""
 
     account = get_account(uuid)
     return JSON(account.to_json(skip=None))
+
+
+ROUTES = (
+    ('GET', '/', list_, 'list_accounts'),
+    ('GET', '/<str:uuid>', get, 'get_account'))
