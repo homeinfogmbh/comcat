@@ -27,9 +27,9 @@ class _ComCatModel(JSONModel):
 class Account(_ComCatModel):
     """A ComCat account."""
 
+    rental_unit = CharField(255)
     uuid = UUIDField(default=uuid4)
     customer = ForeignKeyField(Customer, column_name='customer')
-    rental_unit = CharField(255, null=True)
 
     def to_json(self, *args, skip=('uuid',), **kwargs):
         """Converts the account to JSON,
