@@ -27,7 +27,7 @@ class _ComCatModel(JSONModel):
 class Account(_ComCatModel):
     """A ComCat account."""
 
-    rental_unit = CharField(255, unique=True)
+    rental_unit = CharField(255)
     uuid = UUIDField(default=uuid4)
     customer = ForeignKeyField(Customer, column_name='customer')
 
