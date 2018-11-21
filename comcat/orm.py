@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from uuid import uuid4
 
+from peewee import BooleanField
 from peewee import CharField
 from peewee import DateTimeField
 from peewee import ForeignKeyField
@@ -38,6 +39,8 @@ class Account(_ComCatModel):
     annotation = CharField(255)
     created = DateTimeField(default=datetime.now)
     last_login = DateTimeField(null=True)
+    expires = DateTimeField(null=True)
+    locked = BooleanField(default=False)
 
     @classmethod
     def add(cls, customer, passwd=None):
@@ -47,6 +50,14 @@ class Account(_ComCatModel):
         account.passwd = passwd
         account.save()
         return account
+
+    @property
+    def valid(self):
+        """Determines whether the account may be used."""
+        if self.locked:
+            return False
+
+        return self.expires is None or self.expires > datetime.now()
 
 
 class FirstLoginToken(_ComCatModel):
@@ -74,3 +85,40 @@ class FirstLoginToken(_ComCatModel):
         self.account.save()
         self.delete_instance()
         return passwd
+
+
+class Session(_ComCatModel):
+    """A ComCat session."""
+
+    uuid = UUIDField()
+    account = ForeignKeyField(
+        Account, column_name='account', backref='sessions',
+        on_delete='CASCADE')
+    start = DateTimeField(default=datetime.now)
+    end = DateTimeField()
+
+    @classmethod
+    def open(cls, account, duration=timedelta(minutes=15)):
+        """Opens a new session for the respective account."""
+        now = datetime.now()
+        session = cls(account=account, start=now, end=now+duration)
+        session.save()
+        return session
+
+    @property
+    def exists(self):
+        """Determines whether the session still exists in the database."""
+        try:
+            return type(self)[self.id]
+        except self.DoesNotExist:
+            return False
+
+    @property
+    def active(self):
+        """Determines whether the session is active."""
+        return self.start <= datetime.now() <= self.end
+
+    @property
+    def valid(self):
+        """Determines whether the session is valid."""
+        return self.active and self.exists and self.account.valid
