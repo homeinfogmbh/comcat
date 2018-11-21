@@ -1,13 +1,18 @@
 """Object-relational mappings."""
 
+from datetime import datetime, timedelta
 from uuid import uuid4
 
-from peewee import CharField, ForeignKeyField, UUIDField
+from peewee import CharField
+from peewee import DateTimeField
+from peewee import ForeignKeyField
+from peewee import UUIDField
 
 from mdb import Customer
-from peeweeplus import MySQLDatabase, JSONModel
+from peeweeplus import MySQLDatabase, JSONModel, Argon2Field
 
 from comcat.config import CONFIG
+from comcat.crypto import genpw
 
 
 __all__ = ['Account']
@@ -27,12 +32,45 @@ class _ComCatModel(JSONModel):
 class Account(_ComCatModel):
     """A ComCat account."""
 
-    rental_unit = CharField(255)
     uuid = UUIDField(default=uuid4)
+    passwd = Argon2Field(null=True)
     customer = ForeignKeyField(Customer, column_name='customer')
+    annotation = CharField(255)
+    created = DateTimeField(default=datetime.now)
+    last_login = DateTimeField(null=True)
 
-    def to_json(self, *args, skip=('uuid',), **kwargs):
-        """Converts the account to JSON,
-        suppressing the UUID per default.
-        """
-        return super().to_json(*args, skip=skip, **kwargs)
+    @classmethod
+    def add(cls, customer, passwd=None):
+        """Creates a new account."""
+        account = cls()
+        account.customer = customer
+        account.passwd = passwd
+        account.save()
+        return account
+
+
+class FirstLoginToken(_ComCatModel):
+    """Tokens for first login creation."""
+
+    account = ForeignKeyField(
+        Account, column_name='account', on_delete='CASCADE')
+    uuid = UUIDField(default=uuid4)
+    valid_from = DateTimeField()
+    valid_until = DateTimeField()
+
+    @classmethod
+    def add(cls, account):
+        """Creates a new first """
+        now = datetime.now()
+        expires = now + timedelta(days=14)
+        token = cls(account=account, valid_from=now, valid_until=expires)
+        token.save()
+        return token
+
+    def init_account(self):
+        """Initializes the respective account with a random password."""
+        passwd = genpw()
+        self.account.passwd = passwd
+        self.account.save()
+        self.delete_instance()
+        return passwd
