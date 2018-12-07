@@ -1,9 +1,9 @@
 """ComCat configuration."""
 
-from configlib import INIParser
+from configlib import loadcfg
 
 
 __all__ = ['CONFIG']
 
 
-CONFIG = INIParser('/usr/local/etc/comcat.conf', alert=True)
+CONFIG = loadcfg('comcat.conf')
