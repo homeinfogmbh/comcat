@@ -28,6 +28,7 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+        document.getElementById('testAjax').addEventListener('click', this.testAjax.bind(this), false);
     },
 
     // Update DOM on a Received Event
@@ -40,6 +41,16 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    },
+
+    // Test Ajax Call to play with API.
+    testAjax: function(result) {
+        $.ajax({
+            url: "https://testing.homeinfo.de/wsgi",
+            success: function(json) {
+                $('#result').html(JSON.stringify(json, null, 2));
+            }
+        });
     }
 };
 
