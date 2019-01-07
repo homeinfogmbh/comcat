@@ -44,7 +44,7 @@ var app = {
     },
 
     // Test Ajax Call to play with API.
-    testAjax: function(result) {
+    testAjax: function() {
         $.ajax({
             url: "https://testing.homeinfo.de/wsgi",
             success: function(json) {
