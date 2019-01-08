@@ -7,12 +7,16 @@
     <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature>
-    <name>HelloCordova</name>
+    <name>Wohninfo</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Eine Mieter-Vermieter Kommunikationslösung der HOMEINFO GmbH.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="info@homeinfo.de" href="https://www.homeinfo.de/">
+        HOMEINFO - Digitale Informationssysteme GmbH
+        Hanomaghof 2
+        30449 Hannover
+        USt-IdNr. gem. § 27 a UStG: DE 206025922
+        Registergericht: Amtsgericht Hannover, Registernummer: HRB 58516
     </author>
     <content src="index.html" />
     <access origin="*" />
