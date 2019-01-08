@@ -1,11 +1,11 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "HelloCordova",
-  "short_name": "HelloCordova",
+  "name": "Wohninfo",
+  "short_name": "Wohninfo",
   "version": "io.cordova.hellocordova",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
-  "author": "Apache Cordova Team",
+  "description": "Eine Mieter-Vermieter Kommunikationslösung der HOMEINFO GmbH.",
+  "author": "HOMEINFO - Digitale Informationssysteme GmbH\n        Hanomaghof 2\n        30449 Hannover\n        USt-IdNr. gem. § 27 a UStG: DE 206025922\n        Registergericht: Amtsgericht Hannover, Registernummer: HRB 58516",
   "icons": [],
   "start_url": "index.html"
 }

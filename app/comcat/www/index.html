@@ -32,21 +32,40 @@
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
         <title>Wohninfo</title>
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="libs/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/debugConsole.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
     </head>
     <body>
         <div class="app">
-            <h1>Wohninfo TEST 123 Foobar</h1>
+            <h1>Wohninfo</h1>
             <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
+                <p class="event listening">Verbinde zu Gerät</p>
+                <p class="event received">Gerät ist bereit</p>
             </div>
+            <form id="loginForm">
+                <table border="0">
+                    <tr>
+                        <td>Benutzername</td>
+                        <td><input id="userName" placeholder="Benutzername" type="text"/></td>
+                    </tr>
+                    <tr>
+                        <td>Passwort</td>
+                        <td><input id="password" placeholder="Passwort" type="password"/></td>
+                </table>
+                <table>
+                    <tr>
+                        <td align="center">
+                            <button id="login" type="submit" class="btn btn-primary">Anmelden</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <br/>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <button id="testAjax">Test Ajax</button>
-        <pre id="result"></pre>
+        <pre id="debugConsole"></pre>
     </body>
 </html>

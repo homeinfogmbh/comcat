@@ -1,11 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>HelloCordova</name>
+    <name>Wohninfo</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Eine Mieter-Vermieter Kommunikationslösung der HOMEINFO GmbH.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="info@homeinfo.de" href="https://www.homeinfo.de/">
+        HOMEINFO - Digitale Informationssysteme GmbH
+        Hanomaghof 2
+        30449 Hannover
+        USt-IdNr. gem. § 27 a UStG: DE 206025922
+        Registergericht: Amtsgericht Hannover, Registernummer: HRB 58516
     </author>
     <content src="index.html" />
     <plugin name="cordova-plugin-whitelist" spec="1" />

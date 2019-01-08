@@ -28,7 +28,8 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
-        document.getElementById('testAjax').addEventListener('click', this.testAjax.bind(this), false);
+        document.getElementById('login').addEventListener('click', this.login.bind(this), false);
+        debugConsole.bind();
     },
 
     // Update DOM on a Received Event
@@ -44,11 +45,18 @@ var app = {
     },
 
     // Test Ajax Call to play with API.
-    testAjax: function(result) {
+    login: function(event) {
+        event.preventDefault();
+        var userName = $('#userName').val();
+        var passwd = $('#password').val();
+        var data = {userName: userName, passwd: passwd};
         $.ajax({
-            url: "https://testing.homeinfo.de/wsgi",
+            url: 'https://testing.homeinfo.de/wsgi',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
             success: function(json) {
-                $('#result').html(JSON.stringify(json, null, 2));
+                debugConsole.print(JSON.stringify(json, null, 2));
             }
         });
     }
