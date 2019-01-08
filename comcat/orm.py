@@ -13,13 +13,14 @@ from mdb import Customer
 from peeweeplus import MySQLDatabase, JSONModel, Argon2Field
 
 from comcat.config import CONFIG
-from comcat.crypto import genpw
+from comcat.exceptions import InvalidInitializationToken, InvalidSession
 
 
 __all__ = ['Account']
 
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
+DEFAULT_SESSION_DURATION = timedelta(minutes=15)
 
 
 class _ComCatModel(JSONModel):
@@ -59,12 +60,31 @@ class Account(_ComCatModel):
 
         return self.expires is None or self.expires > datetime.now()
 
+    def initialize(self, token, passwd):
+        """Initializes the respective account with a random password."""
+        try:
+            token = self.initialization_tokens.where(
+                InitializationToken.token == token).get()
+        except InitializationToken.DoesNotExist:
+            raise InvalidInitializationToken()
 
-class FirstLoginToken(_ComCatModel):
+        if not token.valid:
+            raise InvalidInitializationToken()
+
+        self.passwd = passwd
+        token.delete_instance()
+        return self.save()
+
+
+class InitializationToken(_ComCatModel):
     """Tokens for first login creation."""
 
+    class Meta:
+        table_name = 'initialization_token'
+
     account = ForeignKeyField(
-        Account, column_name='account', on_delete='CASCADE')
+        Account, column_name='account', backref='initialization_tokens',
+        on_delete='CASCADE')
     uuid = UUIDField(default=uuid4)
     valid_from = DateTimeField()
     valid_until = DateTimeField()
@@ -78,19 +98,16 @@ class FirstLoginToken(_ComCatModel):
         token.save()
         return token
 
-    def init_account(self):
-        """Initializes the respective account with a random password."""
-        passwd = genpw()
-        self.account.passwd = passwd
-        self.account.save()
-        self.delete_instance()
-        return passwd
+    @property
+    def valid(self):
+        """Determines whether the login token is valid."""
+        return self.valid_from <= datetime.now() <= self.valid_until
 
 
 class Session(_ComCatModel):
     """A ComCat session."""
 
-    uuid = UUIDField()
+    token = UUIDField(default=uuid4)
     account = ForeignKeyField(
         Account, column_name='account', backref='sessions',
         on_delete='CASCADE')
@@ -98,20 +115,25 @@ class Session(_ComCatModel):
     end = DateTimeField()
 
     @classmethod
-    def open(cls, account, duration=timedelta(minutes=15)):
+    def open(cls, account, duration=DEFAULT_SESSION_DURATION):
         """Opens a new session for the respective account."""
         now = datetime.now()
         session = cls(account=account, start=now, end=now+duration)
         session.save()
         return session
 
-    @property
-    def exists(self):
-        """Determines whether the session still exists in the database."""
+    @classmethod
+    def fetch(cls, token):
+        """Returns the respective session."""
         try:
-            return type(self)[self.id]
-        except self.DoesNotExist:
-            return False
+            session = cls.get(cls.token == token)
+        except cls.DoesNotExist:
+            raise InvalidSession()
+
+        if session.valid:
+            return session
+
+        raise InvalidSession()
 
     @property
     def active(self):
@@ -121,4 +143,4 @@ class Session(_ComCatModel):
     @property
     def valid(self):
         """Determines whether the session is valid."""
-        return self.active and self.exists and self.account.valid
+        return self.active and self.account.valid
