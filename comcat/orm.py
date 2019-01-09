@@ -24,7 +24,7 @@ __all__ = ['Account']
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
 ALLOWED_SESSION_DURATIONS = range(5, 31)
-DEFAULT_SESSION_DURATION = timedelta(minutes=15)
+DEFAULT_SESSION_DURATION = 15
 MAX_FAILED_LOGINS = 5
 
 
@@ -152,6 +152,7 @@ class Session(_ComCatModel):
             raise DurationOutOfBounds()
 
         now = datetime.now()
+        duration = timedelta(minutes=duration)
         session = cls(account=account, start=now, end=now+duration)
         session.save()
         return session
