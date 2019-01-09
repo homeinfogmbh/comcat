@@ -3,12 +3,15 @@
 from datetime import datetime, timedelta
 from uuid import uuid4
 
+from argon2.exceptions import VerifyMismatchError
 from peewee import BooleanField
 from peewee import CharField
 from peewee import DateTimeField
 from peewee import ForeignKeyField
+from peewee import IntegerField
 from peewee import UUIDField
 
+from his.messages import AccountLocked, DurationOutOfBounds, InvalidCredentials
 from mdb import Customer
 from peeweeplus import MySQLDatabase, JSONModel, Argon2Field
 
@@ -20,7 +23,9 @@ __all__ = ['Account']
 
 
 DATABASE = MySQLDatabase.from_config(CONFIG['db'])
+ALLOWED_SESSION_DURATIONS = range(5, 31)
 DEFAULT_SESSION_DURATION = timedelta(minutes=15)
+MAX_FAILED_LOGINS = 5
 
 
 class _ComCatModel(JSONModel):
@@ -40,6 +45,7 @@ class Account(_ComCatModel):
     annotation = CharField(255)
     created = DateTimeField(default=datetime.now)
     last_login = DateTimeField(null=True)
+    failed_logins = IntegerField(default=0)
     expires = DateTimeField(null=True)
     locked = BooleanField(default=False)
 
@@ -60,6 +66,11 @@ class Account(_ComCatModel):
 
         return self.expires is None or self.expires > datetime.now()
 
+    @property
+    def can_login(self):
+        """Determines whether the account may login."""
+        return self.valid and self.failed_logins <= MAX_FAILED_LOGINS
+
     def initialize(self, token, passwd):
         """Initializes the respective account with a random password."""
         try:
@@ -75,11 +86,31 @@ class Account(_ComCatModel):
         token.delete_instance()
         return self.save()
 
+    def login(self, passwd):
+        """Performs a login."""
+        if self.can_login:
+            try:
+                self.passwd.verify(passwd)
+            except VerifyMismatchError:
+                self.failed_logins += 1
+                self.save()
+                raise InvalidCredentials()
+
+            if self.passwd.needs_rehash:
+                self.passwd = passwd
+
+            self.failed_logins = 0
+            self.last_login = datetime.now()
+            self.save()
+            return True
+
+        raise AccountLocked()
+
 
 class InitializationToken(_ComCatModel):
     """Tokens for first login creation."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111
         table_name = 'initialization_token'
 
     account = ForeignKeyField(
@@ -117,6 +148,9 @@ class Session(_ComCatModel):
     @classmethod
     def open(cls, account, duration=DEFAULT_SESSION_DURATION):
         """Opens a new session for the respective account."""
+        if duration not in ALLOWED_SESSION_DURATIONS:
+            raise DurationOutOfBounds()
+
         now = datetime.now()
         session = cls(account=account, start=now, end=now+duration)
         session.save()
