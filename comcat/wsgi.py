@@ -1,13 +1,18 @@
 """ComCat login."""
 
+from hashlib import sha256
+from json import dumps
+
 from flask import request
 
 from cmslib.presentation.comcat_account import Presentation
-from comcatlib import authenticated, get_session_duration
+from comcatlib import ACCOUNT
+from comcatlib import Account
+from comcatlib import Session
+from comcatlib import authenticated
+from comcatlib import get_session_duration
 from comcatlib.messages import INVALID_CREDENTIALS
 from wsgilib import JSON
-
-from comcat.orm import DEFAULT_SESSION_DURATION, Account, Session
 
 
 __all__ = ['login']
@@ -20,7 +25,7 @@ def login():
     passwd = request.json.get('passwd')
 
     if not account or not passwd:
-        return MissingCredentials()
+        return INVALID_CREDENTIALS
 
     try:
         account = Account.get(Account.name == account)
@@ -35,13 +40,12 @@ def login():
 
 
 @authenticated
-@with_account
 def get_presentation():
     """Returns the presentation for the respective account."""
 
     presentation = Presentation(ACCOUNT.id)
     json = presentation.to_json()
-    sha256sum = sha256sum(dumps(json).encode()).hexdigest()
+    sha256sum = sha256(dumps(json).encode()).hexdigest()
 
     if request.headers.get('sha256sum') == sha256sum:
         return ('Not Modified', 304)
