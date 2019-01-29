@@ -43,7 +43,8 @@ def login():
 def get_presentation():
     """Returns the presentation for the respective account."""
 
-    presentation = Presentation(ACCOUNT.id)
+    account = ACCOUNT.instance  # Get model from LocalProxy.
+    presentation = Presentation(account)
     json = presentation.to_json()
     sha256sum = sha256(dumps(json).encode()).hexdigest()
 
