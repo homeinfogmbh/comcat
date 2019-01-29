@@ -51,10 +51,11 @@ def get_presentation():
     account = ACCOUNT.instance  # Get model from LocalProxy.
     presentation = Presentation(account)
     json = presentation.to_json()
-    sha256sum = sha256(dumps(json).encode()).hexdigest()
+    current_sha256sum = sha256(dumps(json).encode()).hexdigest()
+    sent_sha256sum = request.headers.get('sha256sum')
 
-    if request.headers.get('sha256sum') == sha256sum:
+    if sent_sha256sum and sent_sha256sum == current_sha256sum:
         return ('Not Modified', 304)
 
-    json['sha256sum'] = sha256sum
+    json['sha256sum'] = current_sha256sum
     return JSON(json)
