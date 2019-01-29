@@ -3,7 +3,7 @@
 from hashlib import sha256
 from json import dumps
 
-from flask import request
+from flask import request, Flask
 
 from cmslib.presentation.comcat_account import Presentation
 from comcatlib import ACCOUNT
@@ -15,9 +15,13 @@ from comcatlib.messages import INVALID_CREDENTIALS
 from wsgilib import JSON
 
 
-__all__ = ['login']
+__all__ = ['APPLICATION']
 
 
+APPLICATION = Flask('comcat')
+
+
+@APPLICATION.route('/login', methods=['POST'])
 def login():
     """Logs in an end user."""
 
@@ -39,6 +43,7 @@ def login():
     return INVALID_CREDENTIALS
 
 
+@APPLICATION.route('/presentation', methods=['GET'])
 @authenticated
 def get_presentation():
     """Returns the presentation for the respective account."""

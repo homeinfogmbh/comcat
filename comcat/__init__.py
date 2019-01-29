@@ -1,6 +1,6 @@
 """Comcat backend."""
 
-from comcat.orm import Account
+from comcat.wsgi import APPLICATION
 
 
-__all__ = ['Account']
+__all__ = ['APPLICATION']
