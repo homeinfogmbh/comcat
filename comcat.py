@@ -16,6 +16,7 @@ from comcatlib import get_facebook_posts as _get_facebook_posts
 from comcatlib import get_session_duration
 from comcatlib import proxy_url
 from comcatlib.messages import INVALID_CREDENTIALS
+from comcatlib.messages import NO_ADDRESS_CONFIGURED
 from damage_report import DamageReport
 from wsgilib import JSON
 
@@ -39,7 +40,7 @@ def login():
     try:
         account = Account.get(Account.name == account)
     except Account.DoesNotExist:
-        return INVALID_CREDENTIALS  # Mitigate account spoofing.
+        return INVALID_CREDENTIALS  # Mitigate account sniffing.
 
     if account.login(passwd):
         session = Session.open(account, duration=get_session_duration())
@@ -98,8 +99,13 @@ def list_damage_reports():
 def submit_damage_report():
     """Submits a new damage report."""
 
+    address = ACCOUNT.address
+
+    if address is None:
+        return NO_ADDRESS_CONFIGURED
+
     damage_report = DamageReport.from_json(
-        request.json, ACCOUNT.customer, ACCOUNT.address)
+        request.json, ACCOUNT.customer, address)
     damage_report.save()
     account_damage_report = AccountDamageReport(ACCOUNT.id, damage_report)
     account_damage_report.save()
