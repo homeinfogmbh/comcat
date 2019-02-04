@@ -8,8 +8,7 @@ from cmslib.exceptions import AmbiguousConfigurationsError
 from cmslib.exceptions import NoConfigurationFound
 from cmslib.messages.presentation import NO_CONFIGURATION_ASSIGNED
 from cmslib.messages.presentation import AMBIGUOUS_CONFIGURATIONS
-from cmslib.presentation.comcat_account import Presentation
-from comcatlib import Account
+from comcatlib import Account, Presentation
 from comcatlib.messages import ACCOUNT_ADDED
 from comcatlib.messages import ACCOUNT_DELETED
 from comcatlib.messages import ACCOUNT_PATCHED

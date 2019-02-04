@@ -4,12 +4,11 @@ from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_EXISTS
 from cmslib.messages.content import NO_SUCH_CONTENT
-from cmslib.orm.content.comcat_account import AccountConfiguration
+from comcatlib import get_account, AccountConfiguration
 from his import authenticated, authorized
 from wsgilib import JSON
 
 from dscms4.configuration import get_configuration
-from dscms4.comcat_account import get_account
 
 
 __all__ = ['ROUTES']

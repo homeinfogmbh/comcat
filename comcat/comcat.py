@@ -5,10 +5,10 @@ from json import dumps
 
 from flask import request, Flask
 
-from cmslib.presentation.comcat_account import Presentation
 from comcatlib import ACCOUNT
 from comcatlib import Account
 from comcatlib import AccountDamageReport
+from comcatlib import Presentation
 from comcatlib import Session
 from comcatlib import authenticated
 from comcatlib import decode_url

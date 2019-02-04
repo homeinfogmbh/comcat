@@ -5,13 +5,11 @@ from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_PATCHED
 from cmslib.messages.content import NO_SUCH_CONTENT
 from cmslib.orm.charts import BaseChart
-from cmslib.orm.content.comcat_account import AccountBaseChart
-from comcatlib import Account
+from comcatlib import get_account, Account, AccountBaseChart
 from his import CUSTOMER, JSON_DATA, authenticated, authorized
 from wsgilib import JSON
 
 from dscms4.charts import get_chart
-from dscms4.comcat_account import get_account
 
 
 __all__ = ['ROUTES']

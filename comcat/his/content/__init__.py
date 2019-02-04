@@ -1,6 +1,6 @@
 """Content handling of ComCat accounts."""
 
-from dscms4.content.comcat_account import charts, configuration, menu
+from comcat.his.content import charts, configuration, menu
 
 
 __all__ = ['ROUTES']
