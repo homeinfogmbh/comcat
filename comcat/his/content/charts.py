@@ -83,11 +83,10 @@ def delete(acc_id, ident):
 
 
 ROUTES = (
-    ('GET', '/content/comcat_account/<int:acc_id>/chart', get,
-     'list_comcat_account_charts'),
-    ('POST', '/content/comcat_account/<int:acc_id>/chart/<int:ident>', add,
-     'add_comcat_account_chart'),
-    ('PATCH', '/content/comcat_account/<int:acc_id>/chart/<int:ident>', patch,
-     'patch_comcat_account_chart'),
-    ('DELETE', '/content/comcat_account/<int:acc_id>/chart/<int:ident>',
-     delete, 'delete_comcat_account_chart'))
+    ('GET', '/content/account/<int:acc_id>/chart', get, 'list_account_charts'),
+    ('POST', '/content/account/<int:acc_id>/chart/<int:ident>', add,
+     'add_account_chart'),
+    ('PATCH', '/content/account/<int:acc_id>/chart/<int:ident>', patch,
+     'patch_account_chart'),
+    ('DELETE', '/content/account/<int:acc_id>/chart/<int:ident>', delete,
+     'delete_account_chart'))
