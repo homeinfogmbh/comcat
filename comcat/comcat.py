@@ -1,4 +1,4 @@
-"""ComCat login."""
+"""ComCat application backend."""
 
 from hashlib import sha256
 from json import dumps
