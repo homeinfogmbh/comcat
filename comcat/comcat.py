@@ -89,8 +89,8 @@ def get_facebook_image():
 def list_damage_reports():
     """Returns a list of sent damage report."""
 
-    damage_reports = DamageReport.select().where(
-        DamageReport.account == ACCOUNT.id)
+    damage_reports = DamageReport.select().join(AccountDamageReport).where(
+        AccountDamageReport.account == ACCOUNT.id)
     return JSON([damage_report.to_dict() for damage_report in damage_reports])
 
 
