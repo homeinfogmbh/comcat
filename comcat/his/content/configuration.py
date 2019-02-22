@@ -73,5 +73,5 @@ ROUTES = (
      'list_account_configurations'),
     ('POST', '/content/account/<int:acc_id>/configuration/<int:ident>', add,
      'add_account_configuration'),
-    ('DELETE', '/content/account/<int:acc_id>/configuration/<int:ident>'
-    delete, 'delete_account_configuration'))
+    ('DELETE', '/content/account/<int:acc_id>/configuration/<int:ident>',
+     delete, 'delete_account_configuration'))
