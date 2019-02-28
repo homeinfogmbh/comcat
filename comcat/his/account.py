@@ -74,7 +74,7 @@ def add():
 
     account = Account.from_json(request.json, fk_fields=True, skip=('uuid',))
     account.save()
-    return ACCOUNT_ADDED.update(account.id)
+    return ACCOUNT_ADDED.update(id=account.id, uuid=account.uuid.hex)
 
 
 @authenticated
