@@ -4,7 +4,7 @@ from comcatlib import ACCOUNT
 from comcatlib.messages import NO_ADDRESS_CONFIGURED
 from comcatlib.messages import NEWS_NOT_ENABLED
 from comcatlib.messages import NO_SUCH_ARTICLE
-from comcatlib.messages import NO_SUCH_IMAGE
+from comcatlib.messages import NO_SUCH_ARTICLE_IMAGE
 from hinews import Article, AccessToken, Image, Tag
 
 
@@ -54,4 +54,4 @@ def get_local_news_image(article_id, image_id):
         return Image.select().where(
             (Image.article == article) & (Image.id == image_id))
     except Image.DoesNotExist:
-        raise NO_SUCH_IMAGE
+        raise NO_SUCH_ARTICLE_IMAGE
