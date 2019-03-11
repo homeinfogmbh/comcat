@@ -111,7 +111,12 @@ def get_presentation(account):
     try:
         request.args['xml']
     except KeyError:
-        return JSON(presentation.to_json())
+        try:
+            return JSON(presentation.to_json())
+        except AmbiguousConfigurationsError:
+            return AMBIGUOUS_CONFIGURATIONS
+        except NoConfigurationFound:
+            return NO_CONFIGURATION_ASSIGNED
 
     try:
         presentation_dom = presentation.to_dom()
