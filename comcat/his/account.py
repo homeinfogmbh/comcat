@@ -72,7 +72,7 @@ def get(account):
 def add():
     """Adds a new ComCat account."""
 
-    account = Account.from_json(request.json, fk_fields=True, skip=('uuid',))
+    account = Account.from_json(request.json, skip=('uuid',))
     account.save()
     return ACCOUNT_ADDED.update(id=account.id, uuid=account.uuid.hex)
 
