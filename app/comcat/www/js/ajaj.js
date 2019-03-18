@@ -30,13 +30,15 @@ comcat.makeRequest = function (method, url, data=null, headers) {
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 resolve({
-                    response: comcat.parseJSON (xhr.response),
+                    response: xhr.response,
+                    json: comcat.parseJSON (xhr.response),
                     status: this.status,
                     statusText: xhr.statusText
                 });
             } else {
                 reject({
-                    response: comcat.parseJSON (xhr.response),
+                    response: xhr.response,
+                    json: comcat.parseJSON (xhr.response),
                     status: this.status,
                     statusText: xhr.statusText
                 });
@@ -44,7 +46,8 @@ comcat.makeRequest = function (method, url, data=null, headers) {
         };
         xhr.onerror = function () {
             reject({
-                response: comcat.parseJSON (xhr.response),
+                response: xhr.response,
+                json: comcat.parseJSON (xhr.response),
                 status: this.status,
                 statusText: xhr.statusText
             });
