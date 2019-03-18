@@ -52,9 +52,16 @@ var app = {
         var data = {userName: userName, passwd: passwd};
         var headers = {'Content-Type': 'application/json; charset=utf-8'};
         var promise = comcat.makeRequest('POST', 'https://testing.homeinfo.de/wsgi', JSON.stringify(data), headers);
-        promise.then(function(json) {
-            comcat.debugConsole.print(JSON.stringify(json, null, 2));
-        });
+        promise.then(
+            function (json) {
+                console.log('Success JSON: ' + json);
+                comcat.debugConsole.log(JSON.stringify(json, null, 2));
+            },
+            function (json) {
+                console.log('Error JSON: ' + json);
+                comcat.debugConsole.log(JSON.stringify(json, null, 2));
+            }
+        );
     }
 };
 

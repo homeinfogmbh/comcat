@@ -16,32 +16,29 @@ comcat.debugConsole = {
         Binds the debug console.
     */
     bind: function () {
-        const console = document.getElementById('debugConsole');
+        const debugConsole = document.getElementById('debugConsole');
 
-        function logEvent (event) {
+        document.onkeydown = function (event) {
             switch(event.which) {
             case 73: // Lower case "i".
-                comcat.toggleVisibility(console);
+                comcat.toggleVisibility(debugConsole);
                 break;
             default:
                 return; // Exit this handler for other keys.
             }
             event.preventDefault(); // Prevent the default action (scroll / move caret).
-        }
-
-        const input = document.querySelector('input');
-        input.addEventListener('keydown', logEvent);
+        };
     },
 
     /*
         Prints text to the debug console.
     */
-    print: function (text, newline = true) {
-        const console = document.getElementById('debugConsole');
-        console.innerHTML += text;
+    log: function (text, newline = true) {
+        const debugConsole = document.getElementById('debugConsole');
+        debugConsole.innerHTML += text;
 
         if (newline) {
-            console.innerHTML += '\n';
+            debugConsole.innerHTML += '\n';
         }
     }
 };

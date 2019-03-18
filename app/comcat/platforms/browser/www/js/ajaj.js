@@ -15,51 +15,45 @@ comcat.parseJSON = function (text) {
     }
 };
 
-comcat.JSONHttpRequest = class extends XMLHttpRequest {
-    constructor (resolve, reject, withCredentials = true) {
-        super();
-        this.withCredentials = withCredentials;
-        this.resolve = resolve;
-        this.reject = reject;
-    }
-
-    get json () {
-        return {
-            response: this.response,
-            json: comcat.parseJSON(this.response),
-            status: this.status,
-            statusText: this.statusText
-        };
-    }
-
-    onload () {
-        if (this.status >= 200 && this.status < 300) {
-            this.resolve(this.json);
-        } else {
-            this.reject(this.json);
-        }
-    }
-
-    onerror () {
-        this.reject(this.json);
-    }
-};
-
 comcat.makeRequest = function (method, url, data=null, headers) {
     function executor (resolve, reject) {
-        const jhr = new comcat.JSONHttpRequest(resolve, reject, false);
-        jhr.open(method, url);
+        const xhr = new XMLHttpRequest();
+        //xhr.withCredentials = true;
+        xhr.open(method, url);
 
         for (let header in headers) {
             if (headers.hasOwnProperty(header)) {
-                jhr.setRequestHeader(header, headers[header]);
+                xhr.setRequestHeader(header, headers[header]);
             }
         }
 
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve({
+                    response: comcat.parseJSON (xhr.response),
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            } else {
+                reject({
+                    response: comcat.parseJSON (xhr.response),
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                response: comcat.parseJSON (xhr.response),
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+
         if (data == null) {
-            jhr.send();
+            xhr.send();
         } else {
-            jhr.send(data);
+            xhr.send(data);
         }
     }
 
