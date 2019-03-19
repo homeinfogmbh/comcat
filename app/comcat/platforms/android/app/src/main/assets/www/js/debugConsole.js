@@ -1,32 +1,44 @@
 /*
     Console for debugging.
 */
+var comcat = comcat || {};
 
-var debugConsole = {
+comcat.toggleVisibility = function (element) {
+    if (element.style.display === 'none') {
+        element.style.display = 'block';
+    } else {
+        element.style.display = 'none';
+    }
+};
+
+comcat.debugConsole = {
     /*
         Binds the debug console.
     */
     bind: function () {
-        $(document).keydown(function(event) {
+        const debugConsole = document.getElementById('debugConsole');
+
+        document.onkeydown = function (event) {
             switch(event.which) {
             case 73: // Lower case "i".
-                $('#debugConsole').toggle();
+                comcat.toggleVisibility(debugConsole);
                 break;
             default:
                 return; // Exit this handler for other keys.
             }
             event.preventDefault(); // Prevent the default action (scroll / move caret).
-        });
+        };
     },
 
     /*
         Prints text to the debug console.
     */
-    print: function (text, newline = true) {
-        $('#debugConsole').append(text);
+    log: function (text, newline = true) {
+        const debugConsole = document.getElementById('debugConsole');
+        debugConsole.innerHTML += text;
 
         if (newline) {
-            $('#debugConsole').append('\n');
+            debugConsole.innerHTML += '\n';
         }
     }
 };

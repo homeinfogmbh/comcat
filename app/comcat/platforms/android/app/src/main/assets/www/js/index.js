@@ -27,9 +27,9 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        this.receivedEvent('deviceready');
+        //this.receivedEvent('deviceready');
         document.getElementById('login').addEventListener('click', this.login.bind(this), false);
-        debugConsole.bind();
+        comcat.debugConsole.bind();
     },
 
     // Update DOM on a Received Event
@@ -47,18 +47,18 @@ var app = {
     // Test Ajax Call to play with API.
     login: function(event) {
         event.preventDefault();
-        var userName = $('#userName').val();
-        var passwd = $('#password').val();
-        var data = {userName: userName, passwd: passwd};
-        $.ajax({
-            url: 'https://testing.homeinfo.de/wsgi',
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function(json) {
-                debugConsole.print(JSON.stringify(json, null, 2));
+        var userName = document.getElementById('userName').value;
+        var passwd = document.getElementById('password').value;
+        comcat.session.login(userName, passwd).then(
+            function (json) {
+                console.log('Success JSON: ' + json);
+                comcat.debugConsole.log(JSON.stringify(json, null, 2));
+            },
+            function (json) {
+                console.log('Error JSON: ' + json);
+                comcat.debugConsole.log(JSON.stringify(json, null, 2));
             }
-        });
+        );
     }
 };
 

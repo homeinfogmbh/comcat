@@ -30,6 +30,8 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Flask('comcat')
 CORS(APPLICATION)
+DOMAIN = 'wohninfo.homeinfo.de'
+SESSION = 'session@{}'.format(domain)
 
 
 @APPLICATION.errorhandler(Response)
@@ -61,7 +63,11 @@ def _login():
 
     if account.login(passwd):
         session = Session.open(account, duration=get_session_duration())
-        return JSON(session.to_json())
+        response = JSON(session.to_json())
+        response.set_cookie(
+            SESSION, session.token.hex, expires=session.end, domain=DOMAIN,
+            secure=True)
+        return response
 
     return INVALID_CREDENTIALS
 
