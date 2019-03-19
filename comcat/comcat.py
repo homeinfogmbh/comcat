@@ -65,7 +65,7 @@ def _login():
         response = JSON(session.to_json())
         response.set_cookie(
             'Session', session.token.hex, expires=session.end, domain=DOMAIN,
-            secure=True)
+            secure=False)
         return response
 
     return INVALID_CREDENTIALS
