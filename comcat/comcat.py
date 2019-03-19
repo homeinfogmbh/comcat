@@ -42,14 +42,20 @@ def _handle_raised_message(message):
 def _login():
     """Logs in an end user."""
 
-    account = request.json.get('account')
+    uuid = request.json.get('uuid')
+
+    try:
+        uuid = UUID(uuid)
+    except (ValueError, TypeError):
+        return INVALID_CREDENTIALS
+
     passwd = request.json.get('passwd')
 
     if not account or not passwd:
         return INVALID_CREDENTIALS
 
     try:
-        account = Account.get(Account.name == account)
+        account = Account.get(Account.uuid == uuid)
     except Account.DoesNotExist:
         return INVALID_CREDENTIALS  # Mitigate account sniffing.
 
