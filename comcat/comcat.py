@@ -44,15 +44,14 @@ def _login():
     """Logs in an end user."""
 
     uuid = request.json.get('uuid')
+    passwd = request.json.get('passwd')
+
+    if not uuid or not passwd:
+        return INVALID_CREDENTIALS
 
     try:
         uuid = UUID(uuid)
     except (ValueError, TypeError):
-        return INVALID_CREDENTIALS
-
-    passwd = request.json.get('passwd')
-
-    if not uuid or not passwd:
         return INVALID_CREDENTIALS
 
     try:
