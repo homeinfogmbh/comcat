@@ -52,7 +52,7 @@ def _login():
 
     passwd = request.json.get('passwd')
 
-    if not account or not passwd:
+    if not uuid or not passwd:
         return INVALID_CREDENTIALS
 
     try:
