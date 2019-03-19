@@ -13,6 +13,7 @@ from comcatlib import Presentation
 from comcatlib import Session
 from comcatlib import authenticated
 from comcatlib import decode_url
+from comcatlib import get_facebook_accounts
 from comcatlib import get_facebook_posts
 from comcatlib import get_session_duration
 from comcatlib import proxy_url
@@ -91,8 +92,13 @@ def _get_presentation():
 def _list_facebook_posts():
     """Returns a list of sent damage report."""
 
-    facebook_posts = get_facebook_posts(ACCOUNT)
-    return JSON([facebook_post.to_json() for facebook_post in facebook_posts])
+    accounts = {}
+
+    for account in get_facebook_accounts(ACCOUNT):
+        posts = tuple(post.to_json() for post in get_facebook_posts(account))
+        accounts[account.facebook_id] = posts
+
+    return JSON(accounts)
 
 
 @APPLICATION.route('/facebook/image', methods=['POST'])
