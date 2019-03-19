@@ -1,5 +1,7 @@
 """Management of charts assigned to ComCat accounts."""
 
+from flask import request
+
 from cmslib.functions.charts import get_chart
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
@@ -7,7 +9,7 @@ from cmslib.messages.content import CONTENT_PATCHED
 from cmslib.messages.content import NO_SUCH_CONTENT
 from cmslib.orm.charts import BaseChart
 from comcatlib import Account, AccountBaseChart
-from his import CUSTOMER, JSON_DATA, authenticated, authorized
+from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON
 
 from comcat.his.functions import get_account
@@ -57,7 +59,8 @@ def add(acc_id, ident):
 
     account = get_account(acc_id)
     base_chart = get_chart(ident).base
-    account_base_chart = AccountBaseChart.from_json(JSON_DATA, account, base_chart)
+    account_base_chart = AccountBaseChart.from_json(
+        request.json, account, base_chart)
     account_base_chart.save()
     return CONTENT_ADDED.update(id=account_base_chart.id)
 
@@ -68,7 +71,7 @@ def patch(acc_id, ident):
     """Adds the chart to the respective account."""
 
     account_base_chart = get_abc(acc_id, ident)
-    account_base_chart.patch_json(JSON_DATA)
+    account_base_chart.patch_json(request.json)
     account_base_chart.save()
     return CONTENT_PATCHED
 
