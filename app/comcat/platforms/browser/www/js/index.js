@@ -49,10 +49,7 @@ var app = {
         event.preventDefault();
         var userName = document.getElementById('userName').value;
         var passwd = document.getElementById('password').value;
-        var data = {userName: userName, passwd: passwd};
-        var headers = {'Content-Type': 'application/json; charset=utf-8'};
-        var promise = comcat.makeRequest('POST', 'https://testing.homeinfo.de/wsgi', JSON.stringify(data), headers);
-        promise.then(
+        comcat.session.login(userName, passwd).then(
             function (json) {
                 console.log('Success JSON: ' + json);
                 comcat.debugConsole.log(JSON.stringify(json, null, 2));
