@@ -1,14 +1,15 @@
 """Management of menus assigned to ComCat accounts."""
 
+from cmslib.functions.menu import get_menu
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_EXISTS
 from cmslib.messages.content import NO_SUCH_CONTENT
-from comcatlib import get_account, AccountMenu
+from comcatlib import AccountMenu
 from his import authenticated, authorized
 from wsgilib import JSON
 
-from dscms4.menu.menu import get_menu
+from comcat.his.functions import get_account
 
 
 __all__ = ['ROUTES']

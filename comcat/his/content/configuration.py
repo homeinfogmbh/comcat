@@ -1,14 +1,15 @@
 """Management of configurations assigned to ComCat accounts."""
 
+from cmslib.functions.configuration import get_configuration
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_EXISTS
 from cmslib.messages.content import NO_SUCH_CONTENT
-from comcatlib import get_account, AccountConfiguration
+from comcatlib import AccountConfiguration
 from his import authenticated, authorized
 from wsgilib import JSON
 
-from dscms4.configuration import get_configuration
+from comcat.his.functions import get_account
 
 
 __all__ = ['ROUTES']

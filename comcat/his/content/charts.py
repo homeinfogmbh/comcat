@@ -1,14 +1,16 @@
 """Management of charts assigned to ComCat accounts."""
 
+from cmslib.functions.charts import get_chart
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_PATCHED
 from cmslib.messages.content import NO_SUCH_CONTENT
 from cmslib.orm.charts import BaseChart
-from comcatlib import get_account, Account, AccountBaseChart
-from dscms4.charts import get_chart
+from comcatlib import Account, AccountBaseChart
 from his import CUSTOMER, JSON_DATA, authenticated, authorized
 from wsgilib import JSON
+
+from comcat.his.functions import get_account
 
 
 __all__ = ['ROUTES']
