@@ -2,6 +2,7 @@
 
 from hashlib import sha256
 from json import dumps
+from uuid import UUID
 
 from flask import request, Flask
 from flask_cors import CORS
