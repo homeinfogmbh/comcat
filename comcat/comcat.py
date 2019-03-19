@@ -63,9 +63,7 @@ def _login():
     if account.login(passwd):
         session = Session.open(account, duration=get_session_duration())
         response = JSON(session.to_json())
-        response.set_cookie(
-            'Session', session.token.hex, expires=session.end, domain=DOMAIN,
-            secure=False)
+        response.set_cookie('Session', session.token.hex, expires=session.end)
         return response
 
     return INVALID_CREDENTIALS
