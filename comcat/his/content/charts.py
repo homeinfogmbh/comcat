@@ -59,8 +59,8 @@ def add(acc_id, ident):
 
     account = get_account(acc_id)
     base_chart = get_chart(ident).base
-    account_base_chart = AccountBaseChart.from_json(
-        request.json, account, base_chart)
+    json = request.json or {}
+    account_base_chart = AccountBaseChart.from_json(json, account, base_chart)
     account_base_chart.save()
     return CONTENT_ADDED.update(id=account_base_chart.id)
 
