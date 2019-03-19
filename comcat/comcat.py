@@ -31,7 +31,6 @@ __all__ = ['APPLICATION']
 APPLICATION = Flask('comcat')
 CORS(APPLICATION)
 DOMAIN = 'wohninfo.homeinfo.de'
-SESSION = 'session@{}'.format(domain)
 
 
 @APPLICATION.errorhandler(Response)
@@ -65,7 +64,7 @@ def _login():
         session = Session.open(account, duration=get_session_duration())
         response = JSON(session.to_json())
         response.set_cookie(
-            SESSION, session.token.hex, expires=session.end, domain=DOMAIN,
+            'Session', session.token.hex, expires=session.end, domain=DOMAIN,
             secure=True)
         return response
 
