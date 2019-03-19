@@ -4,6 +4,7 @@ from hashlib import sha256
 from json import dumps
 
 from flask import request, Flask
+from flask_cors import CORS
 
 from comcatlib import ACCOUNT
 from comcatlib import Account
@@ -27,6 +28,7 @@ __all__ = ['APPLICATION']
 
 
 APPLICATION = Flask('comcat')
+CORS(APPLICATION)
 
 
 @APPLICATION.errorhandler(Response)
