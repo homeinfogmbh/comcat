@@ -11,5 +11,5 @@ setup(
     maintainer='Richard Neumann',
     maintainer_email='<r dot neumann at homeinfo period de>',
     requires=['his'],
-    packages=['comcat', 'comcat.his', 'comcat.his.content'],
+    packages=['comcat', 'comcat.functions', 'comcat.his'],
     description='HOMEINFO ComCat.')
