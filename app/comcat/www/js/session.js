@@ -13,5 +13,5 @@ comcat.session.login = function (userName, passwd) {
     const loginCredentials = {userName: userName, passwd: passwd};
     const postData = JSON.stringify(loginCredentials);
     const headers = {'Content-Type': 'application/json'};
-    return comcat.makeRequest('POST', 'https://comcat.homeinfo.de/login', postData, headers);
+    return comcat.makeRequest('POST', comcat.BASE_URL + '/login', postData, headers);
 };

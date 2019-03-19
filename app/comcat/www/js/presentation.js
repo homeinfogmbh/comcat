@@ -10,7 +10,7 @@ comcat.presentation = comcat.presentation || {};
     Retrieves presentation data from the backend.
 */
 comcat.presentation.get = function () {
-    return comcat.makeRequest('GET', 'https://comcat.homeinfo.de/presentation').then(
+    return comcat.makeRequest('GET', comcat.BASE_URL + '/presentation').then(
         comcat.presentation.Presentation.from_json);
 };
 
