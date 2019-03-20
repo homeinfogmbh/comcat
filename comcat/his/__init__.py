@@ -2,11 +2,12 @@
 
 from his import Application
 
-from comcat.his import account, address, content
+from comcat.his import account, address, content, group
 
 
 __all__ = ['APPLICATION']
 
 
+ROUTES = account.ROUTES + address.ROUTES + content.ROUTES + group.ROUTES
 APPLICATION = Application('comcat')
-APPLICATION.add_routes(account.ROUTES + address.ROUTES + content.ROUTES)
+APPLICATION.add_routes(ROUTES)
