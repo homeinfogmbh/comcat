@@ -3,17 +3,26 @@
 from cmslib.messages.group import MEMBER_ADDED
 from cmslib.messages.group import MEMBER_DELETED
 from cmslib.messages.group import NO_SUCH_MEMBER
+from cmslib.orm.group import Group
 from cmslib.functions.group import get_group
 from comcatlib import GroupMemberAccount
-from his import JSON_DATA, authenticated, authorized
+from his import CUSTOMER, JSON_DATA, authenticated, authorized
 from wsgilib import JSON
 
 
 __all__ = ['ROUTES']
 
 
+def get_groups_tree():
+    """Returns the management tree."""
+
+    for root_group in Group.select().where(
+            (Group.customer == CUSTOMER.id) & (Group.parent >> None)):
+        yield GroupContent(root_group)
+
+
 @authenticated
-@authorized('dscms4')
+@authorized('comcat')
 def get(gid):
     """Returns the group's ComCat accounts."""
 
@@ -28,7 +37,15 @@ def get(gid):
 
 
 @authenticated
-@authorized('dscms4')
+@authorized('comcat')
+def groups_tree():
+    """Returns a tree view of the groups."""
+
+    return JSON([group.to_json() for group in get_groups_tree()])
+
+
+@authenticated
+@authorized('comcat')
 def add(gid):
     """Adds the ComCat account to the respective group."""
 
@@ -39,7 +56,7 @@ def add(gid):
 
 
 @authenticated
-@authorized('dscms4')
+@authorized('comcat')
 def delete(gid, member_id):
     """Deletes the respective terminal from the group."""
 
@@ -52,6 +69,43 @@ def delete(gid, member_id):
 
     group_member_account.delete_instance()
     return MEMBER_DELETED
+
+
+class GroupContent:
+    """Represents content of a group."""
+
+    def __init__(self, group):
+        """Sets the respective group."""
+        self.group = group
+
+    @property
+    def children(self):
+        """Yields children of this group."""
+        for group in Group.select().where(Group.parent == self.group):
+            yield GroupContent(group)
+
+    @property
+    def accounts(self):
+        """Yields terminals of this group."""
+        for group_member_account in GroupMemberAccount.select().where(
+                GroupMemberAccount.group == self.group):
+            yield group_member_account.member
+
+    def to_json(self, recursive=True):
+        """Recursively converts the group content into a JSON-ish dict."""
+        json = self.group.to_json(parent=False, skip=('customer',))
+
+        if recursive:
+            children = [
+                group.to_json(recursive=True) for group in self.children]
+        else:
+            children = [
+                group.group.to_json(parent=False, skip=('customer',))
+                for group in self.children]
+
+        json['children'] = children
+        json['accounts'] = [account.to_json() for account in self.accounts]
+        return json
 
 
 ROUTES = (
