@@ -119,8 +119,8 @@ class GroupContent:
 
 ROUTES = (
     ('GET', '/group/<int:gid>/account', get, 'get_group_members'),
+    ('GET', '/grouptree', groups_tree, 'groups_tree'),
+    ('GET', '/grouptree/<int:gid>', groups_subtree, 'groups_subtree'),
     ('POST', '/group/<int:gid>/account', add, 'add_group_member'),
     ('DELETE', '/group/<int:gid>/account/<int:member_id>',
-     delete, 'delete_group_member'),
-    ('GET', '/grouptree', groups_tree, 'groups_tree'),
-    ('GET', '/grouptree/<int:gid>', groups_subtree, 'groups_subtree'))
+     delete, 'delete_group_member'))
