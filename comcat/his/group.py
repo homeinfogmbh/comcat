@@ -45,6 +45,15 @@ def groups_tree():
 
 
 @authenticated
+@authorized('dscms4')
+def groups_subtree(gid):
+    """Lists the groups."""
+
+    group_content = GroupContent(get_group(gid))
+    return JSON(group_content.to_json(recursive=False))
+
+
+@authenticated
 @authorized('comcat')
 def add(gid):
     """Adds the ComCat account to the respective group."""
@@ -112,4 +121,6 @@ ROUTES = (
     ('GET', '/group/<int:gid>/account', get, 'get_group_members'),
     ('POST', '/group/<int:gid>/account', add, 'add_group_member'),
     ('DELETE', '/group/<int:gid>/account/<int:member_id>',
-     delete, 'delete_group_member'))
+     delete, 'delete_group_member'),
+    ('GET', '/grouptree', groups_tree, 'groups_tree'),
+    ('GET', '/grouptree/<int:gid>', groups_subtree, 'groups_subtree'))
