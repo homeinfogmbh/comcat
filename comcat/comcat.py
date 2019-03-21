@@ -18,6 +18,7 @@ from comcatlib import get_facebook_posts
 from comcatlib import get_session_duration
 from comcatlib import proxy_url
 from comcatlib.messages import INVALID_CREDENTIALS
+from lptlib import get_departures
 from wsgilib import Binary, JSON, Response
 
 from comcat.functions.damage_report import get_damage_reports
@@ -150,3 +151,14 @@ def _get_local_news_image(article_id, image_id):
         return Binary(image.watermarked)
     except OSError:     # Not an image.
         return Binary(image.data)
+
+
+@APPLICATION.route('/ltp', methods=['GET'])
+@authenticated
+def _get_departures():
+    """Returns the departures."""
+
+    address = ACCOUNT.address
+    stops, source = get_departures(address)
+    stops = [stop.to_json() for stop in stops]
+    return JSON({'source': source, 'stops': stops})
