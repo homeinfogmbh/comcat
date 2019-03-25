@@ -72,7 +72,7 @@ def delete(gid, member_id):
     try:
         group_member_account = GroupMemberAccount.get(
             (GroupMemberAccount.group == get_group(gid))
-            & (GroupMemberAccount.id == member_id))
+            & (GroupMemberAccount.member == member_id))
     except GroupMemberAccount.DoesNotExist:
         raise NO_SUCH_MEMBER
 
