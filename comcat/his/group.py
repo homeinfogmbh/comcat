@@ -24,16 +24,16 @@ def get_groups_tree():
 @authenticated
 @authorized('comcat')
 def get(gid):
-    """Returns the group's ComCat accounts."""
+    """Returns the group's mamber mappings for ComCat accounts."""
 
     group = get_group(gid)
-    accounts = []
+    group_members = []
 
     for group_member_account in GroupMemberAccount.select().where(
             GroupMemberAccount.group == group):
-        accounts.append(group_member_account.member.to_json())
+        group_members.append(group_member_account.to_json())
 
-    return JSON(accounts)
+    return JSON(group_members)
 
 
 @authenticated
