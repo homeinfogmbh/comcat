@@ -31,10 +31,34 @@
     <script type="text/javascript" src="js/libs/common.js"></script>
     <script type="text/javascript" src="js/libs/login.js"></script>
     <script type="text/javascript" src="js/libs/session.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
 </head>
-<!--
-      No content.
-      Attempt auto-login and redirect to frontpage.html
-      or index.html respectively.
--->
+<div class="w3-container w3-blue">
+    <div class="w3-row">
+        <h1 align="center">Wohninfo</h1>
+    </div>
+</div>
+<div class="w3-container">
+    <div class="w3-row">
+        <div class="w3-col s12">
+            <form>
+                <h2 class="">Anmelden</h2>
+                <input id="userName"  type="text" class="w3-input" placeholder="6e6038fcc2dd481aa21782e3b1ee9a2d">
+                <input id="password" type="password" class="w3-input" placeholder="Passwort">
+                <input id="storeCredentials" class="w3-check w3-margin-top" type="checkbox"> Zugangsdaten speichern.
+                <br/>
+                <br/>
+                <button id="login" type="submit" class="w3-button w3-block w3-green">Anmelden</button>
+            </form>
+        </div>
+    </div>
+    <div id="invalidCredentialsModal" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <h3>Ungültige Zugangsdaten</h3>
+                <p>Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.</p>
+                <button id="closeInvalidCredentials" class="w3-button w3-block w3-green w3-section w3-padding" type="submit">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

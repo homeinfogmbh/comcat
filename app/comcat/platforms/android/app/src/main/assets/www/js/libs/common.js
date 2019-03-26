@@ -1,11 +1,12 @@
 /*
-    Asynchronous JavaScript and JSON API.
+    ComCat comman API libarary.
 */
 
-/*
-  Makes a request returning a promise.
-*/
 var comcat = comcat || {};
+
+
+comcat.BASE_URL = 'https://wohninfo.homeinfo.de';
+
 
 comcat.parseJSON = function (text) {
     try {
@@ -15,6 +16,10 @@ comcat.parseJSON = function (text) {
     }
 };
 
+
+/*
+    Makes an asychronous JSON API reguest.
+*/
 comcat.makeRequest = function (method, url, data=null, headers) {
     function executor (resolve, reject) {
         const xhr = new XMLHttpRequest();
@@ -31,14 +36,14 @@ comcat.makeRequest = function (method, url, data=null, headers) {
             if (this.status >= 200 && this.status < 300) {
                 resolve({
                     response: xhr.response,
-                    json: comcat.parseJSON (xhr.response),
+                    json: comcat.parseJSON(xhr.response),
                     status: this.status,
                     statusText: xhr.statusText
                 });
             } else {
                 reject({
                     response: xhr.response,
-                    json: comcat.parseJSON (xhr.response),
+                    json: comcat.parseJSON(xhr.response),
                     status: this.status,
                     statusText: xhr.statusText
                 });
@@ -47,7 +52,7 @@ comcat.makeRequest = function (method, url, data=null, headers) {
         xhr.onerror = function () {
             reject({
                 response: xhr.response,
-                json: comcat.parseJSON (xhr.response),
+                json: comcat.parseJSON(xhr.response),
                 status: this.status,
                 statusText: xhr.statusText
             });

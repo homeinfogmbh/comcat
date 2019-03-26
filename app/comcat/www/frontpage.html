@@ -28,13 +28,34 @@
     <link rel="stylesheet" type="text/css" href="css/w3.css">
     <link rel="stylesheet" type="text/css" href="css/loader.css">
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/libs/common.js"></script>
-    <script type="text/javascript" src="js/libs/login.js"></script>
-    <script type="text/javascript" src="js/libs/session.js"></script>
+    <script type="text/javascript" src="js/query.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/session.js"></script>
 </head>
-<!--
-      No content.
-      Attempt auto-login and redirect to frontpage.html
-      or index.html respectively.
--->
+<div class="w3-container w3-teal">
+    <div class="w3-row">
+        <div class="w3-col s2">
+            <p>#</p>
+        </div>
+        <div class="w3-col s8">
+            <h1 align="center">Wohninfo</h1>
+        </div>
+        <div class="w3-col s2"></div>
+    </div>
+    <div class="w3-row">
+        <p>Wohnungsgenossenschaft schöne Aussicht e.G.</p>
+    </div>
+</div>
+<div class="app">
+    <form class="w3-container">
+        <h2 class="">Anmelden</h2>
+        <input id="userName"  type="text" class="w3-input" placeholder="6e6038fcc2dd481aa21782e3b1ee9a2d">
+        <input id="password" type="password" class="w3-input" placeholder="Passwort">
+        <br/>
+        <button id="login" type="submit" class="btn btn-primary">Anmelden</button>
+    </form>
+</div>
+<pre id="debugConsole" style="display: none;">
+This is the console.
+</pre>

@@ -27,38 +27,7 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        //this.receivedEvent('deviceready');
-        document.getElementById('login').addEventListener('click', this.login.bind(this), false);
-        comcat.debugConsole.bind();
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    },
-
-    // Test Ajax Call to play with API.
-    login: function(event) {
-        event.preventDefault();
-        var userName = document.getElementById('userName').value;
-        var passwd = document.getElementById('password').value;
-        comcat.session.login(userName, passwd).then(
-            function (json) {
-                console.log('Success JSON: ' + json);
-                comcat.debugConsole.log(JSON.stringify(json, null, 2));
-            },
-            function (json) {
-                console.log('Error JSON: ' + json);
-                comcat.debugConsole.log(JSON.stringify(json, null, 2));
-            }
-        );
+        comcat.login.autologin();
     }
 };
 

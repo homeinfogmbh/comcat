@@ -18,15 +18,7 @@
     under the License.
 -->
 <head>
-    <!--
-    Customize this policy to fit your own app's needs. For more guidance, see:
-        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-    Some notes:
-        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-            * Enable inline JS: add 'unsafe-inline' to default-src
-    -->
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; connect-src http://wohninfo.homeinfo.de/">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
@@ -36,23 +28,13 @@
     <link rel="stylesheet" type="text/css" href="css/w3.css">
     <link rel="stylesheet" type="text/css" href="css/loader.css">
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/ajaj.js"></script>
-    <script type="text/javascript" src="js/common.js"></script>
-    <script type="text/javascript" src="js/debugConsole.js"></script>
+    <script type="text/javascript" src="js/libs/common.js"></script>
+    <script type="text/javascript" src="js/libs/login.js"></script>
+    <script type="text/javascript" src="js/libs/session.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/session.js"></script>
 </head>
-<div class="w3-container w3-teal">
-    <h1 class="">Anmelden</h1>
-</div>
-<div class="app">
-    <form class="w3-container">
-        <input id="userName"  type="text" class="w3-input" placeholder="6e6038fcc2dd481aa21782e3b1ee9a2d">
-        <input id="password" type="password" class="w3-input" placeholder="Passwort">
-        <br/>
-        <button id="login" type="submit" class="btn btn-primary">Anmelden</button>
-    </form>
-</div>
-<pre id="debugConsole" style="display: none;">
-This is the console.
-</pre>
+<!--
+      No content.
+      Attempt auto-login and redirect to frontpage.html
+      or index.html respectively.
+-->
