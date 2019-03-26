@@ -1,10 +1,9 @@
 /*
     ComCat comman API libarary.
 */
+'use strict';
 
 var comcat = comcat || {};
-
-
 comcat.BASE_URL = 'https://wohninfo.homeinfo.de';
 
 

@@ -1,6 +1,10 @@
 /*
     Login management.
+
+    Depends: libs/session.js
 */
+'use strict';
+
 var comcat = comcat || {};
 comcat.login = comcat.login || {};
 comcat.login.USER_NAME = 'comcat.userName';
