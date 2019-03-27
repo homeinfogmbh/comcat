@@ -39,7 +39,7 @@ def with_account(function):
 def list_():
     """Lists ComCat accounts."""
 
-    return JSON([account.to_json() for account in get_accounts()])
+    return JSON([account.to_json(cascade=True) for account in get_accounts()])
 
 
 @authenticated
@@ -48,7 +48,7 @@ def list_():
 def get(account):
     """Lists ComCat accounts."""
 
-    return JSON(account.to_json())
+    return JSON(account.to_json(cascade=True))
 
 
 @authenticated
