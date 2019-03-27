@@ -1,6 +1,9 @@
 /*
     Retrieval and rendering of presentation data.
+
+    Depends: libs/common.js
 */
+'use strict';
 
 var comcat = comcat || {};
 comcat.presentation = comcat.presentation || {};

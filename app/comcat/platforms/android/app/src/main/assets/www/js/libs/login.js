@@ -1,16 +1,22 @@
 /*
     Login management.
+
+    Depends: libs/session.js
 */
+'use strict';
+
 var comcat = comcat || {};
 comcat.login = comcat.login || {};
+comcat.login.USER_NAME = 'comcat.userName';
+comcat.login.PASSWD = 'comcat.passwd';
 
 
 /*
     Stores the login data in local storage.
 */
 comcat.login.storeCredentials = function (userName, passwd) {
-    localStorage.setItem('comcat.userName', userName);
-    localStorage.setItem('comcat.passwd', passwd);
+    localStorage.setItem(comcat.login.USER_NAME, userName);
+    localStorage.setItem(comcat.login.PASSWD, passwd);
 };
 
 
@@ -19,8 +25,19 @@ comcat.login.storeCredentials = function (userName, passwd) {
 */
 comcat.login.loadCredentials = function () {
     return {
-        userName: localStorage.getItem('comcat.userName'),
-        passwd: localStorage.getItem('comcat.passwd')
+        userName: localStorage.getItem(comcat.login.USER_NAME),
+        passwd: localStorage.getItem(comcat.login.PASSWD)
+    };
+};
+
+
+/*
+    Removes the login data from local storage.
+*/
+comcat.login.clearCredentials = function () {
+    return {
+        userName: localStorage.removeItem(comcat.login.USER_NAME),
+        passwd: localStorage.removeItem(comcat.login.PASSWD)
     };
 };
 

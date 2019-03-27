@@ -1,6 +1,11 @@
 /*
     Session management functions.
+
+    Depends: libs/common.js
 */
+'use strict';
+
+
 var comcat = comcat || {};
 comcat.session = comcat.session || {};
 
