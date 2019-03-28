@@ -6,6 +6,7 @@ from comcatlib import Tenement
 from comcatlib.messages import NO_SUCH_TENEMENT
 from comcatlib.messages import TENEMENT_ADDED
 from comcatlib.messages import TENEMENT_DELETED
+from comcatlib.messages import TENEMENT_PATCHED
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON
 
@@ -30,6 +31,23 @@ def add():
     tenement = Tenement.from_json(request.json, CUSTOMER.id)
     tenement.save()
     return TENEMENT_ADDED.update(id=tenement.id)
+
+
+@authenticated
+@authorized('comcat')
+def patch(ident):
+    """Deletes a tenement."""
+
+    try:
+        tenement = Tenement.get(
+            (Tenement.id == ident)
+            & (Tenement.customer == CUSTOMER.id))
+    except Tenement.DoesNotExist:
+        return NO_SUCH_TENEMENT
+
+    tenement.patch_json(request.json)
+    tenement.save()
+    return TENEMENT_PATCHED
 
 
 @authenticated
