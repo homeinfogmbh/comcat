@@ -12,7 +12,7 @@ from comcatlib import Account, Presentation
 from comcatlib.messages import ACCOUNT_ADDED
 from comcatlib.messages import ACCOUNT_DELETED
 from comcatlib.messages import ACCOUNT_PATCHED
-from his import CUSTOMER, authenticated, authorized, admin
+from his import CUSTOMER, authenticated, authorized, root
 from wsgilib import JSON, XML
 
 from comcat.his.functions import get_account, get_accounts
@@ -53,7 +53,7 @@ def get(account):
 
 @authenticated
 @authorized('comcat')
-@admin
+@root
 def add():
     """Adds a new ComCat account."""
 
@@ -64,7 +64,7 @@ def add():
 
 @authenticated
 @authorized('comcat')
-@admin
+@root
 @with_account
 def patch(account):
     """Updates the respective account."""
@@ -76,7 +76,7 @@ def patch(account):
 
 @authenticated
 @authorized('comcat')
-@admin
+@root
 @with_account
 def delete(account):
     """Updates the respective account."""

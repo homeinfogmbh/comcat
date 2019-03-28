@@ -4,7 +4,7 @@ from flask import request
 
 from comcatlib import Address
 from comcatlib.messages import ADDRESS_ADDED, ADDRESS_DELETED, NO_SUCH_ADDRESS
-from his import CUSTOMER, authenticated, authorized
+from his import CUSTOMER, authenticated, authorized, root
 from wsgilib import JSON
 
 
@@ -22,6 +22,7 @@ def list_():
 
 @authenticated
 @authorized('comcat')
+@root
 def add():
     """Adds a new address."""
 
@@ -32,6 +33,7 @@ def add():
 
 @authenticated
 @authorized('comcat')
+@root
 def delete(ident):
     """Deletes an address."""
 

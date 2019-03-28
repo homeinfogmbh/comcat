@@ -7,7 +7,7 @@ from comcatlib.messages import NO_SUCH_TENEMENT
 from comcatlib.messages import TENEMENT_ADDED
 from comcatlib.messages import TENEMENT_DELETED
 from comcatlib.messages import TENEMENT_PATCHED
-from his import CUSTOMER, authenticated, authorized
+from his import CUSTOMER, authenticated, authorized, root
 from wsgilib import JSON
 
 
@@ -25,6 +25,7 @@ def list_():
 
 @authenticated
 @authorized('comcat')
+@root
 def add():
     """Adds a new tenement."""
 
@@ -35,6 +36,7 @@ def add():
 
 @authenticated
 @authorized('comcat')
+@root
 def patch(ident):
     """Deletes a tenement."""
 
@@ -52,6 +54,7 @@ def patch(ident):
 
 @authenticated
 @authorized('comcat')
+@root
 def delete(ident):
     """Deletes a tenement."""
 
