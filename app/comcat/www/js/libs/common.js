@@ -22,7 +22,7 @@ comcat.parseJSON = function (text) {
 comcat.makeRequest = function (method, url, data=null, headers) {
     function executor (resolve, reject) {
         const xhr = new XMLHttpRequest();
-        //xhr.withCredentials = true;
+        xhr.withCredentials = true;
         xhr.open(method, url);
 
         for (let header in headers) {

@@ -14,7 +14,10 @@ comcat.presentation = comcat.presentation || {};
 */
 comcat.presentation.get = function () {
     return comcat.makeRequest('GET', comcat.BASE_URL + '/presentation').then(
-        comcat.presentation.Presentation.from_json);
+        function (response) {
+            return comcat.presentation.Presentation.from_json(response.json);
+        }
+    );
 };
 
 
@@ -28,10 +31,6 @@ comcat.presentation.Presentation = class {
                 this[key] = json[key];
             }
         }
-    }
-
-    render (element) {
-        // TODO: implement.
     }
 };
 
