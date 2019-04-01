@@ -31,7 +31,7 @@ __all__ = ['APPLICATION']
 
 
 APPLICATION = Flask('comcat')
-CORS(APPLICATION)
+CORS(APPLICATION, support_credentials=True)
 DOMAIN = 'wohninfo.homeinfo.de'
 
 
