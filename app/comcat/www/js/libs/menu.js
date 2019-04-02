@@ -46,7 +46,7 @@ comcat.menu.backButton = function () {
 };
 
 /*
-    Converts a menu item into a button.
+    Represents a menu item.
 */
 comcat.menu.MenuItem = class {
     constructor (name, backgroundColor, textColor, menuItems, charts) {
@@ -180,16 +180,18 @@ comcat.menu.Page = class extends Array {
 /*
     Returns a list of pages from the respective menu items.
 */
-comcat.menu.Page.fromItems = function* (items, root = false) {
+comcat.menu.Page.fromItems = function* (items) {
     items = Array.from(items);
     items.sort(comcat.menu.sortByIndex);
     let page = new comcat.menu.Page();
+    let root = true;
 
     for (let item of items) {
         if (!root && (page.length == comcat.menu.MAX_PAGE_SIZE - 1)) {
             let button = comcat.menu.backButton();
             page.push(button);
             yield page;
+            root = false;
             page = new comcat.menu.Page();
         }
 
@@ -198,6 +200,7 @@ comcat.menu.Page.fromItems = function* (items, root = false) {
 
         if (page.length == comcat.menu.MAX_PAGE_SIZE) {
             yield page;
+            root = false;
             page = new comcat.menu.Page();
         }
     }
