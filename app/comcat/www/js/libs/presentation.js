@@ -41,3 +41,20 @@ comcat.presentation.Presentation = class {
 comcat.presentation.Presentation.from_json = function (json) {
     return new comcat.presentation.Presentation(json);
 };
+
+
+/*
+    Renders the menus.
+*/
+comcat.presentation.renderMenus = function (json) {
+    const menuItems = json.menuItems;
+    let pages = comcat.menu.pages(menuItems);
+    pages = Array.from(pages);
+    const page = pages[0];
+    const rows = comcat.menu.pageDOM(page);
+    const menu = document.getElementById('menu');
+
+    for (let row of rows) {
+        menu.appendChild(row);
+    }
+};
