@@ -37,7 +37,6 @@ var login = {
         const userName = userNameElement.value;
         const passwd = passwdElement.value;
         const storeCredentials = document.getElementById('storeCredentials').checked;
-        console.log('storeCredentials = ' + storeCredentials);
         comcat.session.login(userName, passwd).then(
             function () {
                 if (storeCredentials) {
