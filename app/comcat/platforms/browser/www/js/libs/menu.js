@@ -36,17 +36,60 @@ comcat.menu.sortByIndex = function (alice, bob) {
 };
 
 /*
+    Creates a button to go back.
+*/
+comcat.menu.backButton = function () {
+    const button = document.createElement('button');
+    button.textContent = '← back';
+    button.setAttribute('class', 'comcat-button-submenu');
+    return button;
+};
+
+/*
     Converts a menu item into a button.
 */
-comcat.menu.menuItemToDOM = function (item) {
-    const button = document.createElement('button');
-    button.textContent = item.name;
-    button.style.backgroundColor = item.backgroundColor;
-    button.style.color = item.textColor;
-    button.setAttribute('class', 'comcat-button-submenu');
-    button.setAttribute('data-subtree', JSON.stringify(item.menuItems));
-    button.setAttribute('data-charts', JSON.stringify(item.charts));
-    return button;
+comcat.menu.MenuItem = class {
+    constructor (name, backgroundColor, textColor, menuItems, charts) {
+        this.name = name;
+        this.backgroundColor = backgroundColor;
+        this.textColor = textColor;
+        this.menuItems = menuItems;
+        this.charts = charts;
+    }
+
+    toDOM () {
+        const button = document.createElement('button');
+        button.textContent = this.name;
+        button.style.backgroundColor = this.backgroundColor;
+        button.style.color = this.textColor;
+        button.setAttribute('class', 'comcat-button-submenu');
+        button.setAttribute('data-subtree', JSON.stringify(this.menuItems));
+        button.setAttribute('data-charts', JSON.stringify(this.charts));
+        return button;
+    }
+};
+
+/*
+    Returns a new MenuItem from JSON.
+*/
+comcat.menu.MenuItem.fromJSON = function (json) {
+    const menuItems = [];
+
+    for (let menuItem of json.menuItems) {
+        menuItem = comcat.menu.MenuItem.fromJSON(menuItem);
+        menuItems.push(menuItem);
+    }
+
+    return new comcat.menu.MenuItem(json.name, json.backgroundColor, json.textColor, menuItems, json.charts);
+};
+
+/*
+    Returns new MenuItems from JSON.
+*/
+comcat.menu.MenuItem.fromItems = function* (items) {
+    for (let item of items) {
+        yield comcat.menu.MenuItem.fromJSON(item);
+    }
 };
 
 
@@ -137,23 +180,21 @@ comcat.menu.Page = class extends Array {
 /*
     Returns a list of pages from the respective menu items.
 */
-comcat.menu.Page.fromItems = function* (menuItems, root = false) {
-    menuItems.sort(comcat.menu.sortByIndex);
+comcat.menu.Page.fromItems = function* (items, root = false) {
+    items = Array.from(items);
+    items.sort(comcat.menu.sortByIndex);
     let page = new comcat.menu.Page();
 
-    for (let index in menuItems) {
-        let button;
-
+    for (let item of items) {
         if (!root && (page.length == comcat.menu.MAX_PAGE_SIZE - 1)) {
-            button = comcat.menu.backButton();
+            let button = comcat.menu.backButton();
             page.push(button);
             yield page;
             page = new comcat.menu.Page();
         }
 
-        let menuItem = menuItems[index];
-        button = comcat.menu.menuItemToDOM(menuItem);
-        page.push(button);
+        item = item.toDOM();
+        page.push(item);
 
         if (page.length == comcat.menu.MAX_PAGE_SIZE) {
             yield page;

@@ -47,7 +47,7 @@ comcat.presentation.Presentation.fromJSON = function (json) {
     Renders the menus.
 */
 comcat.presentation.renderMenus = function (json) {
-    const menuItems = json.menuItems;
+    const menuItems = comcat.menu.MenuItem.fromItems(json.menuItems);
     const pages = comcat.menu.Page.fromItems(menuItems);
     const menu = document.getElementById('menu');
     let visible = true;
