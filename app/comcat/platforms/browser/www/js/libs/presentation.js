@@ -15,7 +15,7 @@ comcat.presentation = comcat.presentation || {};
 comcat.presentation.get = function () {
     return comcat.makeRequest('GET', comcat.BASE_URL + '/presentation').then(
         function (response) {
-            return comcat.presentation.Presentation.from_json(response.json);
+            return comcat.presentation.Presentation.fromJSON(response.json);
         }
     );
 };
@@ -38,7 +38,7 @@ comcat.presentation.Presentation = class {
 /*
     Factory method to create a presetation from a given JSON object.
 */
-comcat.presentation.Presentation.from_json = function (json) {
+comcat.presentation.Presentation.fromJSON = function (json) {
     return new comcat.presentation.Presentation(json);
 };
 
@@ -50,9 +50,11 @@ comcat.presentation.renderMenus = function (json) {
     const menuItems = json.menuItems;
     const pages = comcat.menu.pages(menuItems);
     const menu = document.getElementById('menu');
+    let visible = true;
 
     for (let page of pages) {
-        page = comcat.menu.pageDOM(page);
+        page = comcat.menu.pageDOM(page, visible);
+        visible = false;
         menu.appendChild(page);
     }
 };
