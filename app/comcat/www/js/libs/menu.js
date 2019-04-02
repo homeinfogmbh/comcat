@@ -84,13 +84,17 @@ comcat.menu.pages = function* (menuItems, root = false) {
 /*
     Converts a page into rows and columns.
 */
-comcat.menu.pageDOM = function (items) {
+comcat.menu.pageDOM = function (items, visible = true) {
     if (items.length < 1 || items.length > 6) {
         throw 'Invalid page size: ' + items.length + '.';
     }
 
     const page = document.createElement('div');
     page.setAttribute('class', 'comcat-menu-page');
+
+    if (!visible) {
+        page.style.display = 'none';
+    }
 
     // One row.
     if (items.length <= 3) {

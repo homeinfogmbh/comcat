@@ -50,9 +50,11 @@ comcat.presentation.renderMenus = function (json) {
     const menuItems = json.menuItems;
     const pages = comcat.menu.pages(menuItems);
     const menu = document.getElementById('menu');
+    let visible = true;
 
     for (let page of pages) {
-        page = comcat.menu.pageDOM(page);
+        page = comcat.menu.pageDOM(page, visible);
+        visible = false;
         menu.appendChild(page);
     }
 };
