@@ -48,13 +48,11 @@ comcat.presentation.Presentation.from_json = function (json) {
 */
 comcat.presentation.renderMenus = function (json) {
     const menuItems = json.menuItems;
-    let pages = comcat.menu.pages(menuItems);
-    pages = Array.from(pages);
-    const page = pages[0];
-    const rows = comcat.menu.pageDOM(page);
+    const pages = comcat.menu.pages(menuItems);
     const menu = document.getElementById('menu');
 
-    for (let row of rows) {
-        menu.appendChild(row);
+    for (let page of pages) {
+        page = comcat.menu.pageDOM(page);
+        menu.appendChild(page);
     }
 };

@@ -84,71 +84,73 @@ comcat.menu.pages = function* (menuItems, root = false) {
 /*
     Converts a page into rows and columns.
 */
-comcat.menu.pageDOM = function (page) {
-    if (page.length < 1 || page.length > 6) {
-        throw 'Invalid page size: ' + page.length + '.';
+comcat.menu.pageDOM = function (items) {
+    if (items.length < 1 || items.length > 6) {
+        throw 'Invalid page size: ' + items.length + '.';
     }
 
+    const page = document.createElement('div');
+    page.setAttribute('class', 'comcat-menu-page');
+
     // One row.
-    if (page.length <= 3) {
+    if (items.length <= 3) {
         const row = document.createElement('div');
         row.setAttribute('class', 'w3-row');
 
-        for (let item of page) {
+        for (let item of items) {
             let column = document.createElement('div');
-            let size = 12 / page.length;
+            let size = 12 / items.length;
             column.setAttribute('class', 'w3-col s' + size);
             column.appendChild(item);
             row.appendChild(column);
         }
 
-        return [row];
+        page.appendChild(row);
+        return page;
     }
 
     // Two rows, 3 items and 2 items.
-    if (page.length == 5) {
-        const rows = [];
+    if (items.length == 5) {
         let row = document.createElement('div');
         row.setAttribute('class', 'w3-row');
 
         for (let index = 0; index < 3; index++) {
-            let item = page[index];
+            let item = items[index];
             let column = document.createElement('div');
             column.setAttribute('class', 'w3-col s' + 4);
             column.appendChild(item);
             row.appendChild(column);
         }
 
-        rows.push(row);
+        page.appendChild(row);
         row = document.createElement('div');
         row.setAttribute('class', 'w3-row');
 
         for (let index = 3; index < 5; index++) {
-            let item = page[index];
+            let item = items[index];
             let column = document.createElement('div');
             column.setAttribute('class', 'w3-col s' + 6);
             column.appendChild(item);
             row.appendChild(column);
         }
 
-        rows.push(row);
-        return rows;
+        page.appendChild(row);
+        return page;
     }
 
     // Four or six items in two rows.
-    const rows = [];
     let row = document.createElement('div');
     row.setAttribute('class', 'w3-row');
 
-    for (let index = 0; index < page.length; index++) {
-        let item = page[index];
+    for (let index = 0; index < items.length; index++) {
+        let item = items[index];
         let column = document.createElement('div');
-        let size = 12 / (page.length / 2);
+        let size = 12 / (items.length / 2);
         column.setAttribute('class', 'w3-col s' + size);
         column.appendChild(item);
 
-        if (index == (page.length / 2)) {
-            rows.push(row);
+        if (index == (items.length / 2)) {
+            page.appendChild(row);
             row = document.createElement('div');
             row.setAttribute('class', 'w3-row');
         }
@@ -156,6 +158,6 @@ comcat.menu.pageDOM = function (page) {
         row.appendChild(column);
     }
 
-    rows.push(row);
-    return rows;
+    page.appendChild(row);
+    return page;
 };
