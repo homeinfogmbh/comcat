@@ -31,6 +31,12 @@ comcat.presentation.Presentation = class {
                 this[key] = json[key];
             }
         }
+
+        this.initMenu();
+    }
+
+    initMenu () {
+        return comcat.menu.setMenu(this.menuItems);
     }
 };
 
@@ -40,20 +46,4 @@ comcat.presentation.Presentation = class {
 */
 comcat.presentation.Presentation.fromJSON = function (json) {
     return new comcat.presentation.Presentation(json);
-};
-
-
-/*
-    Renders the menus.
-*/
-comcat.presentation.renderMenus = function (json) {
-    const menuItems = comcat.menu.MenuItem.fromItems(json.menuItems);
-    const pages = comcat.menu.Page.fromItems(menuItems);
-    const menu = document.getElementById('menu');
-    let visible = true;
-
-    for (let page of pages) {
-        menu.appendChild(page.toDOM(visible));
-        visible = false;
-    }
 };

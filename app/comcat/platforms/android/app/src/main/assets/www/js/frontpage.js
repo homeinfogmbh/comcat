@@ -27,24 +27,7 @@ var frontpage = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        comcat.presentation.get().then(function (json) {
-            const menuItems = json.menuItems;
-            let pages = comcat.menu.pages(menuItems);
-            pages = Array.from(pages);
-            console.log('Pages:');
-            console.log(JSON.stringify(pages, null, 2));
-            const page = pages[0];
-            const rows = comcat.menu.pageDOM(page);
-            console.log('Rows:');
-            console.log(JSON.stringify(rows, null, 2));
-            const menu = document.getElementById('menu');
-
-            for (let row of rows) {
-                console.log('Row: ' + row + ' ' + typeof row);
-                console.log(JSON.stringify(row));
-                menu.appendChild(row);
-            }
-        });
+        comcat.presentation.get().then(comcat.presentation.renderMenus);
     }
 };
 
