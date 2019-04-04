@@ -26,7 +26,7 @@ comcat.menu.pop = function () {
 
     if (uuid != null) {
         const menuItem = comcat.menu.getMenuItem(uuid);
-        const pages = comcat.menu.getSubMenu(menuItem);
+        const pages = menuItem.subMenu;
         comcat.menu.render(pages);
     }
 };
