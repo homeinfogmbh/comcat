@@ -19,7 +19,7 @@ from comcatlib import get_session_duration
 from comcatlib import proxy_url
 from comcatlib.messages import INVALID_CREDENTIALS
 from lptlib import get_departures
-from wsgilib import Binary, JSON, Response
+from wsgilib import Binary, JSON, JSONMessage, Response
 
 from comcat.functions.damage_report import get_damage_reports
 from comcat.functions.damage_report import submit_damage_report
@@ -36,6 +36,13 @@ DOMAIN = 'wohninfo.homeinfo.de'
 
 
 @APPLICATION.errorhandler(Response)
+def _handle_raised_message(message):
+    """Returns the respective message."""
+
+    return message
+
+
+@APPLICATION.errorhandler(JSONMessage)
 def _handle_raised_message(message):
     """Returns the respective message."""
 
