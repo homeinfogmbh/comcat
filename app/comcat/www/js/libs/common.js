@@ -43,7 +43,7 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
 /*
     Makes an asychronous JSON API reguest.
 */
-comcat.JSONHttpRequest.request = function (method, url, data = null, headers = {}) {
+comcat.request = function (method, url, data = null, headers = {}) {
     function executor (resolve, reject) {
         const jhr = new comcat.JSONHttpRequest(resolve, reject);
         jhr.open(method, url);
@@ -75,38 +75,38 @@ comcat.JSONHttpRequest.request = function (method, url, data = null, headers = {
 /*
     Makes an asychronous JSON API GET reguest.
 */
-comcat.JSONHttpRequest.get = function (url, data = null, headers = {}) {
-    return comcat.JSONHttpRequest.request('GET', url, data, headers);
+comcat.get = function (url, data = null, headers = {}) {
+    return comcat.request('GET', url, data, headers);
 };
 
 
 /*
     Makes an asychronous JSON API POST reguest.
 */
-comcat.JSONHttpRequest.post = function (url, data = null, headers = {}) {
-    return comcat.JSONHttpRequest.request('POST', url, data, headers);
+comcat.post = function (url, data = null, headers = {}) {
+    return comcat.request('POST', url, data, headers);
 };
 
 
 /*
     Makes an asychronous JSON API PUT reguest.
 */
-comcat.JSONHttpRequest.put = function (url, data = null, headers = {}) {
-    return comcat.JSONHttpRequest.request('PUT', url, data, headers);
+comcat.put = function (url, data = null, headers = {}) {
+    return comcat.request('PUT', url, data, headers);
 };
 
 
 /*
     Makes an asychronous JSON API PATCH reguest.
 */
-comcat.JSONHttpRequest.patch = function (url, data = null, headers = {}) {
-    return comcat.JSONHttpRequest.request('PATCH', url, data, headers);
+comcat.patch = function (url, data = null, headers = {}) {
+    return comcat.request('PATCH', url, data, headers);
 };
 
 
 /*
     Makes an asychronous JSON API DELETE reguest.
 */
-comcat.JSONHttpRequest.delete = function (url, data = null, headers = {}) {
-    return comcat.JSONHttpRequest.request('DELETE', url, data, headers);
+comcat.delete = function (url, data = null, headers = {}) {
+    return comcat.request('DELETE', url, data, headers);
 };

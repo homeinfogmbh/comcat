@@ -19,7 +19,7 @@ comcat.presentation = comcat.presentation || {};
     Retrieves presentation data from the backend.
 */
 comcat.presentation.get = function () {
-    return comcat.JSONHttpRequest.get(comcat.BASE_URL + '/presentation').then(
+    return comcat.get(comcat.BASE_URL + '/presentation').then(
         function (response) {
             return comcat.presentation.Presentation.fromJSON(response.json);
         }
