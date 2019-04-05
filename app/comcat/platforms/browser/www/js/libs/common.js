@@ -39,20 +39,22 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
             this.setRequestHeader(header, headers[header]);
         }
     }
+};
 
-    onload () {
-        console.log('Onload.');
-        if (this.status >= 200 && this.status < 300) {
-            this.resolve(this.json);
-        } else {
-            this.reject(this.json);
-        }
-    }
 
-    onerror () {
-        console.log('Onerror.');
+comcat.JSONHttpRequest.onload = function () {
+    console.log('Onload.');
+    if (this.status >= 200 && this.status < 300) {
+        this.resolve(this.json);
+    } else {
         this.reject(this.json);
     }
+};
+
+
+comcat.JSONHttpRequest.onerror = function () {
+    console.log('Onerror.');
+    this.reject(this.json);
 };
 
 
@@ -61,19 +63,14 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
 */
 comcat.request = function (method, url, data = null, headers = {}) {
     function executor (resolve, reject) {
-        function wrapResolve (...args) {
-            console.log('Resolving.');
-            return resolve(...args);
-        }
-
-        const jhr = new comcat.JSONHttpRequest(wrapResolve, reject);
+        const jhr = new comcat.JSONHttpRequest(resolve, reject);
         jhr.open(method, url);
         jhr.setRequestHeaders(headers);
 
+        /*
         jhr.onload = function () {
-            console.log('Onload set.');
             if (this.status >= 200 && this.status < 300) {
-                wrapResolve(this.json);
+                resolve(this.json);
             } else {
                 reject(this.json);
             }
@@ -82,6 +79,7 @@ comcat.request = function (method, url, data = null, headers = {}) {
         jhr.onerror = function () {
             reject(this.json);
         };
+        */
         console.log('Onload is: ' + jhr.onload.toString());
 
         if (data == null) {
