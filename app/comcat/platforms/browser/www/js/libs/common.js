@@ -11,9 +11,11 @@ comcat.BASE_URL = 'https://wohninfo.homeinfo.de';
     A JSON API requestor.
 */
 comcat.JSONHttpRequest = class extends XMLHttpRequest {
-    constructor () {
+    constructor (resolve, reject, withCredentials = true) {
         super();
-        this.withCredentials = true;
+        this.resolve = resolve;
+        this.reject = reject;
+        this.withCredentials = withCredentials;
     }
 
     get json () {
@@ -37,6 +39,20 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
             this.setRequestHeader(header, headers[header]);
         }
     }
+
+    onload () {
+        console.log('Onload.');
+        if (this.status >= 200 && this.status < 300) {
+            this.resolve(this.json);
+        } else {
+            this.reject(this.json);
+        }
+    }
+
+    onerror () {
+        console.log('Onerror.');
+        this.reject(this.json);
+    }
 };
 
 
@@ -45,13 +61,19 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
 */
 comcat.request = function (method, url, data = null, headers = {}) {
     function executor (resolve, reject) {
-        const jhr = new comcat.JSONHttpRequest(resolve, reject);
+        function wrapResolve (...args) {
+            console.log('Resolving.');
+            return resolve(...args);
+        }
+
+        const jhr = new comcat.JSONHttpRequest(wrapResolve, reject);
         jhr.open(method, url);
         jhr.setRequestHeaders(headers);
 
         jhr.onload = function () {
+            console.log('Onload set.');
             if (this.status >= 200 && this.status < 300) {
-                resolve(this.json);
+                wrapResolve(this.json);
             } else {
                 reject(this.json);
             }
@@ -60,6 +82,7 @@ comcat.request = function (method, url, data = null, headers = {}) {
         jhr.onerror = function () {
             reject(this.json);
         };
+        console.log('Onload is: ' + jhr.onload.toString());
 
         if (data == null) {
             jhr.send();
@@ -75,8 +98,8 @@ comcat.request = function (method, url, data = null, headers = {}) {
 /*
     Makes an asychronous JSON API GET reguest.
 */
-comcat.get = function (url, data = null, headers = {}) {
-    return comcat.request('GET', url, data, headers);
+comcat.get = function (url, headers = {}) {
+    return comcat.request('GET', url, null, headers);
 };
 
 
@@ -107,6 +130,6 @@ comcat.patch = function (url, data = null, headers = {}) {
 /*
     Makes an asychronous JSON API DELETE reguest.
 */
-comcat.delete = function (url, data = null, headers = {}) {
-    return comcat.request('DELETE', url, data, headers);
+comcat.delete = function (url, headers = {}) {
+    return comcat.request('DELETE', url, null, headers);
 };
