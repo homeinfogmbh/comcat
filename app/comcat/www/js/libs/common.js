@@ -7,15 +7,6 @@ var comcat = comcat || {};
 comcat.BASE_URL = 'https://wohninfo.homeinfo.de';
 
 
-comcat.parseJSON = function (text) {
-    try {
-        return JSON.parse(text);
-    } catch (error) {
-        return null;
-    }
-};
-
-
 /*
     A JSON API requestor.
 */
@@ -26,12 +17,19 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
     }
 
     get json () {
-        return {
+        const json = {
             response: this.response,
-            json: comcat.parseJSON(this.response),
             status: this.status,
             statusText: this.statusText
         };
+
+        try {
+            json.json = JSON.parse(this.response);
+        } catch (error) {
+            return json;
+        }
+
+        return json;
     }
 
     set headers (headers) {
