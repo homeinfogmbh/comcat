@@ -35,9 +35,10 @@ comcat.menu.Chart = class {
         button.textContent = this.chart.name;
         button.style.backgroundColor = comcat.util.intToColor(this.parent.backgroundColor);
         button.style.color = comcat.util.intToColor(this.parent.textColor);
-        button.setAttribute('class', 'w3-button w3-block comcat-button-chart');
+        button.setAttribute('class', 'w3-button w3-block');
         button.setAttribute('data-id', this.id);
         button.setAttribute('data-type', this.type);
+        button.addEventListener('click', comcat.menu.Chart.onclick, false);
         return button;
     }
 };

@@ -33,9 +33,10 @@ comcat.menu.MenuItem = class {
         button.textContent = this.name;
         button.style.backgroundColor = comcat.util.intToColor(this.backgroundColor);
         button.style.color = comcat.util.intToColor(this.textColor);
-        button.setAttribute('class', 'w3-button w3-block comcat-button-submenu');
+        button.setAttribute('class', 'w3-button w3-block');
         button.setAttribute('data-uuid', this.uuid);
         button.setAttribute('data-parent', this.parent);
+        button.addEventListener('click', comcat.menu.MenuItem.onclick, false);
         return button;
     }
 };
