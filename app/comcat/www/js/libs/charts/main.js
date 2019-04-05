@@ -68,9 +68,9 @@ comcat.charts.Chart.fromJSON = function (json) {
 /*
     Yields charts from list of JSON objects.
 */
-comcat.charts.Chart.fromList = function* (charts) {
-    for (const chart of charts) {
-        yield comcat.charts.Chart.fromJSON(chart);
+comcat.charts.Chart.fromList = function* (list) {
+    for (const json of list) {
+        yield comcat.charts.Chart.fromJSON(json);
     }
 };
 
