@@ -10,7 +10,7 @@ comcat.charts = comcat.charts || {};
 /*
     A Blackboard chart.
 */
-comcat.charts.blackboard.Blackboard = class extends comcat.charts.Chart {
+comcat.charts.Blackboard = class extends comcat.charts.Chart {
     constructor (base, images) {
         super(base);
         this.images = Array.from(images);
