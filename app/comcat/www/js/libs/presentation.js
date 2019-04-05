@@ -40,10 +40,6 @@ comcat.presentation.Presentation = class {
         this.playlist = Array.from(playlist);
         this.menuItems = Array.from(menuItems);
     }
-
-    init () {
-        comcat.menu.init(this);
-    }
 };
 
 
@@ -60,4 +56,12 @@ comcat.presentation.Presentation.fromJSON = function (json) {
     const menuItems = comcat.menu.MenuItem.fromList(json.menuItems);
     return new comcat.presentation.Presentation(
         json.account, json.customer, configuration, charts, playlist, menuItems);
+};
+
+
+/*
+    Initializes the presentation.
+*/
+comcat.presentation.init = function (presentation) {
+    comcat.menu.init(presentation);
 };

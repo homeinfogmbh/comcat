@@ -27,7 +27,7 @@ var frontpage = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        comcat.presentation.get().then(comcat.menu.init);
+        comcat.presentation.get().then(comcat.presentation.init);
     }
 };
 
