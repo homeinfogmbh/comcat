@@ -75,8 +75,8 @@ comcat.request = function (method, url, data = null, headers = {}) {
 /*
     Makes an asychronous JSON API GET reguest.
 */
-comcat.get = function (url, data = null, headers = {}) {
-    return comcat.request('GET', url, data, headers);
+comcat.get = function (url, headers = {}) {
+    return comcat.request('GET', url, null, headers);
 };
 
 
@@ -107,6 +107,6 @@ comcat.patch = function (url, data = null, headers = {}) {
 /*
     Makes an asychronous JSON API DELETE reguest.
 */
-comcat.delete = function (url, data = null, headers = {}) {
-    return comcat.request('DELETE', url, data, headers);
+comcat.delete = function (url, headers = {}) {
+    return comcat.request('DELETE', url, null, headers);
 };
