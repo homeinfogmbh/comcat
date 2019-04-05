@@ -32,7 +32,7 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
         return json;
     }
 
-    set headers (headers) {
+    setRequestHeaders (headers) {
         for (const header in headers) {
             this.setRequestHeader(header, headers[header]);
         }
@@ -47,7 +47,7 @@ comcat.JSONHttpRequest.request = function (method, url, data = null, headers = {
     function executor (resolve, reject) {
         const jhr = new comcat.JSONHttpRequest(resolve, reject);
         jhr.open(method, url);
-        jhr.headers = headers;
+        jhr.setRequestHeaders(headers);
 
         jhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
