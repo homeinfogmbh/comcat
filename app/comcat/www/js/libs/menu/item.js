@@ -49,13 +49,13 @@ comcat.menu.MenuItem.fromJSON = function (json, parent = null) {
     const menuItems = [];
     const charts = [];
 
-    for (const json of json.menuItems) {
-        let menuItem = comcat.menu.MenuItem.fromJSON(json, json.uuid);
+    for (let menuItem of json.menuItems) {
+        menuItem = comcat.menu.MenuItem.fromJSON(menuItem, json.uuid);
         menuItems.push(menuItem);
     }
 
-    for (const json of json.charts) {
-        let chart = comcat.menu.Chart.fromJSON(json, json.uuid);
+    for (let chart of json.charts) {
+        chart = comcat.menu.Chart.fromJSON(chart, json.uuid);
         charts.push(chart);
     }
 
