@@ -11,9 +11,9 @@ comcat.BASE_URL = 'https://wohninfo.homeinfo.de';
     A JSON API requestor.
 */
 comcat.JSONHttpRequest = class extends XMLHttpRequest {
-    constructor () {
+    constructor (withCredentials = true) {
         super();
-        this.withCredentials = true;
+        this.withCredentials = withCredentials;
     }
 
     get json () {
@@ -45,7 +45,7 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
 */
 comcat.request = function (method, url, data = null, headers = {}) {
     function executor (resolve, reject) {
-        const jhr = new comcat.JSONHttpRequest(resolve, reject);
+        const jhr = new comcat.JSONHttpRequest();
         jhr.open(method, url);
         jhr.setRequestHeaders(headers);
 
