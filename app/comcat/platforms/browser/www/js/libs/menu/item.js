@@ -33,9 +33,10 @@ comcat.menu.MenuItem = class {
         button.textContent = this.name;
         button.style.backgroundColor = comcat.util.intToColor(this.backgroundColor);
         button.style.color = comcat.util.intToColor(this.textColor);
-        button.setAttribute('class', 'w3-button w3-block comcat-button-submenu');
+        button.setAttribute('class', 'w3-button w3-block');
         button.setAttribute('data-uuid', this.uuid);
         button.setAttribute('data-parent', this.parent);
+        button.addEventListener('click', comcat.menu.MenuItem.onclick, false);
         return button;
     }
 };
@@ -66,7 +67,7 @@ comcat.menu.MenuItem.fromJSON = function (json, parent = null) {
     Returns new MenuItems from JSON.
 */
 comcat.menu.MenuItem.fromList = function* (list) {
-    for (let json of list) {
+    for (const json of list) {
         yield comcat.menu.MenuItem.fromJSON(json);
     }
 };
@@ -81,7 +82,7 @@ comcat.menu.MenuItem.get = function (uuid) {
     while (menuItems.length > 0) {
         let nextMenuItems = [];
 
-        for (let menuItem of menuItems) {
+        for (const menuItem of menuItems) {
             if (menuItem.uuid == uuid) {
                 return menuItem;
             }
@@ -100,11 +101,8 @@ comcat.menu.MenuItem.get = function (uuid) {
     A menu item's onclick function.
 */
 comcat.menu.MenuItem.onclick = function () {
-    console.log('DEBUG: ' + this);
     const uuid = this.getAttribute('data-uuid');
-    console.log('DEBUG: UUID =  ' + uuid);
     const menuItem = comcat.menu.MenuItem.get(uuid);
-    console.log('DEBUG ITEM:\n' + JSON.stringify(menuItem));
 
     if (menuItem.menuItems.length == 0 && menuItem.charts.length == 1) {
         let chart = menuItem.charts[0];
@@ -112,7 +110,6 @@ comcat.menu.MenuItem.onclick = function () {
         chart.show();
     } else {
         const pages = menuItem.subMenu;
-        console.log('Pages:\n' + JSON.stringify(pages));
         comcat.menu.render(pages);
         comcat.menu.HISTORY.push(menuItem.parent);
     }

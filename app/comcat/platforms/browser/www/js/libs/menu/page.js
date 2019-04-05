@@ -25,7 +25,7 @@ comcat.menu.Page = class extends Array {
             const row = document.createElement('div');
             row.setAttribute('class', 'w3-row');
 
-            for (let item of this) {
+            for (const item of this) {
                 let column = document.createElement('div');
                 let size = 12 / this.length;
                 column.setAttribute('class', 'w3-col s' + size);
@@ -100,9 +100,9 @@ comcat.menu.Page.fromItems = function* (items) {
     items.sort(comcat.menu.sortByIndex);
     let page = new comcat.menu.Page();
 
-    for (let item of items) {
-        item = item.toDOM();
-        page.push(item);
+    for (const item of items) {
+        let dom = item.toDOM();
+        page.push(dom);
 
         if (page.length == comcat.menu.MAX_PAGE_SIZE) {
             yield page;

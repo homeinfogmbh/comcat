@@ -62,7 +62,7 @@ comcat.menu.render = function (pages) {
     menu.innerHTML = '';
     let visible = true;
 
-    for (let page of pages) {
+    for (const page of pages) {
         menu.appendChild(page.toDOM(visible));
         visible = false;
     }
@@ -75,12 +75,4 @@ comcat.menu.render = function (pages) {
 comcat.menu.init = function (presentation) {
     comcat.menu.setMenu(presentation.menuItems);
     comcat.menu.render();
-
-    for (let subMenuButton of document.getElementsByClassName('comcat-button-submenu')) {
-        subMenuButton.addEventListener('click', comcat.menu.MenuItem.onclick, false);
-    }
-
-    for (let chartButton of document.getElementsByClassName('comcat-button-chart')) {
-        chartButton.addEventListener('click', comcat.menu.Chart.onclick, false);
-    }
 };
