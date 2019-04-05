@@ -52,7 +52,7 @@ comcat.charts.BlackboardImage.fromJSON = function (json) {
     Creates blackboard chart images from a JSON list.
 */
 comcat.charts.BlackboardImage.fromList = function* (list) {
-    for (let json of list) {
+    for (const json of list) {
         yield comcat.charts.BlackboardImage.fromJSON(json);
     }
 };

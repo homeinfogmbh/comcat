@@ -25,11 +25,10 @@ comcat.presentation.get = function () {
     Represents presentation data with a function to render it.
 */
 comcat.presentation.Presentation = class {
+    // TODO: Migrated to fromJSON() static factory method.
     constructor (json) {
-        for (let key in json) {
-            if (json.hasOwnProperty(key)) {
-                this[key] = json[key];
-            }
+        for (const key in json) {
+            this[key] = json[key];
         }
 
         this.initMenu();

@@ -62,7 +62,7 @@ comcat.menu.render = function (pages) {
     menu.innerHTML = '';
     let visible = true;
 
-    for (let page of pages) {
+    for (const page of pages) {
         menu.appendChild(page.toDOM(visible));
         visible = false;
     }

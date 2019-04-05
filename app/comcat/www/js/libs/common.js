@@ -19,16 +19,14 @@ comcat.parseJSON = function (text) {
 /*
     Makes an asychronous JSON API reguest.
 */
-comcat.makeRequest = function (method, url, data=null, headers) {
+comcat.makeRequest = function (method, url, data = null, headers = {}) {
     function executor (resolve, reject) {
         const xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.open(method, url);
 
-        for (let header in headers) {
-            if (headers.hasOwnProperty(header)) {
-                xhr.setRequestHeader(header, headers[header]);
-            }
+        for (const header in headers) {
+            xhr.setRequestHeader(header, headers[header]);
         }
 
         xhr.onload = function () {

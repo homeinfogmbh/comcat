@@ -49,13 +49,13 @@ comcat.menu.MenuItem.fromJSON = function (json, parent = null) {
     const menuItems = [];
     const charts = [];
 
-    for (let menuItem of json.menuItems) {
-        menuItem = comcat.menu.MenuItem.fromJSON(menuItem, json.uuid);
+    for (const json of json.menuItems) {
+        let menuItem = comcat.menu.MenuItem.fromJSON(json, json.uuid);
         menuItems.push(menuItem);
     }
 
-    for (let chart of json.charts) {
-        chart = comcat.menu.Chart.fromJSON(chart, json.uuid);
+    for (const json of json.charts) {
+        let chart = comcat.menu.Chart.fromJSON(json, json.uuid);
         charts.push(chart);
     }
 
@@ -67,7 +67,7 @@ comcat.menu.MenuItem.fromJSON = function (json, parent = null) {
     Returns new MenuItems from JSON.
 */
 comcat.menu.MenuItem.fromList = function* (list) {
-    for (let json of list) {
+    for (const json of list) {
         yield comcat.menu.MenuItem.fromJSON(json);
     }
 };
@@ -82,7 +82,7 @@ comcat.menu.MenuItem.get = function (uuid) {
     while (menuItems.length > 0) {
         let nextMenuItems = [];
 
-        for (let menuItem of menuItems) {
+        for (const menuItem of menuItems) {
             if (menuItem.uuid == uuid) {
                 return menuItem;
             }
