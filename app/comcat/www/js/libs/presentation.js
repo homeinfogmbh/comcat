@@ -1,7 +1,13 @@
 /*
     Retrieval and rendering of presentation data.
 
-    Depends: libs/common.js
+    Depends:
+        * libs/common.js
+        * libs/menu/main.js
+        * libs/menu/item.js
+        * libs/charts/main.js
+        * libs/configuration.js
+        * libs/playlist.js
 */
 'use strict';
 
@@ -26,16 +32,17 @@ comcat.presentation.get = function () {
 */
 comcat.presentation.Presentation = class {
     // TODO: Migrated to fromJSON() static factory method.
-    constructor (json) {
-        for (const key in json) {
-            this[key] = json[key];
-        }
-
-        this.initMenu();
+    constructor (account, customer, configuration, charts, playlist, menuItems) {
+        this.account = account;
+        this.customer = customer;
+        this.configuration = configuration;
+        this.charts = Array.from(charts);
+        this.playlist = Array.from(playlist);
+        this.menuItems = Array.from(menuItems);
     }
 
-    initMenu () {
-        return comcat.menu.setMenu(this.menuItems);
+    init () {
+        comcat.menu.init(this);
     }
 };
 
@@ -44,5 +51,13 @@ comcat.presentation.Presentation = class {
     Factory method to create a presetation from a given JSON object.
 */
 comcat.presentation.Presentation.fromJSON = function (json) {
-    return new comcat.presentation.Presentation(json);
+    //const configuration = comcat.configuration.Configuration.fromJSON(json.configuration);
+    const configuration = json.configuration;
+    //const charts = comcat.charts.Chart.fromList(json.charts);
+    const charts = json.charts;
+    //const playlist = comcat.playlist.Playlist.fromList(json.playlist);
+    const playlist = json.playlist;
+    const menuItems = comcat.menu.MenuItem.fromList(json.menuItems);
+    return new comcat.presentation.Presentation(
+        json.account, json.customer, configuration, charts, playlist, menuItems);
 };
