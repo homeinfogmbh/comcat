@@ -11,10 +11,8 @@ comcat.BASE_URL = 'https://wohninfo.homeinfo.de';
     A JSON API requestor.
 */
 comcat.JSONHttpRequest = class extends XMLHttpRequest {
-    constructor (resolve, reject, withCredentials = true) {
+    constructor (withCredentials = true) {
         super();
-        this.resolve = resolve;
-        this.reject = reject;
         this.withCredentials = withCredentials;
     }
 
@@ -42,32 +40,15 @@ comcat.JSONHttpRequest = class extends XMLHttpRequest {
 };
 
 
-comcat.JSONHttpRequest.onload = function () {
-    console.log('Onload.');
-    if (this.status >= 200 && this.status < 300) {
-        this.resolve(this.json);
-    } else {
-        this.reject(this.json);
-    }
-};
-
-
-comcat.JSONHttpRequest.onerror = function () {
-    console.log('Onerror.');
-    this.reject(this.json);
-};
-
-
 /*
     Makes an asychronous JSON API reguest.
 */
 comcat.request = function (method, url, data = null, headers = {}) {
     function executor (resolve, reject) {
-        const jhr = new comcat.JSONHttpRequest(resolve, reject);
+        const jhr = new comcat.JSONHttpRequest();
         jhr.open(method, url);
         jhr.setRequestHeaders(headers);
 
-        /*
         jhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 resolve(this.json);
@@ -79,8 +60,6 @@ comcat.request = function (method, url, data = null, headers = {}) {
         jhr.onerror = function () {
             reject(this.json);
         };
-        */
-        console.log('Onload is: ' + jhr.onload.toString());
 
         if (data == null) {
             jhr.send();
