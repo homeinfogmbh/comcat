@@ -1,5 +1,5 @@
 /*
-    Blackboard chart stuff.
+    Blackboard charts and related models.
 */
 'use strict';
 
@@ -56,3 +56,7 @@ comcat.charts.BlackboardImage.fromList = function* (list) {
         yield comcat.charts.BlackboardImage.fromJSON(json);
     }
 };
+
+
+// Register chart type.
+comcat.charts.TYPES['Blackboard'] = comcat.charts.Blackboard;

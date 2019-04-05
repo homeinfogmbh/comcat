@@ -20,7 +20,7 @@ comcat.menu.Chart = class {
 
     get chart () {
         try {
-            return comcat.charts.Chart.get(this.id, this.type)
+            return comcat.charts.Chart.get(this.id, this.type);
         } catch (error) {
             return {name: 'No such chart.'};
         }
