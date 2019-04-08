@@ -50,7 +50,9 @@ comcat.charts.BaseChart.fromJSON = function (json) {
     An abstract chart.
 */
 comcat.charts.Chart = class {
-    constructor (base) {
+    constructor (id, type, base) {
+        this.id = id;
+        this.type = type;
         this.base = base;
     }
 
@@ -62,6 +64,11 @@ comcat.charts.Chart = class {
         chart.appendChild(header);
         return chart;
     }
+
+    show (container) {
+        container.innerHTML = '';
+        container.appendChild(this.toDOM());
+    }
 };
 
 
@@ -70,6 +77,12 @@ comcat.charts.Chart = class {
 */
 comcat.charts.Chart.fromJSON = function (json) {
     const chartClass = comcat.charts.TYPES[json.type];
+
+    if (chartClass == null) {
+        console.log('Chart class "' + json.type + '" is not yet implemented.');
+        return json;
+    }
+
     return chartClass.fromJSON(json);
 };
 
@@ -88,7 +101,7 @@ comcat.charts.Chart.fromList = function* (list) {
     Returns a chart by ID and type.
 */
 comcat.charts.Chart.get = function (id, type) {
-    for (const chart of comcat.charts.CHARTS) {
+    for (const chart of comcat.charts._CHARTS) {
         if (chart.type == type && chart.id == id) {
             return chart;
         }

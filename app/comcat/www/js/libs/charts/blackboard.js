@@ -11,15 +11,15 @@ comcat.charts = comcat.charts || {};
     A Blackboard chart.
 */
 comcat.charts.Blackboard = class extends comcat.charts.Chart {
-    constructor (base, images) {
-        super(base);
+    constructor (id, type, base, images) {
+        super(id, type, base);
         this.images = Array.from(images);
     }
 
     toDOM () {
         const blackboard = super.toDOM();
         const imageGallery = document.createElement('div');
-        imageGallery.setAttribute('w3-row');
+        imageGallery.setAttribute('class', 'w3-row');
 
         for (const image of this.images) {
             let frame = document.createElement('div');
@@ -29,6 +29,7 @@ comcat.charts.Blackboard = class extends comcat.charts.Chart {
         }
 
         blackboard.appendChild(imageGallery);
+        return blackboard;
     }
 };
 
@@ -39,7 +40,7 @@ comcat.charts.Blackboard = class extends comcat.charts.Chart {
 comcat.charts.Blackboard.fromJSON = function (json) {
     const base = comcat.charts.BaseChart.fromJSON(json.base);
     const images = comcat.charts.BlackboardImage.fromList(json.images);
-    return new comcat.charts.Blackboard(base, images);
+    return new comcat.charts.Blackboard(json.id, json.type, base, images);
 };
 
 
