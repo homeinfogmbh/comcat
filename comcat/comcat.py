@@ -166,7 +166,6 @@ def _get_local_news_articles():
 def _get_local_news_image(article_id, image_id):
     """Returns a local news image."""
 
-    # FIXME: This check is not secure.
     image = get_local_news_image(article_id, image_id)
 
     try:

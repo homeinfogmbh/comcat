@@ -11,13 +11,11 @@ from hinews import Article, AccessToken, Image, Tag
 __all__ = ['get_local_news_articles', 'get_local_news_image']
 
 
-def get_local_news_articles():
-    """Yields local news articles."""
-
-    customer = ACCOUNT.customer
+def _get_address():
+    """Returns the local news address."""
 
     try:
-        AccessToken.get(AccessToken.customer == customer)
+        AccessToken.get(AccessToken.customer == ACCOUNT.customer)
     except AccessToken.DoesNotExist:
         raise NEWS_NOT_ENABLED
 
@@ -26,27 +24,27 @@ def get_local_news_articles():
     if address is None:
         raise NO_ADDRESS_CONFIGURED
 
-    return Article.select().join(Tag).where(Tag.tag == address.city)
+    return address
+
+
+def _get_city():
+    """Returns the address's city."""
+
+    return _get_address().city
+
+
+def get_local_news_articles():
+    """Yields local news articles."""
+
+    return Article.select().join(Tag).where(Tag.tag == _get_city())
 
 
 def get_local_news_image(article_id, image_id):
     """Yields local news articles."""
 
-    customer = ACCOUNT.customer
-
-    try:
-        AccessToken.get(AccessToken.customer == customer)
-    except AccessToken.DoesNotExist:
-        raise NEWS_NOT_ENABLED
-
-    address = ACCOUNT.address
-
-    if address is None:
-        raise NO_ADDRESS_CONFIGURED
-
     try:
         article = Article.select().join(Tag).where(
-            (Tag.tag == address.city) & (Article.id == article_id))
+            (Tag.tag == _get_city()) & (Article.id == article_id))
     except Article.DoesNotExist:
         raise NO_SUCH_ARTICLE
 
