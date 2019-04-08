@@ -1,5 +1,5 @@
 /*
-    Blackboard chart stuff.
+    Blackboard charts and related models.
 */
 'use strict';
 
@@ -10,10 +10,26 @@ comcat.charts = comcat.charts || {};
 /*
     A Blackboard chart.
 */
-comcat.charts.blackboard.Blackboard = class extends comcat.charts.Chart {
-    constructor (base, images) {
-        super(base);
+comcat.charts.Blackboard = class extends comcat.charts.Chart {
+    constructor (id, type, base, images) {
+        super(id, type, base);
         this.images = Array.from(images);
+    }
+
+    toDOM () {
+        const blackboard = super.toDOM();
+        const imageGallery = document.createElement('div');
+        imageGallery.setAttribute('class', 'w3-row');
+
+        for (const image of this.images) {
+            let frame = document.createElement('div');
+            frame.setAttribute('class', 'w3-card-4');
+            frame.appendChild(image.toDOM());
+            imageGallery.append(frame);
+        }
+
+        blackboard.appendChild(imageGallery);
+        return blackboard;
     }
 };
 
@@ -24,7 +40,7 @@ comcat.charts.blackboard.Blackboard = class extends comcat.charts.Chart {
 comcat.charts.Blackboard.fromJSON = function (json) {
     const base = comcat.charts.BaseChart.fromJSON(json.base);
     const images = comcat.charts.BlackboardImage.fromList(json.images);
-    return new comcat.charts.Blackboard(base, images);
+    return new comcat.charts.Blackboard(json.id, json.type, base, images);
 };
 
 
@@ -36,6 +52,12 @@ comcat.charts.BlackboardImage = class {
         this.image = image;
         this.format = format;
         this.index = index;
+    }
+
+    toDOM () {
+        const image = document.createElement('img');
+        image.setAttribute('src', comcat.BASE_URL + '/file/' + this.image);
+        return image;
     }
 };
 
@@ -56,3 +78,7 @@ comcat.charts.BlackboardImage.fromList = function* (list) {
         yield comcat.charts.BlackboardImage.fromJSON(json);
     }
 };
+
+
+// Register chart type.
+comcat.charts.TYPES['Blackboard'] = comcat.charts.Blackboard;

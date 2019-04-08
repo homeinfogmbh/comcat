@@ -13,7 +13,7 @@ comcat.menu.HISTORY = [];
 /*
     Sets the menu from the presentation.
 */
-comcat.menu.setMenu = function (menuItems) {
+comcat.menu.set = function (menuItems) {
     comcat.menu._MENU = Array.from(comcat.menu.MenuItem.fromList(menuItems));
 };
 
@@ -73,6 +73,6 @@ comcat.menu.render = function (pages) {
     Initializes the menu.
 */
 comcat.menu.init = function (presentation) {
-    comcat.menu.setMenu(presentation.menuItems);
+    comcat.menu.set(presentation.menuItems);
     comcat.menu.render();
 };

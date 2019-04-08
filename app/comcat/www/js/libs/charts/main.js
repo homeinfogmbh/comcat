@@ -65,8 +65,11 @@ comcat.charts.Chart = class {
         return chart;
     }
 
-    show (container) {
-        container.innerHTML = '';
+    show (container, clean = true) {
+        if (clean) {
+            container.innerHTML = '';
+        }
+
         container.appendChild(this.toDOM());
     }
 };

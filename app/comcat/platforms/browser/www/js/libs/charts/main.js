@@ -5,6 +5,16 @@
 
 var comcat = comcat || {};
 comcat.charts = comcat.charts || {};
+comcat.charts._CHARTS = [];
+comcat.charts.TYPES = {};
+
+
+/*
+    Sets the charts.
+*/
+comcat.charts.set = function (charts) {
+    comcat.charts._CHARTS = Array.from(comcat.charts.Chart.fromList(charts));
+};
 
 
 /*
@@ -40,7 +50,63 @@ comcat.charts.BaseChart.fromJSON = function (json) {
     An abstract chart.
 */
 comcat.charts.Chart = class {
-    constructor (base) {
+    constructor (id, type, base) {
+        this.id = id;
+        this.type = type;
         this.base = base;
     }
+
+    toDOM () {
+        const chart = document.createElement('div');
+        chart.setAttribute('class', 'w3-container');
+        const header = document.createElement('h1');
+        header.innerHTML = this.base.title;
+        chart.appendChild(header);
+        return chart;
+    }
+
+    show (container) {
+        container.innerHTML = '';
+        container.appendChild(this.toDOM());
+    }
+};
+
+
+/*
+    Creates a chart from a JSON object.
+*/
+comcat.charts.Chart.fromJSON = function (json) {
+    const chartClass = comcat.charts.TYPES[json.type];
+
+    if (chartClass == null) {
+        // eslint-disable-next-line no-console
+        console.warn('Chart class "' + json.type + '" is not yet implemented.');
+        return json;
+    }
+
+    return chartClass.fromJSON(json);
+};
+
+
+/*
+    Yields charts from list of JSON objects.
+*/
+comcat.charts.Chart.fromList = function* (list) {
+    for (const json of list) {
+        yield comcat.charts.Chart.fromJSON(json);
+    }
+};
+
+
+/*
+    Returns a chart by ID and type.
+*/
+comcat.charts.Chart.get = function (id, type) {
+    for (const chart of comcat.charts._CHARTS) {
+        if (chart.type == type && chart.id == id) {
+            return chart;
+        }
+    }
+
+    throw 'No such chart.';
 };

@@ -107,7 +107,8 @@ comcat.menu.MenuItem.onclick = function () {
     if (menuItem.menuItems.length == 0 && menuItem.charts.length == 1) {
         let chart = menuItem.charts[0];
         chart = comcat.charts.Chart.get(chart.id, chart.type);
-        chart.show();
+        const container = document.getElementById('chartFrame');
+        chart.show(container);
     } else {
         const pages = menuItem.subMenu;
         comcat.menu.render(pages);

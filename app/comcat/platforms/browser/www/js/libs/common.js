@@ -1,5 +1,5 @@
 /*
-    ComCat comman API libarary.
+    ComCat common API libarary.
 */
 'use strict';
 

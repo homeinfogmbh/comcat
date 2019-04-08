@@ -63,5 +63,6 @@ comcat.presentation.Presentation.fromJSON = function (json) {
     Initializes the presentation.
 */
 comcat.presentation.init = function (presentation) {
+    comcat.charts.set(presentation.charts);
     comcat.menu.init(presentation);
 };
