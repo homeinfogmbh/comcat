@@ -17,7 +17,8 @@ from comcatlib import get_facebook_accounts
 from comcatlib import get_facebook_posts
 from comcatlib import get_session_duration
 from comcatlib import proxy_url
-from comcatlib.messages import INVALID_CREDENTIALS
+from comcatlib.messages import INVALID_CREDENTIALS, NO_SUCH_FILE
+from hisfs import File
 from lptlib import get_departures
 from wsgilib import Binary, JSON, JSONMessage, Response
 
@@ -95,6 +96,26 @@ def _get_presentation():
     return JSON(json)
 
 
+@APPLICATION.route('/file/<int:file>', methods=['GET'])
+@authenticated
+def _get_file(file):
+    """Returns an image file from the
+    presentation for the respective account.
+    """
+
+    presentation = Presentation(ACCOUNT.instance)
+
+    if file in presentation.files:
+        try:
+            file = File[file]
+        except File.DoesNotExist:
+            raise NO_SUCH_FILE
+
+        return Binary(file.bytes)
+
+    raise NO_SUCH_FILE  # Mitigate file sniffing.
+
+
 @APPLICATION.route('/facebook', methods=['GET'])
 @authenticated
 def _list_facebook_posts():
@@ -152,6 +173,7 @@ def _get_local_news_articles():
 def _get_local_news_image(article_id, image_id):
     """Returns a local news image."""
 
+    # FIXME: This check is not secure.
     image = get_local_news_image(article_id, image_id)
 
     try:
