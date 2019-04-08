@@ -79,7 +79,8 @@ comcat.charts.Chart.fromJSON = function (json) {
     const chartClass = comcat.charts.TYPES[json.type];
 
     if (chartClass == null) {
-        console.log('Chart class "' + json.type + '" is not yet implemented.');
+        // eslint-disable-next-line no-console
+        console.warn('Chart class "' + json.type + '" is not yet implemented.');
         return json;
     }
 
