@@ -53,6 +53,15 @@ comcat.charts.Chart = class {
     constructor (base) {
         this.base = base;
     }
+
+    toDOM () {
+        const chart = document.createElement('div');
+        chart.setAttribute('class', 'w3-container');
+        const header = document.createElement('h1');
+        header.innerHTML = this.base.title;
+        chart.appendChild(header);
+        return chart;
+    }
 };
 
 

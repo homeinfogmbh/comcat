@@ -15,6 +15,21 @@ comcat.charts.Blackboard = class extends comcat.charts.Chart {
         super(base);
         this.images = Array.from(images);
     }
+
+    toDOM () {
+        const blackboard = super.toDOM();
+        const imageGallery = document.createElement('div');
+        imageGallery.setAttribute('w3-row');
+
+        for (const image of this.images) {
+            let frame = document.createElement('div');
+            frame.setAttribute('class', 'w3-card-4');
+            frame.appendChild(image.toDOM());
+            imageGallery.append(frame);
+        }
+
+        blackboard.appendChild(imageGallery);
+    }
 };
 
 
@@ -36,6 +51,12 @@ comcat.charts.BlackboardImage = class {
         this.image = image;
         this.format = format;
         this.index = index;
+    }
+
+    toDOM () {
+        const image = document.createElement('img');
+        image.setAttribute('src', comcat.BASE_URL + '/file/' + this.image);
+        return image;
     }
 };
 
