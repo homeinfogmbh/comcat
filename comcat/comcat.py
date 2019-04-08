@@ -37,12 +37,6 @@ DOMAIN = 'wohninfo.homeinfo.de'
 
 
 @APPLICATION.errorhandler(Response)
-def _handle_raised_message(message):
-    """Returns the respective message."""
-
-    return message
-
-
 @APPLICATION.errorhandler(JSONMessage)
 def _handle_raised_message(message):
     """Returns the respective message."""
@@ -84,8 +78,7 @@ def _login():
 def _get_presentation():
     """Returns the presentation for the respective account."""
 
-    account = ACCOUNT.instance  # Get model from LocalProxy.
-    presentation = Presentation(account)
+    presentation = Presentation(ACCOUNT.instance)  # Get model from LocalProxy.
     json = presentation.to_json()
     sha256sum = sha256(dumps(json).encode()).hexdigest()
 
