@@ -27,7 +27,16 @@ var frontpage = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        comcat.presentation.get().then(comcat.presentation.renderMenus);
+        comcat.presentation.get().then(comcat.presentation.init);
+        const slideHandler = new comcat.touchslide.SlideHandler(
+            function (position) {
+                console.log('Starting touch event at: ' + position);
+            },
+            function (delta) {
+                console.log('Ending touch event at: ' + delta);
+            }
+        );
+        slideHandler.bind(document);
     }
 };
 

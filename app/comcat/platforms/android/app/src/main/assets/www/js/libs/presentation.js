@@ -1,7 +1,13 @@
 /*
     Retrieval and rendering of presentation data.
 
-    Depends: libs/common.js
+    Depends:
+        * libs/common.js
+        * libs/menu/main.js
+        * libs/menu/item.js
+        * libs/charts/main.js
+        * libs/configuration.js
+        * libs/playlist.js
 */
 'use strict';
 
@@ -13,7 +19,7 @@ comcat.presentation = comcat.presentation || {};
     Retrieves presentation data from the backend.
 */
 comcat.presentation.get = function () {
-    return comcat.makeRequest('GET', comcat.BASE_URL + '/presentation').then(
+    return comcat.get(comcat.BASE_URL + '/presentation').then(
         function (response) {
             return comcat.presentation.Presentation.fromJSON(response.json);
         }
@@ -25,12 +31,14 @@ comcat.presentation.get = function () {
     Represents presentation data with a function to render it.
 */
 comcat.presentation.Presentation = class {
-    constructor (json) {
-        for (let key in json) {
-            if (json.hasOwnProperty(key)) {
-                this[key] = json[key];
-            }
-        }
+    // TODO: Migrated to fromJSON() static factory method.
+    constructor (account, customer, configuration, charts, playlist, menuItems) {
+        this.account = account;
+        this.customer = customer;
+        this.configuration = configuration;
+        this.charts = Array.from(charts);
+        this.playlist = Array.from(playlist);
+        this.menuItems = Array.from(menuItems);
     }
 };
 
@@ -39,21 +47,22 @@ comcat.presentation.Presentation = class {
     Factory method to create a presetation from a given JSON object.
 */
 comcat.presentation.Presentation.fromJSON = function (json) {
-    return new comcat.presentation.Presentation(json);
+    //const configuration = comcat.configuration.Configuration.fromJSON(json.configuration);
+    const configuration = json.configuration;
+    //const charts = comcat.charts.Chart.fromList(json.charts);
+    const charts = json.charts;
+    //const playlist = comcat.playlist.Playlist.fromList(json.playlist);
+    const playlist = json.playlist;
+    const menuItems = comcat.menu.MenuItem.fromList(json.menuItems);
+    return new comcat.presentation.Presentation(
+        json.account, json.customer, configuration, charts, playlist, menuItems);
 };
 
 
 /*
-    Renders the menus.
+    Initializes the presentation.
 */
-comcat.presentation.renderMenus = function (json) {
-    const menuItems = comcat.menu.MenuItem.fromItems(json.menuItems);
-    const pages = comcat.menu.Page.fromItems(menuItems);
-    const menu = document.getElementById('menu');
-    let visible = true;
-
-    for (let page of pages) {
-        menu.appendChild(page.toDOM(visible));
-        visible = false;
-    }
+comcat.presentation.init = function (presentation) {
+    comcat.charts.set(presentation.charts);
+    comcat.menu.init(presentation);
 };

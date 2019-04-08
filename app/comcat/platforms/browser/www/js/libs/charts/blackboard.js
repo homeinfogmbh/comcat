@@ -57,6 +57,7 @@ comcat.charts.BlackboardImage = class {
     toDOM () {
         const image = document.createElement('img');
         image.setAttribute('src', comcat.BASE_URL + '/file/' + this.image);
+        image.style.width = '100%';
         return image;
     }
 };
