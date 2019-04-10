@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var frontpage = {
+const frontpage = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);

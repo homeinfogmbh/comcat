@@ -3,7 +3,7 @@
 */
 'use strict';
 
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.dom = comcat.dom || {};
 
 

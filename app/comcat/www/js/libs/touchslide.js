@@ -1,7 +1,7 @@
 /*
     Handling of sliding events.
 */
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.touchslide = comcat.touchslide || {};
 
 

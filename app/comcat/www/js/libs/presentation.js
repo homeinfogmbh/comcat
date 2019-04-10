@@ -11,7 +11,7 @@
 */
 'use strict';
 
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.presentation = comcat.presentation || {};
 
 

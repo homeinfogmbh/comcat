@@ -6,7 +6,7 @@
 'use strict';
 
 
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.session = comcat.session || {};
 
 

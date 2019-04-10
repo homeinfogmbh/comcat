@@ -3,7 +3,7 @@
 */
 'use strict';
 
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.menu = comcat.menu || {};
 comcat.menu._MENU = [];
 comcat.menu.MAX_PAGE_SIZE = 6;

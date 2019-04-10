@@ -3,7 +3,7 @@
 */
 'use strict';
 
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.charts = comcat.charts || {};
 comcat.charts._CHARTS = [];
 comcat.charts.TYPES = {};

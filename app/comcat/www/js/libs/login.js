@@ -5,7 +5,7 @@
 */
 'use strict';
 
-var comcat = comcat || {};
+let comcat = comcat || {};
 comcat.login = comcat.login || {};
 comcat.login.USER_NAME = 'comcat.userName';
 comcat.login.PASSWD = 'comcat.passwd';
