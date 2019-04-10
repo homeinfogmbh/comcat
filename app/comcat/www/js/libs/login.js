@@ -54,7 +54,7 @@ comcat.login.autologin = function () {
                 window.location = 'frontpage.html';
             },
             function () {
-                window.location = 'index.html';
+                window.location = 'login.html';
             }
         );
     } else {
