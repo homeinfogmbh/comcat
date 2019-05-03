@@ -10,8 +10,7 @@
         * libs/playlist.js
 */
 'use strict';
-
-let comcat = comcat || {};
+comcat = comcat || {};
 comcat.presentation = comcat.presentation || {};
 
 
@@ -19,7 +18,9 @@ comcat.presentation = comcat.presentation || {};
     Retrieves presentation data from the backend.
 */
 comcat.presentation.get = function () {
-    return comcat.get(comcat.BASE_URL + '/presentation').then(
+    //return comcat.get(comcat.BASE_URL + '/presentation').then(
+	//return comcat.get('presentation.json').then(
+	return comcat.get('https://backend.homeinfo.de/comcat/account/1/presentation?customer=1000').then(
         function (response) {
             return comcat.presentation.Presentation.fromJSON(response.json);
         }
@@ -63,6 +64,8 @@ comcat.presentation.Presentation.fromJSON = function (json) {
     Initializes the presentation.
 */
 comcat.presentation.init = function (presentation) {
+	comcat.menu.init(presentation);
     comcat.charts.set(presentation.charts);
-    comcat.menu.init(presentation);
+	for (var chart of comcat.charts._CHARTS)
+		chart.show(document.getElementById('chartFrame'), false);
 };

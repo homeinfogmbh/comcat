@@ -3,7 +3,7 @@
 */
 'use strict';
 
-let comcat = comcat || {};
+comcat = comcat || {};
 comcat.menu = comcat.menu || {};
 
 
@@ -103,6 +103,7 @@ comcat.menu.MenuItem.get = function (uuid) {
 comcat.menu.MenuItem.onclick = function () {
     const uuid = this.getAttribute('data-uuid');
     const menuItem = comcat.menu.MenuItem.get(uuid);
+	console.log(menuItem)
 
     if (menuItem.menuItems.length == 0 && menuItem.charts.length == 1) {
         let chart = menuItem.charts[0];
