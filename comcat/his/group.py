@@ -66,13 +66,13 @@ def add(gid):
 
 @authenticated
 @authorized('comcat')
-def delete(gid, member_id):
+def delete(gid, account):
     """Deletes the respective terminal from the group."""
 
     try:
         group_member_account = GroupMemberAccount.get(
             (GroupMemberAccount.group == get_group(gid))
-            & (GroupMemberAccount.member == member_id))
+            & (GroupMemberAccount.account == account))
     except GroupMemberAccount.DoesNotExist:
         raise NO_SUCH_MEMBER
 
@@ -98,7 +98,7 @@ class GroupContent:
         """Yields terminals of this group."""
         for group_member_account in GroupMemberAccount.select().where(
                 GroupMemberAccount.group == self.group):
-            yield group_member_account.member
+            yield group_member_account.account
 
     def to_json(self, recursive=True):
         """Recursively converts the group content into a JSON-ish dict."""
@@ -122,5 +122,5 @@ ROUTES = (
     ('GET', '/grouptree', groups_tree, 'groups_tree'),
     ('GET', '/grouptree/<int:gid>', groups_subtree, 'groups_subtree'),
     ('POST', '/group/<int:gid>/account', add, 'add_group_member'),
-    ('DELETE', '/group/<int:gid>/account/<int:member_id>',
+    ('DELETE', '/group/<int:gid>/account/<int:account>',
      delete, 'delete_group_member'))
