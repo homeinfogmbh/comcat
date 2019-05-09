@@ -5,7 +5,7 @@
 */
 'use strict';
 
-let comcat = comcat || {};
+comcat = comcat || {};
 comcat.login = comcat.login || {};
 comcat.login.USER_NAME = 'comcat.userName';
 comcat.login.PASSWD = 'comcat.passwd';
@@ -47,7 +47,6 @@ comcat.login.clearCredentials = function () {
 */
 comcat.login.autologin = function () {
     const credentials = comcat.login.loadCredentials();
-
     if (credentials.userName != null && credentials.passwd != null) {
         comcat.session.login(credentials.userName, credentials.passwd).then(
             function () {

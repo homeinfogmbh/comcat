@@ -3,7 +3,7 @@
 */
 'use strict';
 
-let comcat = comcat || {};
+comcat = comcat || {};
 comcat.charts = comcat.charts || {};
 comcat.charts._CHARTS = [];
 comcat.charts.TYPES = {};
@@ -69,7 +69,6 @@ comcat.charts.Chart = class {
         if (clean) {
             container.innerHTML = '';
         }
-
         container.appendChild(this.toDOM());
     }
 };
@@ -79,8 +78,7 @@ comcat.charts.Chart = class {
     Creates a chart from a JSON object.
 */
 comcat.charts.Chart.fromJSON = function (json) {
-    const chartClass = comcat.charts.TYPES[json.type];
-
+	const chartClass = comcat.charts.TYPES[json.type];
     if (chartClass == null) {
         // eslint-disable-next-line no-console
         console.warn('Chart class "' + json.type + '" is not yet implemented.');
