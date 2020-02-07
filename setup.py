@@ -13,7 +13,8 @@ setup(
     requires=['his', 'cmslib', 'comcatlib'],
     packages=[
         'comcat',
-        'comcat.functions',
+        'comcat.app',
         'comcat.his',
-        'comcat.his.content'],
+        'comcat.his.content'
+    ],
     description='HOMEINFO ComCat.')
