@@ -35,7 +35,8 @@ def get_ubc(ident):
     """Returns a UserBaseChart by its id and customer context."""
 
     return UserBaseChart.select().join(User).where(
-        (User.customer == CUSTOMER.id) & (UserBaseChart.id == ident)).get()
+        (UserBaseChart.id == ident) & (User.customer == CUSTOMER.id)
+    ).get()
 
 
 @authenticated
@@ -94,9 +95,9 @@ def delete(ident):
 
 
 ROUTES = (
-    ('GET', '/content/user-base-chart/<int:ident>', get),
+    ('GET', '/content/user/base-chart/<int:ident>', get),
     ('GET', '/content/user/<int:user>/base-chart', list_),
-    ('POST', '/content/user-base-chart', add),
-    ('PATCH', '/content/user-base-chart/<int:ident>', patch),
-    ('DELETE', '/content/user-base-chart/<int:ident>', delete)
+    ('POST', '/content/user/base-chart', add),
+    ('PATCH', '/content/user/base-chart/<int:ident>', patch),
+    ('DELETE', '/content/user/base-chart/<int:ident>', delete)
 )
