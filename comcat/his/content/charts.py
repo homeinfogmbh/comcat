@@ -29,12 +29,12 @@ def list_ubc(ident):
                 & (BaseChart.trashed == 0))
 
 
-def get_ubc(user, ident):
+def get_ubc(user, base_chart):
     """Returns the respective account base chart."""
 
     try:
         return UserBaseChart.select().join(User).where(
-            (UserBaseChart.id == ident)
+            (UserBaseChart.id == base_chart)
             & (User.customer == CUSTOMER.id)
             & (User.id == user)).get()
     except UserBaseChart.DoesNotExist:
@@ -61,10 +61,10 @@ def add():
 
 @authenticated
 @authorized('comcat')
-def patch(user, ident):
+def patch(user, base_chart):
     """Adds the chart to the respective user."""
 
-    user_base_chart = get_ubc(user, ident)
+    user_base_chart = get_ubc(user, base_chart)
     user_base_chart.patch_json(request.json)
     user_base_chart.save()
     return CONTENT_PATCHED
@@ -72,10 +72,10 @@ def patch(user, ident):
 
 @authenticated
 @authorized('comcat')
-def delete(user, ident):
+def delete(user, base_chart):
     """Deletes the chart from the respective user."""
 
-    user_base_chart = get_ubc(user, ident)
+    user_base_chart = get_ubc(user, base_chart)
     user_base_chart.delete_instance()
     return CONTENT_DELETED
 
@@ -83,6 +83,6 @@ def delete(user, ident):
 ROUTES = (
     ('GET', '/content/user/<int:user>/chart', get),
     ('POST', '/content/user/chart', add),
-    ('PATCH', '/content/user/<int:user>/chart/<int:ident>', patch),
-    ('DELETE', '/content/user/<int:user>/chart/<int:ident>', delete)
+    ('PATCH', '/content/user/<int:user>/chart/<int:base_chart>', patch),
+    ('DELETE', '/content/user/<int:user>/chart/<int:base_chart>', delete)
 )
