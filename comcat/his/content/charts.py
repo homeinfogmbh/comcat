@@ -2,7 +2,6 @@
 
 from flask import request
 
-from cmslib.functions.charts import get_chart
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_PATCHED
@@ -11,8 +10,6 @@ from cmslib.orm.charts import BaseChart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON
-
-from comcat.his.functions import get_user
 
 
 __all__ = ['ROUTES']
@@ -39,7 +36,7 @@ def get_ubc(user, ident):
         return UserBaseChart.select().join(User).where(
             (UserBaseChart.id == ident)
             & (User.customer == CUSTOMER.id)
-            & (User.id == acc_id)).get()
+            & (User.id == user)).get()
     except UserBaseChart.DoesNotExist:
         raise NO_SUCH_CONTENT
 
@@ -54,13 +51,10 @@ def get(user):
 
 @authenticated
 @authorized('comcat')
-def add(user, ident):
+def add():
     """Adds the chart to the respective user."""
 
-    user = get_user(user)
-    base_chart = get_chart(ident).base
-    json = request.json or {}
-    user_base_chart = UserBaseChart.from_json(json, user, base_chart)
+    user_base_chart = UserBaseChart.from_json(request.json)
     user_base_chart.save()
     return CONTENT_ADDED.update(id=user_base_chart.id)
 
@@ -70,7 +64,7 @@ def add(user, ident):
 def patch(user, ident):
     """Adds the chart to the respective user."""
 
-    user_base_chart = get_abc(user, ident)
+    user_base_chart = get_ubc(user, ident)
     user_base_chart.patch_json(request.json)
     user_base_chart.save()
     return CONTENT_PATCHED
@@ -88,7 +82,7 @@ def delete(user, ident):
 
 ROUTES = (
     ('GET', '/content/user/<int:acc_id>/chart', get),
-    ('POST', '/content/user/<int:acc_id>/chart/<int:ident>', add),
+    ('POST', '/content/user/chart', add),
     ('PATCH', '/content/user/<int:acc_id>/chart/<int:ident>', patch),
     ('DELETE', '/content/user/<int:acc_id>/chart/<int:ident>', delete)
 )
