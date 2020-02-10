@@ -19,7 +19,7 @@ USER_JOIN = UserBaseChart.user == User.id
 BASE_CHART_JOIN = UserBaseChart.base_chart == BaseChart.id
 
 
-def list_ubc(ident):
+def list_ubc(user):
     """Yields the user's base charts of the
     current customer for the respective user.
     """
@@ -27,22 +27,29 @@ def list_ubc(ident):
     return UserBaseChart.select().join(
         User, join_type='LEFT', on=USER_JOIN).join(
             BaseChart, join_type='LEFT', on=BASE_CHART_JOIN).where(
-                (User.customer == CUSTOMER.id) & (User.id == ident)
+                (User.customer == CUSTOMER.id) & (User.id == user)
                 & (BaseChart.trashed == 0))
 
 
-def get_ubc(user, base_chart):
-    """Returns the respective account base chart."""
+def get_ubc(ident):
+    """Returns a UserBaseChart by its id and customer context."""
 
     return UserBaseChart.select().join(User).where(
-        (User.customer == CUSTOMER.id) & (User.id == user)
-        & (UserBaseChart.base_chart == base_chart)).get()
+        (User.customer == CUSTOMER.id) & (UserBaseChart.id == ident)).get()
 
 
 @authenticated
 @authorized('comcat')
-def get(user):
-    """Returns a list of user base charts of the given user."""
+def get(ident):
+    """Returns the respective UserBaseChart."""
+
+    return JSON(get_ubc(ident).to_json())
+
+
+@authenticated
+@authorized('comcat')
+def list_(user):
+    """Returns a list of UserBaseCharts of the given user."""
 
     return JSON([ubc.to_json() for ubc in list_ubc(user)])
 
@@ -59,36 +66,37 @@ def add():
 
 @authenticated
 @authorized('comcat')
-def patch(user, base_chart):
+def patch(ident):
     """Adds the chart to the respective user."""
 
     try:
-        user_base_chart = get_ubc(user, base_chart)
+        user_base_chart = get_ubc(ident)
     except UserBaseChart.DoesNotExist:
         return NO_SUCH_CONTENT
 
     user_base_chart.patch_json(request.json)
     user_base_chart.save()
-    return CONTENT_PATCHED
+    return CONTENT_PATCHED.update(id=user_base_chart.id)
 
 
 @authenticated
 @authorized('comcat')
-def delete(user, base_chart):
+def delete(ident):
     """Deletes the chart from the respective user."""
 
     try:
-        user_base_chart = get_ubc(user, base_chart)
+        user_base_chart = get_ubc(ident)
     except UserBaseChart.DoesNotExist:
         return NO_SUCH_CONTENT
 
     user_base_chart.delete_instance()
-    return CONTENT_DELETED
+    return CONTENT_DELETED.update(id=user_base_chart.id)
 
 
 ROUTES = (
-    ('GET', '/content/user/<int:user>/chart', get),
-    ('POST', '/content/user/chart', add),
-    ('PATCH', '/content/user/<int:user>/chart/<int:base_chart>', patch),
-    ('DELETE', '/content/user/<int:user>/chart/<int:base_chart>', delete)
+    ('GET', '/content/user-base-chart/<int:ident>', get),
+    ('GET', '/content/user/<int:user>/base-chart', list_),
+    ('POST', '/content/user-base-chart', add),
+    ('PATCH', '/content/user-base-chart/<int:ident>', patch),
+    ('DELETE', '/content/user-base-chart/<int:ident>', delete)
 )
