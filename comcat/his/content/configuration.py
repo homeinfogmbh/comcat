@@ -76,8 +76,8 @@ def delete(user, ident):
 
 
 ROUTES = (
-    ('GET', '/content/account/<int:acc_id>/configuration', get),
-    ('POST', '/content/account/<int:acc_id>/configuration/<int:ident>', add),
-    ('DELETE', '/content/account/<int:acc_id>/configuration/<int:ident>',
+    ('GET', '/content/account/<int:user>/configuration', get),
+    ('POST', '/content/account/<int:user>/configuration/<int:ident>', add),
+    ('DELETE', '/content/account/<int:user>/configuration/<int:ident>',
      delete)
 )
