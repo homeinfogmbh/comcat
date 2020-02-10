@@ -25,10 +25,13 @@ def list_ubc(user):
     """
 
     return UserBaseChart.select().join(
-        User, join_type='LEFT', on=USER_JOIN).join(
-            BaseChart, join_type='LEFT', on=BASE_CHART_JOIN).where(
-                (User.customer == CUSTOMER.id) & (User.id == user)
-                & (BaseChart.trashed == 0))
+        User, join_type='LEFT', on=USER_JOIN
+    ).join(
+        BaseChart, join_type='LEFT', on=BASE_CHART_JOIN
+    ).where(
+        (User.customer == CUSTOMER.id) & (User.id == user)
+        & (BaseChart.trashed == 0)
+    )
 
 
 def get_ubc(ident):
