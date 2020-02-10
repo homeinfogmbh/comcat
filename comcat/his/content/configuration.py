@@ -5,46 +5,52 @@ from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_EXISTS
 from cmslib.messages.content import NO_SUCH_CONTENT
-from comcatlib import AccountConfiguration
-from his import authenticated, authorized
+from comcatlib import User, UserConfiguration
+from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON
 
-from comcat.his.functions import get_account
+from comcat.his.functions import get_user
 
 
 __all__ = ['ROUTES']
 
 
+def list_user_configs(user):
+    """Lists configurations of the given user."""
+
+    return UserConfiguration.select().join(User).where(
+        (User.id == user) & (User.customer == CUSTOMER.id))
+
+
 @authenticated
 @authorized('comcat')
-def get(acc_id):
+def get(user):
     """Returns a list of IDs of the configurations
-    in the respective account.
+    of the given user.
     """
 
     return JSON([
-        account_configuration.configuration.id for account_configuration
-        in AccountConfiguration.select().where(
-            AccountConfiguration.account == get_account(acc_id))])
+        user_configuration.configuration.id for user_configuration
+        in list_user_configs(user)])
 
 
 @authenticated
 @authorized('comcat')
-def add(acc_id, ident):
-    """Adds the configuration to the respective account."""
+def add(user, ident):
+    """Adds the configuration to the respective user."""
 
-    account = get_account(acc_id)
+    user = get_user(user)
     configuration = get_configuration(ident)
 
     try:
-        AccountConfiguration.get(
-            (AccountConfiguration.account == account)
-            & (AccountConfiguration.configuration == configuration))
-    except AccountConfiguration.DoesNotExist:
-        account_configuration = AccountConfiguration()
-        account_configuration.account = account
-        account_configuration.configuration = configuration
-        account_configuration.save()
+        UserConfiguration.get(
+            (UserConfiguration.user == user)
+            & (UserConfiguration.configuration == configuration))
+    except UserConfiguration.DoesNotExist:
+        user_configuration = UserConfiguration()
+        user_configuration.user = user
+        user_configuration.configuration = configuration
+        user_configuration.save()
         return CONTENT_ADDED
 
     return CONTENT_EXISTS
@@ -52,27 +58,26 @@ def add(acc_id, ident):
 
 @authenticated
 @authorized('comcat')
-def delete(acc_id, ident):
-    """Deletes the configuration from the respective account."""
+def delete(user, ident):
+    """Deletes the configuration from the respective user."""
 
-    account = get_account(acc_id)
+    user = get_user(user)
     configuration = get_configuration(ident)
 
     try:
-        account_configuration = AccountConfiguration.get(
-            (AccountConfiguration.account == account)
-            & (AccountConfiguration.configuration == configuration))
-    except AccountConfiguration.DoesNotExist:
+        user_configuration = UserConfiguration.get(
+            (UserConfiguration.user == user)
+            & (UserConfiguration.configuration == configuration))
+    except UserConfiguration.DoesNotExist:
         raise NO_SUCH_CONTENT
 
-    account_configuration.delete_instance()
+    user_configuration.delete_instance()
     return CONTENT_DELETED
 
 
 ROUTES = (
-    ('GET', '/content/account/<int:acc_id>/configuration', get,
-     'list_account_configurations'),
-    ('POST', '/content/account/<int:acc_id>/configuration/<int:ident>', add,
-     'add_account_configuration'),
+    ('GET', '/content/account/<int:acc_id>/configuration', get),
+    ('POST', '/content/account/<int:acc_id>/configuration/<int:ident>', add),
     ('DELETE', '/content/account/<int:acc_id>/configuration/<int:ident>',
-     delete, 'delete_account_configuration'))
+     delete)
+)
