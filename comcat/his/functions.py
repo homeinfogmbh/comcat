@@ -1,25 +1,33 @@
 """Common functions."""
 
-from his import CUSTOMER
+from his import ACCOUNT, CUSTOMER
 
-from comcatlib import Account
-from comcatlib.messages import NO_SUCH_ACCOUNT
-
-
-__all__ = ['get_account', 'get_accounts']
+from comcatlib import User
+from comcatlib.messages import NO_SUCH_USER
 
 
-def get_account(ident):
-    """Returns the respective ComCat account of the current customer."""
+__all__ = ['get_user', 'get_users']
+
+
+def get_user(ident):
+    """Returns the respective ComCat user of the current customer."""
+
+    if ACCOUNT.root:
+        try:
+            return User[ident]
+        except User.DoesNotExist:
+            raise NO_SUCH_USER
 
     try:
-        return Account.get(
-            (Account.id == ident) & (Account.customer == CUSTOMER.id))
-    except Account.DoesNotExist:
-        raise NO_SUCH_ACCOUNT
+        return User.get((User.id == ident) & (User.customer == CUSTOMER.id))
+    except User.DoesNotExist:
+        raise NO_SUCH_USER
 
 
-def get_accounts():
-    """Yields ComCat accounts of the current customer."""
+def get_users():
+    """Yields ComCat users of the current customer."""
 
-    return Account.select().where(Account.customer == CUSTOMER.id)
+    if ACCOUNT.root:
+        return User
+
+    return User.select().where(User.customer == CUSTOMER.id)

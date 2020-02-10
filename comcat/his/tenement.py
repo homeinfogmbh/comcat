@@ -70,6 +70,7 @@ def delete(ident):
 
 
 ROUTES = (
-    ('GET', '/tenement', list_, 'list_tenements'),
-    ('POST', '/tenement', add, 'add_tenements'),
-    ('DELETE', '/tenement/<int:ident>', delete, 'delete_tenements'))
+    ('GET', '/tenement', list_),
+    ('POST', '/tenement', add),
+    ('DELETE', '/tenement/<int:ident>', delete)
+)

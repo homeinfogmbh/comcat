@@ -8,89 +8,87 @@ from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_PATCHED
 from cmslib.messages.content import NO_SUCH_CONTENT
 from cmslib.orm.charts import BaseChart
-from comcatlib import Account, AccountBaseChart
+from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON
 
-from comcat.his.functions import get_account
+from comcat.his.functions import get_user
 
 
 __all__ = ['ROUTES']
 
 
-def list_abc(ident):
-    """Yields the account base charts of the
-    current customer for the respective account.
+def list_ubc(ident):
+    """Yields the user's base charts of the
+    current customer for the respective user.
     """
 
-    term_join = AccountBaseChart.account == Account.id
-    bc_join = AccountBaseChart.base_chart == BaseChart.id
-    return AccountBaseChart.select().join(
-        Account, join_type='LEFT', on=term_join).join(
+    term_join = UserBaseChart.account == User.id
+    bc_join = UserBaseChart.base_chart == BaseChart.id
+    return UserBaseChart.select().join(
+        User, join_type='LEFT', on=term_join).join(
             BaseChart, join_type='LEFT', on=bc_join).where(
-                (Account.customer == CUSTOMER.id) & (Account.id == ident)
+                (User.customer == CUSTOMER.id) & (User.id == ident)
                 & (BaseChart.trashed == 0))
 
 
-def get_abc(acc_id, ident):
+def get_ubc(user, ident):
     """Returns the respective account base chart."""
 
     try:
-        return AccountBaseChart.select().join(Account).where(
-            (AccountBaseChart.id == ident)
-            & (Account.customer == CUSTOMER.id)
-            & (Account.id == acc_id)).get()
-    except AccountBaseChart.DoesNotExist:
+        return UserBaseChart.select().join(User).where(
+            (UserBaseChart.id == ident)
+            & (User.customer == CUSTOMER.id)
+            & (User.id == acc_id)).get()
+    except UserBaseChart.DoesNotExist:
         raise NO_SUCH_CONTENT
 
 
 @authenticated
 @authorized('comcat')
-def get(acc_id):
-    """Returns a list of IDs of the charts in the respective account."""
+def get(user):
+    """Returns a list of user base charts of the given user."""
 
-    return JSON([abc.to_json() for abc in list_abc(acc_id)])
+    return JSON([ubc.to_json() for ubc in list_ubc(user)])
 
 
 @authenticated
 @authorized('comcat')
-def add(acc_id, ident):
-    """Adds the chart to the respective account."""
+def add(user, ident):
+    """Adds the chart to the respective user."""
 
-    account = get_account(acc_id)
+    user = get_user(user)
     base_chart = get_chart(ident).base
     json = request.json or {}
-    account_base_chart = AccountBaseChart.from_json(json, account, base_chart)
-    account_base_chart.save()
-    return CONTENT_ADDED.update(id=account_base_chart.id)
+    user_base_chart = UserBaseChart.from_json(json, user, base_chart)
+    user_base_chart.save()
+    return CONTENT_ADDED.update(id=user_base_chart.id)
 
 
 @authenticated
 @authorized('comcat')
-def patch(acc_id, ident):
-    """Adds the chart to the respective account."""
+def patch(user, ident):
+    """Adds the chart to the respective user."""
 
-    account_base_chart = get_abc(acc_id, ident)
-    account_base_chart.patch_json(request.json)
-    account_base_chart.save()
+    user_base_chart = get_abc(user, ident)
+    user_base_chart.patch_json(request.json)
+    user_base_chart.save()
     return CONTENT_PATCHED
 
 
 @authenticated
 @authorized('comcat')
-def delete(acc_id, ident):
-    """Deletes the chart from the respective account."""
+def delete(user, ident):
+    """Deletes the chart from the respective user."""
 
-    account_base_chart = get_abc(acc_id, ident)
-    account_base_chart.delete_instance()
+    user_base_chart = get_ubc(user, ident)
+    user_base_chart.delete_instance()
     return CONTENT_DELETED
 
 
 ROUTES = (
-    ('GET', '/content/account/<int:acc_id>/chart', get, 'list_account_charts'),
-    ('POST', '/content/account/<int:acc_id>/chart/<int:ident>', add,
-     'add_account_chart'),
-    ('PATCH', '/content/account/<int:acc_id>/chart/<int:ident>', patch,
-     'patch_account_chart'),
-    ('DELETE', '/content/account/<int:acc_id>/chart/<int:ident>', delete,
-     'delete_account_chart'))
+    ('GET', '/content/user/<int:acc_id>/chart', get),
+    ('POST', '/content/user/<int:acc_id>/chart/<int:ident>', add),
+    ('PATCH', '/content/user/<int:acc_id>/chart/<int:ident>', patch),
+    ('DELETE', '/content/user/<int:acc_id>/chart/<int:ident>', delete)
+)

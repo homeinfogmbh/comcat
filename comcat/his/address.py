@@ -49,6 +49,7 @@ def delete(ident):
 
 
 ROUTES = (
-    ('GET', '/address', list_, 'list_addresses'),
-    ('POST', '/address', add, 'add_address'),
-    ('DELETE', '/address/<int:ident>', delete, 'delete_address'))
+    ('GET', '/address', list_),
+    ('POST', '/address', add),
+    ('DELETE', '/address/<int:ident>', delete)
+)
