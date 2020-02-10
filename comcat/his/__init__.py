@@ -9,9 +9,8 @@ __all__ = ['APPLICATION']
 
 
 ROUTES = sum(
-    (account.ROUTES, address.ROUTES, content.ROUTES, group.ROUTES,
-     tenement.ROUTES),
-    start=()
+    (address.ROUTES, content.ROUTES, group.ROUTES, tenement.ROUTES),
+    start=account.ROUTES
 )
 APPLICATION = Application('comcat')
 APPLICATION.add_routes(ROUTES)
