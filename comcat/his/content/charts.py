@@ -81,8 +81,8 @@ def delete(user, ident):
 
 
 ROUTES = (
-    ('GET', '/content/user/<int:acc_id>/chart', get),
+    ('GET', '/content/user/<int:user>/chart', get),
     ('POST', '/content/user/chart', add),
-    ('PATCH', '/content/user/<int:acc_id>/chart/<int:ident>', patch),
-    ('DELETE', '/content/user/<int:acc_id>/chart/<int:ident>', delete)
+    ('PATCH', '/content/user/<int:user>/chart/<int:ident>', patch),
+    ('DELETE', '/content/user/<int:user>/chart/<int:ident>', delete)
 )
