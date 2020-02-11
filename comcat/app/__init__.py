@@ -12,12 +12,12 @@ from comcat.app.presentation import get_presentation
 __all__ = ['APPLICATION']
 
 
-APPLICATION.route('/damage_report', methods=['GET'])(list_damage_reports)
-APPLICATION.route('/damage_report', methods=['POST'])(submit_damage_report)
+APPLICATION.route('/damage-report', methods=['GET'])(list_damage_reports)
+APPLICATION.route('/damage-report', methods=['POST'])(submit_damage_report)
 APPLICATION.route('/file/<int:file>', methods=['GET'])(get_file)
-APPLICATION.route('/local_news', methods=['GET'])(get_local_news_articles)
+APPLICATION.route('/local-news', methods=['GET'])(get_local_news_articles)
 APPLICATION.route(
-    '/local_news/<int:article_id>/<int:image_id>', methods=['GET']
+    '/local-news/<int:article_id>/<int:image_id>', methods=['GET']
 )(get_local_news_image)
 APPLICATION.route('/login', methods=['POST'])(login)
 APPLICATION.route('/ltp', methods=['GET'])(get_departures)
