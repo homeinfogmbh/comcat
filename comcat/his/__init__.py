@@ -2,15 +2,15 @@
 
 from his import Application
 
-from comcat.his import account, address, content, group, tenement
+from comcat.his import address, content, group, tenement, user
 
 
 __all__ = ['APPLICATION']
 
 
 ROUTES = sum(
-    (address.ROUTES, content.ROUTES, group.ROUTES, tenement.ROUTES),
-    account.ROUTES
+    (content.ROUTES, group.ROUTES, tenement.ROUTES, user.ROUTES),
+    address.ROUTES
 )
 APPLICATION = Application('comcat')
 APPLICATION.add_routes(ROUTES)
