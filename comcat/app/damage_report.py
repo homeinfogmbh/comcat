@@ -13,6 +13,9 @@ from wsgilib import JSON
 __all__ = ['list_damage_reports', 'submit_damage_report']
 
 
+DENIED_FIELDS = ('address', 'timestamp', 'checked')
+
+
 @REQUIRE_OAUTH('comcat')
 def list_damage_reports():
     """Returns a list of sent damage report."""
@@ -32,9 +35,11 @@ def submit_damage_report():
         raise NO_ADDRESS_CONFIGURED
 
     damage_report = DamageReport.from_json(
-        request.json, current_token.user.customer, address)
+        request.json, current_token.user.customer, address, skip=DENIED_FIELDS
+    )
     damage_report.save()
     user_damage_report = UserDamageReport(
-        user=current_token.user, damage_report=damage_report)
+        user=current_token.user, damage_report=damage_report
+    )
     user_damage_report.save()
     return ('Damage report submitted.', 201)
