@@ -17,13 +17,13 @@ __all__ = ['login']
 def login():
     """Logs in an end user."""
 
+    print('Raw data:', request.data, flush=True)
     uuid = request.form.get('uuid')
     passwd = request.form.get('passwd')
 
     print('UUID:', uuid, 'passwd:', passwd, flush=True)
     from json import dumps
     print('Form:', dumps(request.form, indent=2), flush=True)
-    print('Raw data:', request.data, flush=True)
 
     if not uuid or not passwd:
         return INVALID_CREDENTIALS
