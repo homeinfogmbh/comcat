@@ -17,8 +17,8 @@ __all__ = ['login']
 def login():
     """Logs in an end user."""
 
-    uuid = request.json.get('uuid')
-    passwd = request.json.get('passwd')
+    uuid = request.form.get('uuid')
+    passwd = request.form.get('passwd')
 
     if not uuid or not passwd:
         return INVALID_CREDENTIALS
