@@ -20,6 +20,8 @@ def login():
     uuid = request.form.get('uuid')
     passwd = request.form.get('passwd')
 
+    print('UUID:', uuid, 'passwd:', passwd, flush=True)
+
     if not uuid or not passwd:
         return INVALID_CREDENTIALS
 
