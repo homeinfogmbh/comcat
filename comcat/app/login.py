@@ -22,7 +22,8 @@ def login():
 
     print('UUID:', uuid, 'passwd:', passwd, flush=True)
     from json import dumps
-    print(dumps(request.form, indent=2), flush=True)
+    print('Form:', dumps(request.form, indent=2), flush=True)
+    print('Raw data:', request.data, flush=True)
 
     if not uuid or not passwd:
         return INVALID_CREDENTIALS
