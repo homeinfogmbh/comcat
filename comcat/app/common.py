@@ -13,8 +13,18 @@ __all__ = ['APPLICATION', 'DOMAIN']
 APPLICATION = Flask('comcat')
 CORS(APPLICATION, supports_credentials=True)
 DOMAIN = 'wohninfo.homeinfo.de'
+
+
+def init_app(application):
+    """Initializes the application."""
+
+    application.secret_key = '/usr/local/etc/comcat.secret'
+    application.config['SESSION_TYPE'] = 'filesystem'
+
+
 init_oauth(APPLICATION)
 init_oauth_endpoints(APPLICATION)
+init_app(APPLICATION)
 
 
 @APPLICATION.errorhandler(Response)
