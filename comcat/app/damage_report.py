@@ -13,7 +13,7 @@ from wsgilib import JSON
 __all__ = ['list_damage_reports', 'submit_damage_report']
 
 
-DENIED_FIELDS = ('address', 'timestamp', 'checked')
+DENIED_FIELDS = {'address', 'timestamp', 'checked'}
 
 
 @REQUIRE_OAUTH('comcat')
