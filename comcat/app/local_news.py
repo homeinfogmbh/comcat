@@ -45,18 +45,26 @@ def _get_local_news_articles():
     return Article.select().join(Tag).where(Tag.tag == _get_city())
 
 
-def _get_local_news_image(article_id, image_id):
+def _get_local_news_article(article_id):
     """Yields local news articles."""
 
+    condition = Article.id == article_id
+    condition &= Tag.tag == _get_city()
+
     try:
-        article = Article.select().join(Tag).where(
-            (Tag.tag == _get_city()) & (Article.id == article_id)).get()
+        article = Article.select().join(Tag).where(condition).get()
     except Article.DoesNotExist:
         raise NO_SUCH_ARTICLE
 
+
+def _get_local_news_image(article_id, image_id):
+    """Yields local news articles."""
+
+    condition = Image.id == image_id
+    condition &= Image.article == _get_local_news_article(article_id)
+
     try:
-        return Image.select().where(
-            (Image.article == article) & (Image.id == image_id)).get()
+        return Image.select().where(condition).get()
     except Image.DoesNotExist:
         raise NO_SUCH_ARTICLE_IMAGE
 
