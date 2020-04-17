@@ -22,7 +22,10 @@ def _get_address():
     except AccessToken.DoesNotExist:
         raise NEWS_NOT_ENABLED
 
-    address = current_token.user.address
+    try:
+        address = current_token.user.tenement.address
+    except AttributeError:
+        raise NO_ADDRESS_CONFIGURED
 
     if address is None:
         raise NO_ADDRESS_CONFIGURED
