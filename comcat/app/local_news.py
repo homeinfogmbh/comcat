@@ -50,13 +50,13 @@ def _get_local_news_image(article_id, image_id):
 
     try:
         article = Article.select().join(Tag).where(
-            (Tag.tag == _get_city()) & (Article.id == article_id))
+            (Tag.tag == _get_city()) & (Article.id == article_id)).get()
     except Article.DoesNotExist:
         raise NO_SUCH_ARTICLE
 
     try:
         return Image.select().where(
-            (Image.article == article) & (Image.id == image_id))
+            (Image.article == article) & (Image.id == image_id)).get()
     except Image.DoesNotExist:
         raise NO_SUCH_ARTICLE_IMAGE
 
