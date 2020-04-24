@@ -52,7 +52,7 @@ def _get_local_news_article(article_id):
     condition &= Tag.tag == _get_city()
 
     try:
-        article = Article.select().join(Tag).where(condition).get()
+        return Article.select().join(Tag).where(condition).get()
     except Article.DoesNotExist:
         raise NO_SUCH_ARTICLE
 
