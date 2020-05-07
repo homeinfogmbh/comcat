@@ -1,31 +1,69 @@
 """Attachment file endpoint."""
 
+from functools import wraps
+
+from flask import request
+
 from authlib.integrations.flask_oauth2 import current_token
 
 from comcatlib import REQUIRE_OAUTH
-from comcatlib import Presentation
 from comcatlib.messages import NO_SUCH_FILE
-from hisfs import File
-from wsgilib import Binary
+from hisfs.exceptions import QuotaExceeded
+from hisfs.messages import FILE_CREATED, QUOTA_EXCEEDED
+from hisfs.orm import File, Quota
+from wsgilib import Binary, JSON
 
 
 __all__ = ['get_file']
 
 
+def get_file(ident):
+    """Returns the file with the given ID."""
+
+    try:
+        return File.get((File.id == ident) & (File.user == current_token.user))
+    except File.DoesNotExist:
+        raise NO_SUCH_FILE
+
+
+def with_file(function):
+    """Returns the respective file."""
+
+    @wraps(function)
+    def wrapper(file, *args, **kwargs):
+        """Wraps the decorated function."""
+        return function(get_file(file), *args, **kwargs)
+
+    return wrapper
+
+
 @REQUIRE_OAUTH('comcat')
-def get_file(file):
+def post(name):
+    """Adds a new file."""
+
+    bytes_ = request.get_data()
+
+    try:
+        Quota.for_customer(current_token.user.customer_id).alloc(len(bytes_))
+    except QuotaExceeded:
+        return QUOTA_EXCEEDED
+
+    file = File.add(name, current_token.user, bytes_)
+    file.save()
+    return FILE_CREATED.update(id=file.id)
+
+
+@REQUIRE_OAUTH('comcat')
+@with_file
+def get(file):
     """Returns an image file from the
     presentation for the respective account.
     """
 
-    presentation = Presentation(current_token.user)
+    if request.args.get('metadata'):
+        return JSON(file.metadata.to_json())
 
-    if file in presentation.files:
-        try:
-            file = File[file]
-        except File.DoesNotExist:
-            raise NO_SUCH_FILE
+    if request.args.get('download'):
+        return Binary(file.bytes, filename=file.name)
 
-        return Binary(file.bytes)
-
-    raise NO_SUCH_FILE  # Mitigate file sniffing.
+    return Binary(file.bytes)
