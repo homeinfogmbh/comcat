@@ -14,7 +14,7 @@ from hisfs.orm import File, Quota
 from wsgilib import Binary, JSON
 
 
-__all__ = ['get_file']
+__all__ = ['get_file', 'post', 'get', 'delete']
 
 
 def get_file(ident):
