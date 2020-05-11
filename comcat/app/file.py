@@ -9,7 +9,7 @@ from authlib.integrations.flask_oauth2 import current_token
 from comcatlib import REQUIRE_OAUTH
 from comcatlib.messages import NO_SUCH_FILE
 from hisfs.exceptions import QuotaExceeded
-from hisfs.messages import FILE_CREATED, QUOTA_EXCEEDED
+from hisfs.messages import FILE_CREATED, FILE_DELETED, QUOTA_EXCEEDED
 from hisfs.orm import File, Quota
 from wsgilib import Binary, JSON
 
@@ -67,3 +67,14 @@ def get(file):
         return Binary(file.bytes, filename=file.name)
 
     return Binary(file.bytes)
+
+
+@REQUIRE_OAUTH('comcat')
+@with_file
+def delete(file):
+    """Returns an image file from the
+    presentation for the respective account.
+    """
+
+    file.delete_instance()
+    return FILE_DELETED
