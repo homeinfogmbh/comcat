@@ -8,7 +8,7 @@ from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
 
 
-__all__ = ['list_', 'add', 'delete']
+__all__ = ['ROUTES']
 
 
 BASE_CHART_MENU_ADDED = JSONMessage('Base chart menu added.', 201)
@@ -63,3 +63,10 @@ def delete(ident):
 
     base_chart_menu.delete_instance()
     return BASE_CHART_MENU_DELETED
+
+
+ROUTES = (
+    ('GET', '/menu/<int:base_chart_id>', list_),
+    ('POST', '/menu', add),
+    ('DELETE', '/menu/<int:ident>', delete)
+)
