@@ -2,6 +2,7 @@
 
 from flask import request
 
+from cmslib.functions.charts import get_chart
 from cmslib.orm.charts import BaseChart
 from comcatlib.orm import BaseChartMenu
 from his import CUSTOMER, authenticated, authorized
@@ -34,10 +35,11 @@ def get_base_chart_menu(base_chart_menu_id):
 
 @authenticated
 @authorized('comcat')
-def list_(base_chart_id):
+def list_(ident):
     """Lists menus of the respective base chart."""
 
-    base_chart_menus = get_base_chart_menus(base_chart_id)
+    chart = get_chart(ident)
+    base_chart_menus = get_base_chart_menus(chart.base_id)
     return JSON([menu.to_json() for menu in base_chart_menus])
 
 
@@ -66,7 +68,7 @@ def delete(ident):
 
 
 ROUTES = (
-    ('GET', '/menu/<int:base_chart_id>', list_),
+    ('GET', '/menu/<int:ident>', list_),
     ('POST', '/menu', add),
     ('DELETE', '/menu/<int:ident>', delete)
 )
