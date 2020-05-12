@@ -4,7 +4,7 @@ from flask import request
 
 from cmslib.functions.charts import get_chart
 from cmslib.orm.charts import BaseChart
-from comcatlib.orm import BaseChartMenu, Menu
+from comcatlib.orm.menu import BaseChartMenu, Menu
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
 
