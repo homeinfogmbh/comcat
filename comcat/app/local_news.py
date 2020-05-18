@@ -11,7 +11,11 @@ from hinews import Article, AccessToken, Image, Tag
 from wsgilib import Binary, JSON
 
 
-__all__ = ['get_local_news_articles', 'get_local_news_image']
+__all__ = [
+    'get_local_news_article',
+    'get_local_news_articles',
+    'get_local_news_image'
+]
 
 
 def _get_address():
@@ -67,6 +71,14 @@ def _get_local_news_image(article_id, image_id):
         return Image.select().where(condition).get()
     except Image.DoesNotExist:
         raise NO_SUCH_ARTICLE_IMAGE
+
+
+@REQUIRE_OAUTH('comcat')
+def get_local_news_article(article_id):
+    """Get a single local news article."""
+
+    article = _get_local_news_article(article_id)
+    return JSON(article.to_json(preview=True))
 
 
 @REQUIRE_OAUTH('comcat')
