@@ -9,7 +9,12 @@ from damage_report import DamageReport, Attachment
 from wsgilib import JSON, JSONMessage
 
 
-__all__ = ['list_damage_reports', 'submit_damage_report']
+__all__ = [
+    'list_damage_reports',
+    'get_damage_report',
+    'submit_damage_report',
+    'get_attachment'
+]
 
 
 DENIED_FIELDS = {'address', 'timestamp', 'checked'}
