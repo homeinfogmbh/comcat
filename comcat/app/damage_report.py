@@ -48,13 +48,11 @@ def _get_damage_report(report_id):
 def _get_attachment(report_id, attachment_id):
     """Returns the respective attachment."""
 
-    select = Attachment.select().join(DamageReport).join(UserDamageReport)
     condition = Attachment.id == attachment_id
-    condition &= DamageReport.id == report_id
-    condition &= UserDamageReport.user == current_token.user
+    condition &= DamageReport.id << _get_damage_reports()
 
     try:
-        return select.where(condition).get()
+        return Attachment.select().join(DamageReport).where(condition).get()
     except Attachment.DoesNotExist:
         raise NO_SUCH_ATTACHMENT
 
@@ -85,12 +83,10 @@ def submit_damage_report():
         raise NO_ADDRESS_CONFIGURED
 
     damage_report = DamageReport.from_json(
-        request.json, current_token.user.customer, address, skip=DENIED_FIELDS
-    )
+        request.json, current_token.user.customer, address, skip=DENIED_FIELDS)
     damage_report.save()
     user_damage_report = UserDamageReport(
-        user=current_token.user, damage_report=damage_report
-    )
+        user=current_token.user, damage_report=damage_report)
     user_damage_report.save()
     return DAMAGE_REPORT_SUBMITTED
 
