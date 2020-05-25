@@ -112,7 +112,7 @@ def delete_damage_report(report_id):
     """Deletes the given damage report."""
 
     user_damage_report = _get_user_damage_report(report_id)
-    damage_report = user_damage_report
+    damage_report = user_damage_report.damage_report
 
     if not damage_report.checked:
         damage_report.delete_instance()
