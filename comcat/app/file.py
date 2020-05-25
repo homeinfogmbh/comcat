@@ -8,9 +8,9 @@ from authlib.integrations.flask_oauth2 import current_token
 
 from comcatlib import REQUIRE_OAUTH
 from comcatlib.messages import NO_SUCH_FILE
+from comcatlib.orm.files import File, Quota
 from hisfs.exceptions import QuotaExceeded
 from hisfs.messages import FILE_CREATED, FILE_DELETED, QUOTA_EXCEEDED
-from hisfs.orm import File, Quota
 from wsgilib import Binary, JSON
 
 
@@ -47,9 +47,10 @@ def post(name):
     """Adds a new file."""
 
     bytes_ = request.get_data()
+    quota = Quota.for_customer(current_token.user.customer_id)
 
     try:
-        Quota.for_customer(current_token.user.customer_id).alloc(len(bytes_))
+        quota.alloc(len(bytes_))
     except QuotaExceeded:
         return QUOTA_EXCEEDED
 
