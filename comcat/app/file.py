@@ -14,14 +14,19 @@ from hisfs.orm import File, Quota
 from wsgilib import Binary, JSON
 
 
-__all__ = ['get_file', 'post', 'get', 'delete']
+__all__ = ['ENDPOINTS']
 
 
-def get_file(ident):
+def get_file(file_id):
     """Returns the file with the given ID."""
 
+    condition = File.id == file_id
+
+    if not current_token.user.root:
+        condition &= File.user == current_token.user
+
     try:
-        return File.get((File.id == ident) & (File.user == current_token.user))
+        return File.get(condition)
     except File.DoesNotExist:
         raise NO_SUCH_FILE
 
@@ -30,9 +35,9 @@ def with_file(function):
     """Returns the respective file."""
 
     @wraps(function)
-    def wrapper(file, *args, **kwargs):
+    def wrapper(file_id, *args, **kwargs):
         """Wraps the decorated function."""
-        return function(get_file(file), *args, **kwargs)
+        return function(get_file(file_id), *args, **kwargs)
 
     return wrapper
 
@@ -78,3 +83,10 @@ def delete(file):
 
     file.delete_instance()
     return FILE_DELETED
+
+
+ENDPOINTS = (
+    (['POST'], '/file', post),
+    (['GET'], '/file/<int:file_id>', post),
+    (['DELETE'], '/file/<int:file_id>', delete)
+)
