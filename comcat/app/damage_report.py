@@ -9,7 +9,7 @@ from comcatlib.messages import ATTACHMENT_DELETED
 from comcatlib.messages import DAMAGE_REPORT_ALREADY_PROCESSED
 from comcatlib.messages import DAMAGE_REPORT_DELETED
 from comcatlib.messages import DAMAGE_REPORT_SUBMITTED
-from comcatlib.messages import NO_ADDRESS_CONFIGURED
+from comcatlib.messages import MISSING_ADDRESS
 from comcatlib.messages import NO_SUCH_ATTACHMENT
 from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
 from damage_report import DamageReport
@@ -95,7 +95,7 @@ def submit_damage_report():
     address = current_token.user.address
 
     if address is None:
-        raise NO_ADDRESS_CONFIGURED
+        raise MISSING_ADDRESS
 
     damage_report = DamageReport.from_json(
         request.json, current_token.user.customer, address,
