@@ -11,11 +11,7 @@ from hinews import Article, AccessToken, Image, Tag
 from wsgilib import Binary, JSON
 
 
-__all__ = [
-    'get_local_news_article',
-    'get_local_news_articles',
-    'get_local_news_image'
-]
+__all__ = ['ENDPOINTS']
 
 
 def _get_address():
@@ -85,9 +81,8 @@ def get_local_news_article(article_id):
 def get_local_news_articles():
     """Lists local news."""
 
-    return JSON([
-        article.to_json(preview=True) for article
-        in _get_local_news_articles()])
+    articles = _get_local_news_articles()
+    return JSON([article.to_json(preview=True) for article in articles])
 
 
 @REQUIRE_OAUTH('comcat')
@@ -100,3 +95,11 @@ def get_local_news_image(article_id, image_id):
         return Binary(image.watermarked)
     except OSError:     # Not an image.
         return Binary(image.data)
+
+
+ENDPOINTS = (
+    (['GET'], '/local-news/<int:article_id>', get_local_news_article),
+    (['GET'], '/local-news', get_local_news_articles),
+    (['GET'], '/local-news/<int:article_id>/<int:image_id>',
+     get_local_news_image)
+)
