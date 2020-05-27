@@ -57,14 +57,15 @@ def _get_local_news_article(article_id):
         raise NO_SUCH_ARTICLE
 
 
-def _get_local_news_image(article_id, image_id):
+def _get_local_news_image(image_id):
     """Yields local news articles."""
 
     condition = Image.id == image_id
-    condition &= Image.article == _get_local_news_article(article_id)
+    condition &= Tag.tag == _get_city()
+    select = Image.select().join(Article).join(Tag)
 
     try:
-        return Image.select().where(condition).get()
+        return select.where(condition).get()
     except Image.DoesNotExist:
         raise NO_SUCH_ARTICLE_IMAGE
 
@@ -86,10 +87,10 @@ def get_local_news_articles():
 
 
 @REQUIRE_OAUTH('comcat')
-def get_local_news_image(article_id, image_id):
+def get_local_news_image(image_id):
     """Returns a local news image."""
 
-    image = _get_local_news_image(article_id, image_id)
+    image = _get_local_news_image(image_id)
 
     try:
         return Binary(image.watermarked)
@@ -100,6 +101,5 @@ def get_local_news_image(article_id, image_id):
 ENDPOINTS = (
     (['GET'], '/local-news/<int:article_id>', get_local_news_article),
     (['GET'], '/local-news', get_local_news_articles),
-    (['GET'], '/local-news/<int:article_id>/<int:image_id>',
-     get_local_news_image)
+    (['GET'], '/local-news/<int:image_id>', get_local_news_image)
 )
