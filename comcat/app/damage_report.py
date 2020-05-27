@@ -115,6 +115,8 @@ def delete_damage_report(report_id):
     damage_report = user_damage_report.damage_report
 
     if not damage_report.checked:
+        # Deletion of corresponding damage report will also
+        # delete user-damage report via database cascading.
         damage_report.delete_instance()
         return DAMAGE_REPORT_DELETED
 
