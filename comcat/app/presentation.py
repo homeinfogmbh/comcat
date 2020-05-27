@@ -11,7 +11,7 @@ from comcatlib import Presentation
 from wsgilib import JSON
 
 
-__all__ = ['get_presentation']
+__all__ = ['ENDPOINTS']
 
 
 @REQUIRE_OAUTH('comcat')
@@ -27,3 +27,6 @@ def get_presentation():
 
     json['sha256sum'] = sha256sum
     return JSON(json)
+
+
+ENDPOINTS = ()  # TODO: implement.
