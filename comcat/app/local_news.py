@@ -3,7 +3,7 @@
 from authlib.integrations.flask_oauth2 import current_token
 
 from comcatlib import REQUIRE_OAUTH
-from comcatlib.messages import NO_ADDRESS_CONFIGURED
+from comcatlib.messages import MISSING_ADDRESS
 from comcatlib.messages import NEWS_NOT_ENABLED
 from comcatlib.messages import NO_SUCH_ARTICLE
 from comcatlib.messages import NO_SUCH_ARTICLE_IMAGE
@@ -25,10 +25,10 @@ def _get_address():
     try:
         address = current_token.user.tenement.address
     except AttributeError:
-        raise NO_ADDRESS_CONFIGURED
+        raise MISSING_ADDRESS
 
     if address is None:
-        raise NO_ADDRESS_CONFIGURED
+        raise MISSING_ADDRESS
 
     return address
 
