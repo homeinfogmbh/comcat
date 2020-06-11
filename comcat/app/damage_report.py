@@ -78,7 +78,7 @@ def _get_attachment(attachment_id):
 def list_damage_reports():
     """Returns a list of sent damage report."""
 
-    return JSON([report.to_dict() for report in _get_user_damage_reports()])
+    return JSON([report.to_json() for report in _get_user_damage_reports()])
 
 
 @REQUIRE_OAUTH('comcat')
