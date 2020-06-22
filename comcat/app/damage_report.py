@@ -52,6 +52,26 @@ def _get_user_damage_report(report_id):
         raise NO_SUCH_DAMAGE_REPORT
 
 
+def _get_damage_reports():
+    """Yields damage reports for the current user."""
+
+    condition = _get_damage_report_condition()
+    select = DamageReport.select().join(UserDamageReport).join(User)
+    return select.where(condition)
+
+
+def _get_damage_report(report_id):
+    """Returns a damage report with the given ID."""
+
+    condition = _get_damage_report_condition()
+    condition &= UserDamageReport.id == report_id
+
+    try:
+        return DamageReport.select().join(UserDamageReport).join(User).get()
+    except DamageReport.DoesNotExist:
+        raise NO_SUCH_DAMAGE_REPORT
+
+
 def _get_attachments(report_id):
     """Returns the attachments of the given damage report."""
 
@@ -78,15 +98,14 @@ def _get_attachment(attachment_id):
 def list_damage_reports():
     """Returns a list of sent damage report."""
 
-    return JSON([report.to_json() for report in _get_user_damage_reports()])
+    return JSON([report.to_json() for report in _get_damage_reports()])
 
 
 @REQUIRE_OAUTH('comcat')
 def get_damage_report(report_id):
     """Returns a damage report."""
 
-    user_damage_report = _get_user_damage_report(report_id)
-    return JSON(user_damage_report.damage_report.to_json())
+    return JSON(_get_damage_report(report_id).to_json())
 
 
 @REQUIRE_OAUTH('comcat')
