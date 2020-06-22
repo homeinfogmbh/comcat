@@ -93,7 +93,7 @@ def get_damage_report(report_id):
 def submit_damage_report():
     """Submits a new damage report."""
 
-    address = current_token.user.address
+    address = current_token.user.tenement.address
 
     if address is None:
         raise MISSING_ADDRESS
