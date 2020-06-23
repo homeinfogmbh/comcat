@@ -1,6 +1,7 @@
 """Management of charts assigned to ComCat accounts."""
 
 from flask import request
+from peewee import JOIN
 
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
@@ -25,9 +26,9 @@ def list_ubc(user):
     """
 
     return UserBaseChart.select().join(
-        User, join_type='LEFT', on=USER_JOIN
+        User, join_type=JOIN.LEFT_OUTER, on=USER_JOIN
     ).join(
-        BaseChart, join_type='LEFT', on=BASE_CHART_JOIN
+        BaseChart, join_type=JOIN.LEFT_OUTER, on=BASE_CHART_JOIN
     ).where(
         (User.customer == CUSTOMER.id) & (User.id == user)
         & (BaseChart.trashed == 0)
