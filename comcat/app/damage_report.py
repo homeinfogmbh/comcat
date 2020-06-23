@@ -3,9 +3,9 @@
 from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 
-from comcatlib import REQUIRE_OAUTH,
-from comcatlib import User,
-from comcatlib import UserDamageReport,
+from comcatlib import REQUIRE_OAUTH
+from comcatlib import User
+from comcatlib import UserDamageReport
 from comcatlib import DamageReportAttachment
 from comcatlib.messages import ATTACHMENT_ADDED
 from comcatlib.messages import ATTACHMENT_DELETED
