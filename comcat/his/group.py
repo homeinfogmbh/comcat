@@ -69,7 +69,7 @@ def add(gid):
         group_member_user = GroupMemberUser.get(
             (GroupMemberUser.group == group)
             & (GroupMemberUser.user == user))
-    except GroupMemberUser.DoesNotEixst:
+    except GroupMemberUser.DoesNotExist:
         group_member_user = GroupMemberUser(group=group, user=user)
         group_member_user.save()
 
