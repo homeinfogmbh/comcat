@@ -39,9 +39,9 @@ def get(ident):
 @authenticated
 @authorized('comcat')
 def list_(user):
-    """Returns a list of IDs of the menus in the respective account."""
+    """Returns a list of user menus in the respective account."""
 
-    return JSON([user_menu.menu.id for user_menu in list_user_menus(user)])
+    return JSON([user_menu.to_json() for user_menu in list_user_menus(user)])
 
 
 @authenticated
