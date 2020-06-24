@@ -51,7 +51,7 @@ def add():
 
     user_menu = UserMenu.from_json(request.json)
     user_menu.save()
-    return CONTENT_ADDED
+    return CONTENT_ADDED.update(id=user_menu.id)
 
 
 @authenticated
