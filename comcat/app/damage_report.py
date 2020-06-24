@@ -30,11 +30,7 @@ DENIED_FIELDS = {'address', 'timestamp', 'checked'}
 def _get_damage_report_condition():
     """Damage report selection condition."""
 
-    condition_owner = UserDamageReport.user == current_token.user
-    condition_other = UserDamageReport.user != current_token.user
-    condition_other &= UserDamageReport.private == 0
-    condition_other &= User.tenement == current_token.user.tenement
-    return condition_owner | condition_other
+    return UserDamageReport.user == current_token.user
 
 
 def _get_user_damage_reports():
