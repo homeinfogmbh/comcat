@@ -14,7 +14,7 @@ from hisfs.messages import FILE_CREATED, FILE_DELETED, QUOTA_EXCEEDED
 from wsgilib import Binary, JSON
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ENDPOINTS', 'get_file']
 
 
 def get_file(file_id):
@@ -88,6 +88,6 @@ def delete(file):
 
 ENDPOINTS = (
     (['POST'], '/file', post),
-    (['GET'], '/file/<int:file_id>', post),
+    (['GET'], '/file/<int:file_id>', get),
     (['DELETE'], '/file/<int:file_id>', delete)
 )
