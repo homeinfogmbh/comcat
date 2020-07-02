@@ -43,7 +43,7 @@ def with_file(function):
 
 
 @REQUIRE_OAUTH('comcat')
-def post(name):
+def post():
     """Adds a new file."""
 
     bytes_ = request.get_data()
@@ -54,7 +54,7 @@ def post(name):
     except QuotaExceeded:
         return QUOTA_EXCEEDED
 
-    file = File.add(name, current_token.user, bytes_)
+    file = File.add(current_token.user, bytes_)
     file.save()
     return FILE_CREATED.update(id=file.id)
 
@@ -87,7 +87,7 @@ def delete(file):
 
 
 ENDPOINTS = (
-    (['POST'], '/file/<name>', post),
+    (['POST'], '/file', post),
     (['GET'], '/file/<int:file_id>', get),
     (['DELETE'], '/file/<int:file_id>', delete)
 )
