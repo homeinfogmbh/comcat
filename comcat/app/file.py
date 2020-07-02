@@ -87,7 +87,7 @@ def delete(file):
 
 
 ENDPOINTS = (
-    (['POST'], '/file', post),
+    (['POST'], '/file/<name>', post),
     (['GET'], '/file/<int:file_id>', get),
     (['DELETE'], '/file/<int:file_id>', delete)
 )
