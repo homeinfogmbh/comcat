@@ -161,9 +161,9 @@ def get_attachment(attachment_id):
 def submit_attachment():
     """Adds an attachment for the given damage report."""
 
-    report_id = request.json.pop('report')
+    user_damage_report_id = request.json.pop('userDamageReport')
     file_id = request.json.pop('file')
-    user_damage_report = _get_user_damage_report(report_id)
+    user_damage_report = _get_user_damage_report(user_damage_report_id)
     file = get_file(file_id)
     attachment = DamageReportAttachment(
         user_damage_report=user_damage_report, file=file)
