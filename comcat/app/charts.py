@@ -11,6 +11,9 @@ from comcatlib.orm.content import UserBaseChart
 from comcatlib.orm.group import GroupMemberUser
 
 
+__all__ = ['ENDPOINTS']
+
+
 def user_groups(user):
     """Yields all groups the given deployment is a member of."""
 
