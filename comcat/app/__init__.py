@@ -12,12 +12,15 @@ from comcat.app.common import APPLICATION
 __all__ = ['APPLICATION']
 
 
-ENDPOINTS = sum(
-    (damage_report.ENDPOINTS, local_news.ENDPOINTS, lpt.ENDPOINTS,
-     related_files.ENDPOINTS, user_files.ENDPOINTS),
-    charts.ENDPOINTS
-)
+ENDPOINTS = {
+    'charts': charts.ENDPOINTS,
+    'damage_report': damage_report.ENDPOINTS,
+    'local_news': local_news.ENDPOINTS,
+    'lpt': lpt.ENDPOINTS,
+    'related_files': related_files.ENDPOINTS,
+    'user_files': user_files.ENDPOINTS
+}
 
 
-for methods, path, function in ENDPOINTS:
-    APPLICATION.route(path, methods=methods)(function)
+for endpoint, (methods, path, function) in ENDPOINTS.items():
+    APPLICATION.route(path, methods=methods, endpoint=endpoint)(function)
