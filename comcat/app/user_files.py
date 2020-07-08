@@ -1,4 +1,4 @@
-"""Attachment file endpoint."""
+"""User files endpoint."""
 
 from functools import wraps
 
@@ -35,9 +35,9 @@ def with_file(function):
     """Returns the respective file."""
 
     @wraps(function)
-    def wrapper(file_id, *args, **kwargs):
+    def wrapper(ident, *args, **kwargs):
         """Wraps the decorated function."""
-        return function(get_file(file_id), *args, **kwargs)
+        return function(get_file(ident), *args, **kwargs)
 
     return wrapper
 
@@ -78,16 +78,14 @@ def get(file):
 @REQUIRE_OAUTH('comcat')
 @with_file
 def delete(file):
-    """Returns an image file from the
-    presentation for the respective account.
-    """
+    """Deletes a user file."""
 
     file.delete_instance()
     return FILE_DELETED
 
 
 ENDPOINTS = (
-    (['POST'], '/file', post),
-    (['GET'], '/file/<int:file_id>', get),
-    (['DELETE'], '/file/<int:file_id>', delete)
+    (['POST'], '/user-file', post),
+    (['GET'], '/user-file/<int:ident>', get),
+    (['DELETE'], '/user-file/<int:ident>', delete)
 )
