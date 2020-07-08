@@ -18,7 +18,7 @@ from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
 from damage_report import DamageReport
 from wsgilib import JSON
 
-from comcat.app.file import get_file
+from comcat.app.user_file import get_file
 
 
 __all__ = ['ENDPOINTS']
