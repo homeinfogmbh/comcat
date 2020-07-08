@@ -22,5 +22,6 @@ ENDPOINTS = {
 }
 
 
-for endpoint, (methods, path, function) in ENDPOINTS.items():
-    APPLICATION.route(path, methods=methods, endpoint=endpoint)(function)
+for name, endpoints in ENDPOINTS.items():
+    for methods, path, function in endpoints:
+        APPLICATION.route(path, methods=methods, endpoint=name)(function)
