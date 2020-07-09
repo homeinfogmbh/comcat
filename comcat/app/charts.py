@@ -7,6 +7,7 @@ from cmslib.orm.charts import BaseChart
 from cmslib.orm.content.group import GroupBaseChart
 from wsgilib import JSON
 
+from comcatlib import REQUIRE_OAUTH
 from comcatlib.orm.content import UserBaseChart
 from comcatlib.orm.group import GroupMemberUser
 

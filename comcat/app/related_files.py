@@ -1,5 +1,6 @@
 """Read-only endpoint for data-related files from HISFS."""
 
+from comcatlib import REQUIRE_OAUTH
 from comcatlib.messages import NO_SUCH_FILE
 from wsgilib import Binary
 
