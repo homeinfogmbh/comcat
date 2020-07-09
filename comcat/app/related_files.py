@@ -24,6 +24,7 @@ def allowed_files():
     return files
 
 
+@REQUIRE_OAUTH('comcat')
 def get(ident):
     """Gets a data-related hisfs file."""
 

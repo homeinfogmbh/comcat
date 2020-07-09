@@ -39,12 +39,14 @@ def get_base_chart(ident):
     return get_user_base_charts().where(BaseChart.id == ident)
 
 
+@REQUIRE_OAUTH('comcat')
 def list_():
     """Lists available charts."""
 
     return JSON([bc.chart.to_json() for bc in get_user_base_charts()])
 
 
+@REQUIRE_OAUTH('comcat')
 def get(ident):
     """Returns a chart by it's base chart ID."""
 
