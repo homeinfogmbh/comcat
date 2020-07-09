@@ -37,7 +37,7 @@ def get_user_base_charts():
 def get_base_chart(ident):
     """Returns a base chart."""
 
-    return get_user_base_charts().where(BaseChart.id == ident)
+    return get_user_base_charts().where(BaseChart.id == ident).get()
 
 
 @REQUIRE_OAUTH('comcat')
