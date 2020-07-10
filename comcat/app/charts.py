@@ -10,6 +10,7 @@ from wsgilib import JSON
 from comcatlib import REQUIRE_OAUTH
 from comcatlib.orm.content import UserBaseChart
 from comcatlib.orm.group import GroupMemberUser
+from comcatlib.orm.menu import BaseChartMenu
 
 
 __all__ = ['ENDPOINTS']
@@ -34,17 +35,25 @@ def get_user_base_charts():
         BaseChart).join(GroupBaseChart, JOIN.LEFT_OUTER).where(condition)
 
 
-def get_base_chart(ident):
-    """Returns a base chart."""
+def get_menus(base_chart):
+    """Yields the menus for the base chart."""
 
-    return get_user_base_charts().where(BaseChart.id == ident).get()
+    return BaseChartMenu.select().where(BaseChartMenu.base_chart == base_chart)
+
+
+def jsonify_base_chart(base_chart):
+    """Returns a JSON-ish representation of the base chart."""
+
+    json = base_chart.chart.to_json()
+    json['base']['menus'] = [menu.menu.value for menu in get_menus(base_chart)]
+    return json
 
 
 @REQUIRE_OAUTH('comcat')
 def list_():
     """Lists available charts."""
 
-    return JSON([bc.chart.to_json() for bc in get_user_base_charts()])
+    return JSON([jsonify_base_chart(bc) for bc in get_user_base_charts()])
 
 
 ENDPOINTS = ((['GET'], '/charts', list_),)
