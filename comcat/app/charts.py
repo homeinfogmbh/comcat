@@ -47,14 +47,4 @@ def list_():
     return JSON([bc.chart.to_json() for bc in get_user_base_charts()])
 
 
-@REQUIRE_OAUTH('comcat')
-def get(ident):
-    """Returns a chart by it's base chart ID."""
-
-    return JSON(get_base_chart(ident).chart.to_json())
-
-
-ENDPOINTS = (
-    (['GET'], '/charts', list_),
-    (['GET'], '/chart/<int:ident>', get)
-)
+ENDPOINTS = ((['GET'], '/charts', list_),)
