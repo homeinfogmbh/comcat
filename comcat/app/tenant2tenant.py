@@ -7,7 +7,6 @@ from tenant2tenant import TenantMessage, Visibility
 from wsgilib import JSON
 
 from comcatlib.orm.tenant2tenant import UserTenantMessage
-from comcatlib.orm.user import User
 
 
 __all__ = ['ENDPOINTS']
