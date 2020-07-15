@@ -13,13 +13,26 @@ from comcatlib.orm.user import User
 __all__ = ['ENDPOINTS']
 
 
-def user_tenant_messages(user):
-    """Yields tenant-to-tenant messages public to the given user."""
+def tenant_messages():
+    """Yields the tenant-to-tenant messages the current user may access."""
+
+    user = current_token.user
+
+    if user.root:
+        # Root users can see all tenant-to-tenant messages.
+        return TenantMessage.select()
+
+    if user.admin:
+        # Admins can see all tenant-to-tenant messages of their company.
+        condition = User.customer == user.customer
+        select = TenantMessage.join(UserTenantMessage).join(User)
+        return select.where(condition)
 
     condition = (
         # Own messages.
         (UserTenantMessage.issuer == user)
         | (
+            # Messages by same customer.
             (TenantMessage.customer == user.customer)
             & (
                 (
@@ -38,24 +51,6 @@ def user_tenant_messages(user):
     select = TenantMessage.select().join(
         UserTenantMessage, join_type=JOIN.LEFT_OUTER)
     return select.where(condition)
-
-
-def tenant_messages():
-    """Yields the tenant-to-tenant messages the current user may access."""
-
-    user = current_token.user
-
-    if user.root:
-        # Root users can see all tenant-to-tenant messages.
-        return TenantMessage.select()
-
-    if user.admin:
-        # Admins can see all tenant-to-tenant messages of their company.
-        condition = User.customer == user.customer
-        select = TenantMessage.join(UserTenantMessage).join(User)
-        return select.where(condition)
-
-    return user_tenant_messages(user)
 
 
 def list_():
