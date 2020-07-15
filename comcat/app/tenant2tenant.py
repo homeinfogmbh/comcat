@@ -15,8 +15,8 @@ __all__ = ['ENDPOINTS']
 def own_tenant_messages(user):
     """Yields tenant-to-tenant messages owned by the given user."""
 
-    condition = UserTenantMessage.issuer == user
-    return TenantMessage.select().join(UserTenantMessage).where(condition)
+    return TenantMessage.select().join(UserTenantMessage).where(
+        UserTenantMessage.issuer == user)
 
 
 def public_tenant_messages(user):
