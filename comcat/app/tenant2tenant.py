@@ -1,6 +1,7 @@
 """ORM-related functions."""
 
 from authlib.integrations.flask_oauth2 import current_token
+from peewee import JOIN
 
 from tenant2tenant import TenantMessage, Visibility
 from wsgilib import JSON
@@ -12,48 +13,31 @@ from comcatlib.orm.user import User
 __all__ = ['ENDPOINTS']
 
 
-def own_tenant_messages(user):
-    """Yields tenant-to-tenant messages owned by the given user."""
-
-    return TenantMessage.select().join(UserTenantMessage).where(
-        UserTenantMessage.issuer == user)
-
-
-def public_tenant_messages(user):
+def user_tenant_messages(user):
     """Yields tenant-to-tenant messages public to the given user."""
 
     condition = (
-        (TenantMessage.customer == user.customer)
-        & (
-            (
-                # If the visibility is set to customer-wide,
-                # show all those entries of the same customer.
-                TenantMessage.visibility == Visibility.CUSTOMER
-            ) | (
-                # If the visibility is restricted to tenement, only
-                # show entries of the same customer and address.
-                (TenantMessage.visibility == Visibility.TENEMENT)
-                & (TenantMessage.address == user.tenement.address)
+        # Own messages.
+        (UserTenantMessage.issuer == user)
+        | (
+            (TenantMessage.customer == user.customer)
+            & (
+                (
+                    # If the visibility is set to customer-wide,
+                    # show all those entries of the same customer.
+                    TenantMessage.visibility == Visibility.CUSTOMER
+                ) | (
+                    # If the visibility is restricted to tenement, only
+                    # show entries of the same customer and address.
+                    (TenantMessage.visibility == Visibility.TENEMENT)
+                    & (TenantMessage.address == user.tenement.address)
+                )
             )
         )
     )
-    return TenantMessage.select().where(condition)
-
-
-def user_tenant_messages(user):
-    """Yields the tenant-to-tenant messages
-    that a standard user may access.
-    """
-
-    messages = set()
-
-    for message in own_tenant_messages(user):
-        messages.add(message)
-
-    for message in public_tenant_messages(user):
-        messages.add(message)
-
-    return messages
+    select = TenantMessage.select().join(
+        UserTenantMessage, join_type=JOIN.LEFT_OUTER)
+    return select.where(condition)
 
 
 def tenant_messages():
