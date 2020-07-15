@@ -24,7 +24,8 @@ def tenant_messages():
 
     if user.admin:
         # Admins can see all tenant-to-tenant messages of their company.
-        return TenantMessage.where(TenantMessage.customer == user.customer)
+        return TenantMessage.select().where(
+            TenantMessage.customer == user.customer)
 
     condition = (
         # Own messages.
