@@ -32,7 +32,8 @@ def tenant_messages():
         # Own messages.
         (UserTenantMessage.issuer == user)
         | (
-            # Messages by same customer.
+            # Show messages of the same customer
+            # under the following conditions.
             (TenantMessage.customer == user.customer)
             & (
                 (
