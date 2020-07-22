@@ -1,6 +1,7 @@
-"""ORM-related functions."""
+"""Tenant-to-tenant endpoint."""
 
 from authlib.integrations.flask_oauth2 import current_token
+from flask import request
 from peewee import JOIN
 
 from tenant2tenant import TenantMessage, Visibility
@@ -58,6 +59,18 @@ def list_():
     return JSON([msg.to_json() for msg in tenant_messages()])
 
 
+def post():
+    """Adds a new tenant-to-tenant message."""
+
+    tenant_message = TenantMessage.from_json(request.json)
+    tenant_message.save()
+    user_tenant_message = UserTenantMessage(
+        tenant_message=tenant_message, user=current_token.user)
+    user_tenant_message.save()
+    return TENANT_MESSAGE_ADDED.update(id=user_tenant_message.id)
+
+
 ENDPOINTS = (
     (['GET'], '/tenant2tenant', list_),
+    (['POST'], '/tenant2tenant', post)
 )

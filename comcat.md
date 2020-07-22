@@ -18,7 +18,7 @@ Im Folgenden werden die Web-Application endpoints für die Smartphone-Anwenung b
 * `/file`             Abfragen und Senden von Binärdateien.
 * `/local-news`       Abfragen von lokalen Nachrichten.
 * `/ltp`              Abfragen von ÖPNV Verbindungen.
-* `/presentation`     Abfragen der Präsentationsdaten.
+* `/charts`           Abfragen von zugeordneten Charts.
 
 #### `/login`
 Der Endpoint `/login` erwaret eine POST-Request mit JSON-Body, welcher folgenden Datensatz enthält:
