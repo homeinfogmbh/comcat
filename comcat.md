@@ -7,6 +7,7 @@ ComCat ist ein Softwareprojekt zur Bereitellung eine Smartphone-Anwendung zur Mi
 Im Folgenden werden die Web-Application endpoints für die Smartphone-Anwenung beschrieben.
 
 #### Meta-Dienste
+* `/client`             Client Registrierung.
 * `/login`              Zur Anmeldung von Benutzern ("User").
 * `/oauth/authorize`    Authorisierung von OAuth Clients durch den User.
 * `/oauth/token`        Ausstellung von Bearer Tokens für die Clients.
@@ -21,12 +22,10 @@ Im Folgenden werden die Web-Application endpoints für die Smartphone-Anwenung b
 * `/charts`           Abfragen von zugeordneten Charts.
 
 #### `/login`
-Der Endpoint `/login` erwaret eine POST-Request mit JSON-Body, welcher folgenden Datensatz enthält:
+Der Endpoint `/login` erwaret eine POST-Request mit Form-Body, welcher folgenden Datensatz enthält:
 
-    {
-        "uuid": <uuid>,
-        "passwd": <password>
-    }
+* "uuid": <uuid>
+* "passwd": <password>
 
 Dabei ist `uuid` die UUID des entsprechenden Users und `passwd` das Passwort des Users.
 
