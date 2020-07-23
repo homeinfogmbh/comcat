@@ -1,6 +1,6 @@
 """ComCat application backend."""
 
-from flask import Flask
+from flask import Flask, session
 from flask_cors import CORS
 
 from comcatlib import init_oauth, init_oauth_endpoints
@@ -25,6 +25,13 @@ def init_app(application):
 init_oauth(APPLICATION)
 init_oauth_endpoints(APPLICATION)
 init_app(APPLICATION)
+
+
+@APPLICATION.before_first_request
+def init():
+    """Initializes the app."""
+
+    session.clear()
 
 
 @APPLICATION.errorhandler(Response)
