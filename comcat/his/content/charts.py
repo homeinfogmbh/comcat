@@ -20,19 +20,22 @@ USER_JOIN = UserBaseChart.user == User.id
 BASE_CHART_JOIN = UserBaseChart.base_chart == BaseChart.id
 
 
-def list_ubc(user):
+def list_ubc(user=None):
     """Yields the user's base charts of the
     current customer for the respective user.
     """
 
+    condition = User.customer == CUSTOMER.id
+
+    if user is not None:
+        condition &= User.id == user
+
+    condition &= BaseChart.trashed == 0
     return UserBaseChart.select().join(
         User, join_type=JOIN.LEFT_OUTER, on=USER_JOIN
     ).join(
         BaseChart, join_type=JOIN.LEFT_OUTER, on=BASE_CHART_JOIN
-    ).where(
-        (User.customer == CUSTOMER.id) & (User.id == user)
-        & (BaseChart.trashed == 0)
-    )
+    ).where(condition)
 
 
 def get_ubc(ident):
@@ -41,6 +44,19 @@ def get_ubc(ident):
     return UserBaseChart.select().join(User).where(
         (UserBaseChart.id == ident) & (User.customer == CUSTOMER.id)
     ).get()
+
+
+@authenticated
+@authorized('comcat')
+def mapping():
+    """Returns a mapping of base-chart → user."""
+
+    json = {}
+
+    for ubc in list_ubc():
+        json[ubc.base_chart_id] = ubc.user_id
+
+    return JSON(json)
 
 
 @authenticated
@@ -99,6 +115,7 @@ def delete(ident):
 
 
 ROUTES = (
+    ('GET', '/content/user/base-chart', mapping),
     ('GET', '/content/user/base-chart/<int:ident>', get),
     ('GET', '/content/user/<int:user>/base-chart', list_),
     ('POST', '/content/user/base-chart', add),
