@@ -3,28 +3,18 @@
 from flask import Flask, session
 from flask_cors import CORS
 
-from comcatlib import init_oauth, init_oauth_endpoints
+from comcatlib import init_app
 from wsgilib import JSONMessage, Response
 
 
-__all__ = ['APPLICATION', 'DOMAIN']
+__all__ = ['APPLICATION']
 
 
 APPLICATION = Flask('comcat')
 CORS(APPLICATION, supports_credentials=True)
-DOMAIN = 'wohninfo.homeinfo.de'
-
-
-def init_app(application):
-    """Initializes the application."""
-
-    application.secret_key = '/usr/local/etc/comcat.secret'
-    application.config['SESSION_TYPE'] = 'filesystem'
-
-
-init_oauth(APPLICATION)
-init_oauth_endpoints(APPLICATION)
 init_app(APPLICATION)
+APPLICATION.secret_key = '/usr/local/etc/comcat.secret'
+APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 
 
 @APPLICATION.before_first_request
