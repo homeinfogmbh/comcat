@@ -18,7 +18,7 @@ APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 
 
 @APPLICATION.before_first_request
-def init():
+def before_first_request():
     """Initializes the app."""
 
     session.clear()
@@ -26,7 +26,7 @@ def init():
 
 @APPLICATION.errorhandler(Response)
 @APPLICATION.errorhandler(JSONMessage)
-def handle_raised_message(message):
+def errorhandler(message):
     """Returns the respective message."""
 
     return message
