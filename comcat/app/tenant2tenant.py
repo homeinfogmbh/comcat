@@ -4,7 +4,7 @@ from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 from peewee import JOIN
 
-from tenant2tenant import TenantMessage, Visibility
+from tenant2tenant import MESSAGE_ADDED, TenantMessage, Visibility
 from wsgilib import JSON
 
 from comcatlib.orm.tenant2tenant import UserTenantMessage
@@ -34,6 +34,8 @@ def tenant_messages():
             # Show messages of the same customer
             # under the following conditions.
             (TenantMessage.customer == user.customer)
+            # Only show released messages.
+            & (TenantMessage.released == 1)
             & (
                 (
                     # If the visibility is set to customer-wide,
@@ -67,7 +69,7 @@ def post():
     user_tenant_message = UserTenantMessage(
         tenant_message=tenant_message, user=current_token.user)
     user_tenant_message.save()
-    return TENANT_MESSAGE_ADDED.update(id=user_tenant_message.id)
+    return MESSAGE_ADDED.update(id=user_tenant_message.id)
 
 
 ENDPOINTS = (
