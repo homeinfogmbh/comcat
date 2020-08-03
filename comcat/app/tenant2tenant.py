@@ -1,10 +1,16 @@
 """Tenant-to-tenant endpoint."""
 
+from datetime import datetime
+
 from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 from peewee import JOIN
 
-from tenant2tenant import MESSAGE_ADDED, TenantMessage, Visibility
+from tenant2tenant import MESSAGE_ADDED
+from tenant2tenant import email
+from tenant2tenant import Configuration
+from tenant2tenant import TenantMessage
+from tenant2tenant import Visibility
 from wsgilib import JSON
 
 from comcatlib.orm.tenant2tenant import UserTenantMessage
@@ -55,6 +61,26 @@ def tenant_messages():
     return select.where(condition)
 
 
+def _add_message():
+    """Adds a tenant message."""
+
+    customer = current_token.user.customer
+    address = current_token.user.tenement.address
+    message = request.json['message']
+    tenant_message = TenantMessage.add(customer, address, message)
+    tenant_message.subject = request.json.get('subject') or None
+    configuration = Configuration.for_customer(customer)
+
+    if configuration.auto_release:
+        tenant_message.released = True
+        tenant_message.start_date = now = datetime.now()
+        tenant_message.end_date = now + configuration.release_time
+
+    tenant_message.save()
+    #email(tenant_message)  # Notify customer about new message.
+    return tenant_message
+
+
 def list_():
     """Lists all tenant-to-tenant messages."""
 
@@ -64,8 +90,7 @@ def list_():
 def post():
     """Adds a new tenant-to-tenant message."""
 
-    tenant_message = TenantMessage.from_json(request.json)
-    tenant_message.save()
+    tenant_message = _add_message()
     user_tenant_message = UserTenantMessage(
         tenant_message=tenant_message, user=current_token.user)
     user_tenant_message.save()
