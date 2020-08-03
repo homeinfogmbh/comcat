@@ -7,7 +7,7 @@ from flask import request
 from peewee import JOIN
 
 from tenant2tenant import MESSAGE_ADDED
-from tenant2tenant import email
+#from tenant2tenant import email
 from tenant2tenant import Configuration
 from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
@@ -69,6 +69,13 @@ def _add_message():
     message = request.json['message']
     tenant_message = TenantMessage.add(customer, address, message)
     tenant_message.subject = request.json.get('subject') or None
+    visibility = request.json.get('visibility')
+
+    if visibility:
+        tenant_message.visibility = Visibility(visibility)
+    else:
+        tenant_message.visibility = Visibility.TENEMENT
+
     configuration = Configuration.for_customer(customer)
 
     if configuration.auto_release:
