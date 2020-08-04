@@ -7,6 +7,8 @@ from flask import request
 from peewee import JOIN
 
 from tenant2tenant import MESSAGE_ADDED
+from tenant2tenant import MESSAGE_DELETED
+from tenant2tenant import NO_SUCH_MESSAGE
 #from tenant2tenant import email
 from tenant2tenant import Configuration
 from tenant2tenant import TenantMessage
@@ -61,6 +63,15 @@ def tenant_messages():
     return select.where(condition)
 
 
+def _get_message(ident):
+    """Returns a tenant-to-tenant message."""
+
+    try:
+        return tenant_messages().where(UserTenantMessage.id == ident)
+    except TenantMessage.DoesNotExist:
+        raise NO_SUCH_MESSAGE
+
+
 def _add_message():
     """Adds a tenant message."""
 
@@ -104,7 +115,15 @@ def post():
     return MESSAGE_ADDED.update(id=user_tenant_message.id)
 
 
+def delete(ident):
+    """Deletes a tenant-to-tenant message."""
+
+    _get_message(ident).delete_instance()
+    return MESSAGE_DELETED
+
+
 ENDPOINTS = (
     (['GET'], '/tenant2tenant', list_),
-    (['POST'], '/tenant2tenant', post)
+    (['POST'], '/tenant2tenant', post),
+    (['DELETE'], '/tenant2tenant/<int:ident>', delete)
 )
