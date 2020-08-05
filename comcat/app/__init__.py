@@ -5,6 +5,7 @@ from comcat.app import damage_report
 from comcat.app import local_news
 from comcat.app import lpt
 from comcat.app import related_files
+from comcat.app import tenant2tenant
 from comcat.app import user_files
 from comcat.app.common import APPLICATION
 
@@ -18,6 +19,7 @@ ENDPOINTS = {
     'local_news': local_news.ENDPOINTS,
     'lpt': lpt.ENDPOINTS,
     'related_files': related_files.ENDPOINTS,
+    'tenant2tenant': tenant2tenant.ENDPOINTS,
     'user_files': user_files.ENDPOINTS
 }
 
