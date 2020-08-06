@@ -65,7 +65,7 @@ def tenant_messages():
 
 
 def _get_message(ident):
-    """Returns a tenant-to-tenant message."""
+    """Returns a tenant-to-tenant message owned by the current user."""
 
     condition = (
         (UserTenantMessage.id == ident)
