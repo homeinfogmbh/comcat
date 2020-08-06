@@ -67,8 +67,14 @@ def tenant_messages():
 def _get_message(ident):
     """Returns a tenant-to-tenant message."""
 
+    condition = (
+        (UserTenantMessage.id == ident)
+        & (UserTenantMessage.issuer == current_token.user)
+    )
+    select = TenantMessage.select().join(UserTenantMessage)
+
     try:
-        return tenant_messages().where(UserTenantMessage.id == ident)
+        return select.where(condition).get()
     except TenantMessage.DoesNotExist:
         raise NO_SUCH_MESSAGE
 
