@@ -3,6 +3,7 @@
 from flask import request
 from peewee import JOIN
 
+from cmslib.functions.chart import get_chart
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_PATCHED
@@ -44,19 +45,6 @@ def get_ubc(ident):
     return UserBaseChart.select().join(User).where(
         (UserBaseChart.id == ident) & (User.customer == CUSTOMER.id)
     ).get()
-
-
-@authenticated
-@authorized('comcat')
-def mapping():
-    """Returns a mapping of base-chart → user."""
-
-    json = {}
-
-    for ubc in list_ubc():
-        json[ubc.base_chart_id] = ubc.user_id
-
-    return JSON(json)
 
 
 @authenticated
@@ -114,11 +102,26 @@ def delete(ident):
     return CONTENT_DELETED.update(id=user_base_chart.id)
 
 
+@authenticated
+@authorized('comcat')
+def chart_accounts(ident):
+    """Returns a mapping of base-chart → user."""
+
+    chart = get_chart(ident)
+    users = []
+
+    for user_base_chart in UserBaseChart.select().where(
+            UserBaseChart.base_chart == chart.base):
+        users.append(user_base_chart.user)
+
+    return JSON(users)
+
+
 ROUTES = (
-    ('GET', '/content/user/base-chart', mapping),
     ('GET', '/content/user/base-chart/<int:ident>', get),
     ('GET', '/content/user/<int:user>/base-chart', list_),
     ('POST', '/content/user/base-chart', add),
     ('PATCH', '/content/user/base-chart/<int:ident>', patch),
-    ('DELETE', '/content/user/base-chart/<int:ident>', delete)
+    ('DELETE', '/content/user/base-chart/<int:ident>', delete),
+    ('GET', '/content/user/chart-accounts/<int:ident>', chart_accounts),
 )
