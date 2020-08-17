@@ -123,5 +123,5 @@ ROUTES = (
     ('POST', '/content/user/base-chart', add),
     ('PATCH', '/content/user/base-chart/<int:ident>', patch),
     ('DELETE', '/content/user/base-chart/<int:ident>', delete),
-    ('GET', '/content/user/chart-accounts/<int:ident>', chart_accounts),
+    ('GET', '/content/user/chart-accounts/<int:ident>', chart_accounts)
 )
