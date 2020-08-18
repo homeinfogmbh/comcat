@@ -112,7 +112,7 @@ def chart_accounts(ident):
 
     for user_base_chart in UserBaseChart.select().where(
             UserBaseChart.base_chart == chart.base):
-        users.append(user_base_chart.user)
+        users.append(user_base_chart.user_id)
 
     return JSON(users)
 
