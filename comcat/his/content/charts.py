@@ -3,7 +3,7 @@
 from flask import request
 from peewee import JOIN
 
-from cmslib.functions.chart import get_chart
+from cmslib.functions.charts import get_chart
 from cmslib.messages.content import CONTENT_ADDED
 from cmslib.messages.content import CONTENT_DELETED
 from cmslib.messages.content import CONTENT_PATCHED
