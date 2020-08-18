@@ -22,7 +22,7 @@ from comcatlib.orm.tenant2tenant import UserTenantMessage
 __all__ = ['ENDPOINTS']
 
 
-def tenant_messages():
+def _get_messages():
     """Yields the tenant-to-tenant messages the current user may access."""
 
     user = current_token.user
@@ -110,7 +110,7 @@ def _add_message():
 def list_():
     """Lists all tenant-to-tenant messages."""
 
-    return JSON([msg.to_json() for msg in tenant_messages()])
+    return JSON([msg.to_json() for msg in _get_messages()])
 
 
 @REQUIRE_OAUTH('comcat')

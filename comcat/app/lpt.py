@@ -20,6 +20,4 @@ def get_departures():
     return JSON({'source': source, 'stops': stops})
 
 
-ENDPOINTS = (
-    (['GET'], '/lpt', get_departures),
-)
+ENDPOINTS = ((['GET'], '/lpt', get_departures),)
