@@ -104,17 +104,14 @@ def delete(ident):
 
 @authenticated
 @authorized('comcat')
-def chart_accounts(ident):
-    """Returns a mapping of base-chart → user."""
+def chart_user_base_charts(ident):
+    """Returns a list of UserBaseChart for the given chart."""
 
     chart = get_chart(ident)
-    users = []
-
-    for user_base_chart in UserBaseChart.select().where(
-            UserBaseChart.base_chart == chart.base):
-        users.append(user_base_chart.user_id)
-
-    return JSON(users)
+    user_base_charts = UserBaseChart.select().where(
+        UserBaseChart.base_chart == chart.base)
+    users_base_charts = [ubc.to_json() for ubc in user_base_charts]
+    return JSON(users_base_charts)
 
 
 ROUTES = (
@@ -123,5 +120,6 @@ ROUTES = (
     ('POST', '/content/user/base-chart', add),
     ('PATCH', '/content/user/base-chart/<int:ident>', patch),
     ('DELETE', '/content/user/base-chart/<int:ident>', delete),
-    ('GET', '/content/user/chart-accounts/<int:ident>', chart_accounts)
+    ('GET', '/content/user/user-base-charts/<int:ident>',
+     chart_user_base_charts)
 )
