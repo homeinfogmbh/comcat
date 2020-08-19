@@ -52,7 +52,7 @@ def get_ubc(ident):
 def get(ident):
     """Returns the respective UserBaseChart."""
 
-    return JSON(get_ubc(ident).to_json())
+    return JSON(get_ubc(ident).to_json(chart=True))
 
 
 @authenticated
@@ -60,7 +60,7 @@ def get(ident):
 def list_(user):
     """Returns a list of UserBaseCharts of the given user."""
 
-    return JSON([ubc.to_json() for ubc in list_ubc(user)])
+    return JSON([ubc.to_json(chart=True) for ubc in list_ubc(user)])
 
 
 @authenticated
