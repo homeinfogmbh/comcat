@@ -4,7 +4,6 @@ from datetime import datetime
 
 from authlib.integrations.flask_oauth2 import current_token
 from flask import request
-from peewee import JOIN
 
 from tenant2tenant import MESSAGE_ADDED
 from tenant2tenant import MESSAGE_DELETED
@@ -22,6 +21,39 @@ from comcatlib.orm.tenant2tenant import UserTenantMessage
 __all__ = ['ENDPOINTS']
 
 
+def _get_own_messages():
+    """Returns messages owned by the user."""
+
+    return UserTenantMessage.select().where(
+        UserTenantMessage.issuer == current_token.user)
+
+
+def _get_related_messages():
+    """Get messages not owned by oneself."""
+
+    user = current_token.user
+    condition = (
+        # Show messages of the same customer
+        # under the following conditions.
+        (TenantMessage.customer == user.customer)
+        # Only show released messages.
+        & (TenantMessage.released == 1)
+        & (
+            (
+                # If the visibility is set to customer-wide,
+                # show all those entries of the same customer.
+                TenantMessage.visibility == Visibility.CUSTOMER
+            ) | (
+                # If the visibility is restricted to tenement, only
+                # show entries of the same customer and address.
+                (TenantMessage.visibility == Visibility.TENEMENT)
+                & (TenantMessage.address == user.tenement.address)
+            )
+        )
+    )
+    return TenantMessage.select().where(condition)
+
+
 def _get_messages():
     """Yields the tenant-to-tenant messages the current user may access."""
 
@@ -29,48 +61,40 @@ def _get_messages():
 
     if user.root:
         # Root users can see all tenant-to-tenant messages.
-        return TenantMessage.select()
+        yield from TenantMessage.select()
+    elif user.admin:
+        # Admins can see all tenant-to-tenant messages of their company.
+        yield from TenantMessage.select().where(
+            TenantMessage.customer == user.customer)
+    else:
+        yield from _get_own_messages()
+        yield from  _get_related_messages()
+
+
+def _get_deletable_message(ident):
+    """Returns a tenant-to-tenant message
+    that the current user may delete.
+    """
+
+    user = current_token.user
+
+    if user.root:
+        try:
+            return TenantMessage[ident]
+        except TenantMessage.DoesNotExist:
+            raise NO_SUCH_MESSAGE
+
+    condition = TenantMessage.customer == user.customer
+    condition &= TenantMessage.id == ident
 
     if user.admin:
-        # Admins can see all tenant-to-tenant messages of their company.
-        return TenantMessage.select().where(
-            TenantMessage.customer == user.customer)
-
-    condition = (
-        # Own messages.
-        (UserTenantMessage.issuer == user)
-        | (
-            # Show messages of the same customer
-            # under the following conditions.
-            (TenantMessage.customer == user.customer)
-            # Only show released messages.
-            & (TenantMessage.released == 1)
-            & (
-                (
-                    # If the visibility is set to customer-wide,
-                    # show all those entries of the same customer.
-                    TenantMessage.visibility == Visibility.CUSTOMER
-                ) | (
-                    # If the visibility is restricted to tenement, only
-                    # show entries of the same customer and address.
-                    (TenantMessage.visibility == Visibility.TENEMENT)
-                    & (TenantMessage.address == user.tenement.address)
-                )
-            )
-        )
-    )
-    select = TenantMessage.select().join(
-        UserTenantMessage, join_type=JOIN.LEFT_OUTER)
-    return select.where(condition)
+        try:
+            return TenantMessage.select().where(condition).get()
+        except TenantMessage.DoesNotExist:
+            raise NO_SUCH_MESSAGE
 
 
-def _get_message(ident):
-    """Returns a tenant-to-tenant message owned by the current user."""
-
-    condition = (
-        (UserTenantMessage.id == ident)
-        & (UserTenantMessage.issuer == current_token.user)
-    )
+    condition &= UserTenantMessage.issuer == current_token.user
     select = TenantMessage.select().join(UserTenantMessage)
 
     try:
@@ -128,7 +152,7 @@ def post():
 def delete(ident):
     """Deletes a tenant-to-tenant message."""
 
-    _get_message(ident).delete_instance()
+    _get_deletable_message(ident).delete_instance()
     return MESSAGE_DELETED
 
 
