@@ -136,7 +136,7 @@ def post():
     user_tenant_message = UserTenantMessage(
         tenant_message=tenant_message, user=current_token.user)
     user_tenant_message.save()
-    return MESSAGE_ADDED.update(id=user_tenant_message.id)
+    return MESSAGE_ADDED.update(id=tenant_message.id)
 
 
 @REQUIRE_OAUTH('comcat')
