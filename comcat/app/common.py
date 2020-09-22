@@ -1,5 +1,7 @@
 """ComCat application backend."""
 
+from uuid import uuid4
+
 from flask import Flask, session
 
 from comcatlib import init_app
@@ -11,7 +13,7 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Flask('comcat')
 init_app(APPLICATION)
-APPLICATION.secret_key = '/usr/local/etc/comcat.secret'
+APPLICATION.secret_key = uuid4().bytes
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 
 
