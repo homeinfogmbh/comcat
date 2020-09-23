@@ -116,7 +116,7 @@ def get_presentation(user):
 ROUTES = (
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
-    ('POST', '/user', add, 'add_account'),
+    ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
     ('GET', '/user/<int:ident>/presentation', get_presentation)
