@@ -3,7 +3,7 @@
 from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import oauth
 from comcatlib import User
 from comcatlib import UserDamageReport
 from comcatlib import DamageReportAttachment
@@ -93,21 +93,21 @@ def _get_attachment(attachment_id):
         raise NO_SUCH_ATTACHMENT
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def list_damage_reports():
     """Returns a list of sent damage report."""
 
     return JSON([report.to_json() for report in _get_damage_reports()])
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def get_damage_report(report_id):
     """Returns a damage report."""
 
     return JSON(_get_damage_report(report_id).to_json())
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def submit_damage_report():
     """Submits a new damage report."""
 
@@ -126,7 +126,7 @@ def submit_damage_report():
     return DAMAGE_REPORT_SUBMITTED.update(id=user_damage_report.id)
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def delete_damage_report(report_id):
     """Deletes the given damage report."""
 
@@ -142,14 +142,14 @@ def delete_damage_report(report_id):
     return DAMAGE_REPORT_ALREADY_PROCESSED
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def list_attachments(report_id):
     """Returns a list of available attachments for the damage report."""
 
     return JSON([attachment.id for attachment in _get_attachments(report_id)])
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def get_attachment(attachment_id):
     """Returns an image from the damage report."""
 
@@ -157,7 +157,7 @@ def get_attachment(attachment_id):
     return JSON(attachment.to_json())
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def submit_attachment():
     """Adds an attachment for the given damage report."""
 
@@ -171,7 +171,7 @@ def submit_attachment():
     return ATTACHMENT_ADDED.update(id=attachment.id)
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def delete_attachment(attachment_id):
     """Removes the respective attachment."""
 

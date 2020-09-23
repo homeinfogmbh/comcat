@@ -2,7 +2,7 @@
 
 from authlib.integrations.flask_oauth2 import current_token
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import oauth
 from lptlib import get_departures as _get_departures
 from wsgilib import JSON
 
@@ -10,7 +10,7 @@ from wsgilib import JSON
 __all__ = ['ENDPOINTS']
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def get_departures():
     """Returns the departures."""
 

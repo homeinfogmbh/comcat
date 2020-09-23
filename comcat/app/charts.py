@@ -9,7 +9,7 @@ from cmslib.orm.charts import BaseChart
 from cmslib.orm.content.group import GroupBaseChart
 from wsgilib import JSON
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import oauth
 from comcatlib.orm.content import UserBaseChart
 from comcatlib.orm.group import GroupMemberUser
 from comcatlib.orm.menu import BaseChartMenu
@@ -56,7 +56,7 @@ def jsonify_base_chart(base_chart):
     return json
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def list_():
     """Lists available charts."""
 

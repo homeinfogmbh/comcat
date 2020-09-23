@@ -2,7 +2,7 @@
 
 from authlib.integrations.flask_oauth2 import current_token
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import oauth
 from comcatlib.messages import MISSING_ADDRESS
 from comcatlib.messages import NEWS_NOT_ENABLED
 from comcatlib.messages import NO_SUCH_ARTICLE
@@ -70,7 +70,7 @@ def _get_local_news_image(image_id):
         raise NO_SUCH_ARTICLE_IMAGE
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def get_local_news_article(article_id):
     """Get a single local news article."""
 
@@ -78,7 +78,7 @@ def get_local_news_article(article_id):
     return JSON(article.to_json(preview=True))
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def get_local_news_articles():
     """Lists local news."""
 
@@ -86,7 +86,7 @@ def get_local_news_articles():
     return JSON([article.to_json(preview=True) for article in articles])
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def get_local_news_image(image_id):
     """Returns a local news image."""
 

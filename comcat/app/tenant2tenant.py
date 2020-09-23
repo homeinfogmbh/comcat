@@ -15,7 +15,7 @@ from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
 from wsgilib import JSON
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import oauth
 from comcatlib.orm.tenant2tenant import UserTenantMessage
 
 
@@ -121,14 +121,14 @@ def _add_message():
     return tenant_message
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def list_():
     """Lists all tenant-to-tenant messages."""
 
     return JSON([msg.to_json() for msg in _get_messages()])
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def post():
     """Adds a new tenant-to-tenant message."""
 
@@ -139,7 +139,7 @@ def post():
     return MESSAGE_ADDED.update(id=tenant_message.id)
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def delete(ident):
     """Deletes a tenant-to-tenant message."""
 

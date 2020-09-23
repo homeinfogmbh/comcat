@@ -6,7 +6,7 @@ from flask import request
 
 from authlib.integrations.flask_oauth2 import current_token
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import oauth
 from comcatlib.messages import NO_SUCH_FILE
 from comcatlib.orm.files import File, Quota
 from hisfs.exceptions import QuotaExceeded
@@ -42,7 +42,7 @@ def with_file(function):
     return wrapper
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 def post():
     """Adds a new file."""
 
@@ -59,7 +59,7 @@ def post():
     return FILE_CREATED.update(id=file.id)
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 @with_file
 def get(file):
     """Returns an image file from the
@@ -75,7 +75,7 @@ def get(file):
     return Binary(file.bytes)
 
 
-@REQUIRE_OAUTH('comcat')
+@oauth('comcat')
 @with_file
 def delete(file):
     """Deletes a user file."""
