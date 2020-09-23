@@ -57,7 +57,7 @@ def get(user):
 def add():
     """Adds a new ComCat user."""
 
-    user = User.from_json(request.json, CUSTOMER.id, skip=('uuid',))
+    user = User.from_json(request.json, CUSTOMER.id, skip={'uuid'})
     user.save()
     return USER_ADDED.update(id=user.id, uuid=user.uuid.hex)
 
