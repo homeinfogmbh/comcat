@@ -2,6 +2,8 @@
 
 from flask import request
 
+from comcatlib import ADDRESS
+from comcatlib import CUSTOMER
 from comcatlib import REQUIRE_OAUTH
 from comcatlib import USER
 from comcatlib import User
@@ -11,7 +13,6 @@ from comcatlib.messages import ATTACHMENT_DELETED
 from comcatlib.messages import DAMAGE_REPORT_ALREADY_PROCESSED
 from comcatlib.messages import DAMAGE_REPORT_DELETED
 from comcatlib.messages import DAMAGE_REPORT_SUBMITTED
-from comcatlib.messages import MISSING_ADDRESS
 from comcatlib.messages import NO_SUCH_ATTACHMENT
 from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
 from damage_report import Attachment, DamageReport
@@ -104,13 +105,8 @@ def get_damage_report(report_id):
 def submit_damage_report():
     """Submits a new damage report."""
 
-    address = USER.tenement.address
-
-    if address is None:
-        raise MISSING_ADDRESS
-
     damage_report = DamageReport.from_json(
-        request.json, USER.customer, address, skip=DENIED_FIELDS)
+        request.json, CUSTOMER.id, ADDRESS.id, skip=DENIED_FIELDS)
     damage_report.save()
     user_damage_report = UserDamageReport(
         user=USER.id, damage_report=damage_report)

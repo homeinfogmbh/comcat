@@ -14,7 +14,7 @@ from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
 from wsgilib import JSON
 
-from comcatlib import REQUIRE_OAUTH, USER
+from comcatlib import ADDRESS, CUSTOMER, REQUIRE_OAUTH, USER
 from comcatlib.orm.tenant2tenant import UserTenantMessage
 
 
@@ -27,14 +27,14 @@ def _get_messages():
     if USER.admin:
         # Admins can see all tenant-to-tenant messages of their company.
         return TenantMessage.select().where(
-            TenantMessage.customer == USER.customer)
+            TenantMessage.customer == CUSTOMER.id)
 
     condition = (
         (UserTenantMessage.user == USER.id)
         | (
             # Show messages of the same customer
             # under the following conditions.
-            (TenantMessage.customer == USER.customer)
+            (TenantMessage.customer == CUSTOMER.id)
             # Only show released messages.
             & (TenantMessage.released == 1)
             & (
@@ -46,7 +46,7 @@ def _get_messages():
                     # If the visibility is restricted to tenement, only
                     # show entries of the same customer and address.
                     (TenantMessage.visibility == Visibility.TENEMENT)
-                    & (TenantMessage.address == USER.tenement.address)
+                    & (TenantMessage.address == ADDRESS.id)
                 )
             )
         )
@@ -60,7 +60,7 @@ def _get_deletable_message(ident):
     that the current user may delete.
     """
 
-    condition = TenantMessage.customer == USER.customer
+    condition = TenantMessage.customer == CUSTOMER.id
     condition &= TenantMessage.id == ident
 
     if USER.admin:
@@ -82,10 +82,8 @@ def _get_deletable_message(ident):
 def _add_message():
     """Adds a tenant message."""
 
-    customer = USER.customer
-    address = USER.tenement.address
     message = request.json['message']
-    tenant_message = TenantMessage.add(customer, address, message)
+    tenant_message = TenantMessage.add(CUSTOMER.id, ADDRESS.id, message)
     tenant_message.subject = request.json.get('subject') or None
     visibility = request.json.get('visibility')
 
@@ -94,7 +92,7 @@ def _add_message():
     else:
         tenant_message.visibility = Visibility.TENEMENT
 
-    configuration = Configuration.for_customer(customer)
+    configuration = Configuration.for_customer(CUSTOMER.id)
 
     if configuration.auto_release:
         tenant_message.released = True

@@ -1,7 +1,6 @@
 """Local news endpoint."""
 
-from comcatlib import REQUIRE_OAUTH, USER
-from comcatlib.messages import MISSING_ADDRESS
+from comcatlib import ADDRESS, CUSTOMER, REQUIRE_OAUTH
 from comcatlib.messages import NEWS_NOT_ENABLED
 from comcatlib.messages import NO_SUCH_ARTICLE
 from comcatlib.messages import NO_SUCH_ARTICLE_IMAGE
@@ -16,19 +15,11 @@ def _get_address():
     """Returns the local news address."""
 
     try:
-        AccessToken.get(AccessToken.customer == USER.customer)
+        AccessToken.get(AccessToken.customer == CUSTOMER.id)
     except AccessToken.DoesNotExist:
         raise NEWS_NOT_ENABLED from None
 
-    try:
-        address = USER.tenement.address
-    except AttributeError:
-        raise MISSING_ADDRESS from None
-
-    if address is None:
-        raise MISSING_ADDRESS from None
-
-    return address
+    return ADDRESS
 
 
 def _get_city():
