@@ -24,10 +24,6 @@ __all__ = ['ENDPOINTS']
 def _get_messages():
     """Yields the tenant-to-tenant messages the current user may access."""
 
-    if USER.root:
-        # Root users can see all tenant-to-tenant messages.
-        return TenantMessage.select()
-
     if USER.admin:
         # Admins can see all tenant-to-tenant messages of their company.
         return TenantMessage.select().where(
@@ -63,12 +59,6 @@ def _get_deletable_message(ident):
     """Returns a tenant-to-tenant message
     that the current user may delete.
     """
-
-    if USER.root:
-        try:
-            return TenantMessage[ident]
-        except TenantMessage.DoesNotExist:
-            raise NO_SUCH_MESSAGE from None
 
     condition = TenantMessage.customer == USER.customer
     condition &= TenantMessage.id == ident

@@ -19,9 +19,7 @@ def get_file(file_id):
     """Returns the file with the given ID."""
 
     condition = File.id == file_id
-
-    if not USER.root:
-        condition &= File.user == USER.id
+    condition &= File.user == USER.id
 
     try:
         return File.get(condition)
