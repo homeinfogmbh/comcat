@@ -2,7 +2,6 @@
 
 from datetime import datetime
 
-from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 from peewee import JOIN
 
@@ -15,7 +14,7 @@ from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
 from wsgilib import JSON
 
-from comcatlib import oauth
+from comcatlib import REQUIRE_OAUTH, USER
 from comcatlib.orm.tenant2tenant import UserTenantMessage
 
 
@@ -25,23 +24,21 @@ __all__ = ['ENDPOINTS']
 def _get_messages():
     """Yields the tenant-to-tenant messages the current user may access."""
 
-    user = current_token.user
-
-    if user.root:
+    if USER.root:
         # Root users can see all tenant-to-tenant messages.
         return TenantMessage.select()
 
-    if user.admin:
+    if USER.admin:
         # Admins can see all tenant-to-tenant messages of their company.
         return TenantMessage.select().where(
-            TenantMessage.customer == user.customer)
+            TenantMessage.customer == USER.customer)
 
     condition = (
-        (UserTenantMessage.user == user)
+        (UserTenantMessage.user == USER.id)
         | (
             # Show messages of the same customer
             # under the following conditions.
-            (TenantMessage.customer == user.customer)
+            (TenantMessage.customer == USER.customer)
             # Only show released messages.
             & (TenantMessage.released == 1)
             & (
@@ -53,7 +50,7 @@ def _get_messages():
                     # If the visibility is restricted to tenement, only
                     # show entries of the same customer and address.
                     (TenantMessage.visibility == Visibility.TENEMENT)
-                    & (TenantMessage.address == user.tenement.address)
+                    & (TenantMessage.address == USER.tenement.address)
                 )
             )
         )
@@ -67,25 +64,23 @@ def _get_deletable_message(ident):
     that the current user may delete.
     """
 
-    user = current_token.user
-
-    if user.root:
+    if USER.root:
         try:
             return TenantMessage[ident]
         except TenantMessage.DoesNotExist:
             raise NO_SUCH_MESSAGE
 
-    condition = TenantMessage.customer == user.customer
+    condition = TenantMessage.customer == USER.customer
     condition &= TenantMessage.id == ident
 
-    if user.admin:
+    if USER.admin:
         try:
             return TenantMessage.select().where(condition).get()
         except TenantMessage.DoesNotExist:
             raise NO_SUCH_MESSAGE
 
 
-    condition &= UserTenantMessage.user == current_token.user
+    condition &= UserTenantMessage.user == USER.id
     select = TenantMessage.select().join(UserTenantMessage)
 
     try:
@@ -97,8 +92,8 @@ def _get_deletable_message(ident):
 def _add_message():
     """Adds a tenant message."""
 
-    customer = current_token.user.customer
-    address = current_token.user.tenement.address
+    customer = USER.customer
+    address = USER.tenement.address
     message = request.json['message']
     tenant_message = TenantMessage.add(customer, address, message)
     tenant_message.subject = request.json.get('subject') or None
@@ -121,25 +116,25 @@ def _add_message():
     return tenant_message
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def list_():
     """Lists all tenant-to-tenant messages."""
 
     return JSON([msg.to_json() for msg in _get_messages()])
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def post():
     """Adds a new tenant-to-tenant message."""
 
     tenant_message = _add_message()
     user_tenant_message = UserTenantMessage(
-        tenant_message=tenant_message, user=current_token.user)
+        tenant_message=tenant_message, user=USER.id)
     user_tenant_message.save()
     return MESSAGE_ADDED.update(id=tenant_message.id)
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def delete(ident):
     """Deletes a tenant-to-tenant message."""
 

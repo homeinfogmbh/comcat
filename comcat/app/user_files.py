@@ -4,9 +4,7 @@ from functools import wraps
 
 from flask import request
 
-from authlib.integrations.flask_oauth2 import current_token
-
-from comcatlib import oauth
+from comcatlib import REQUIRE_OAUTH, USER
 from comcatlib.messages import NO_SUCH_FILE
 from comcatlib.orm.files import File, Quota
 from hisfs.exceptions import QuotaExceeded
@@ -22,8 +20,8 @@ def get_file(file_id):
 
     condition = File.id == file_id
 
-    if not current_token.user.root:
-        condition &= File.user == current_token.user
+    if not USER.root:
+        condition &= File.user == USER.id
 
     try:
         return File.get(condition)
@@ -42,24 +40,24 @@ def with_file(function):
     return wrapper
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def post():
     """Adds a new file."""
 
     bytes_ = request.get_data()
-    quota = Quota.for_customer(current_token.user.customer_id)
+    quota = Quota.for_customer(USER.customer_id)
 
     try:
         quota.alloc(len(bytes_))
     except QuotaExceeded:
         return QUOTA_EXCEEDED
 
-    file = File.add(current_token.user, bytes_)
+    file = File.add(USER.id, bytes_)
     file.save()
     return FILE_CREATED.update(id=file.id)
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 @with_file
 def get(file):
     """Returns an image file from the
@@ -75,7 +73,7 @@ def get(file):
     return Binary(file.bytes)
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 @with_file
 def delete(file):
     """Deletes a user file."""

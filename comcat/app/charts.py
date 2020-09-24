@@ -2,14 +2,13 @@
 
 from contextlib import suppress
 
-from authlib.integrations.flask_oauth2 import current_token
 from peewee import JOIN
 
 from cmslib.orm.charts import BaseChart
 from cmslib.orm.content.group import GroupBaseChart
 from wsgilib import JSON
 
-from comcatlib import oauth
+from comcatlib import REQUIRE_OAUTH, USER
 from comcatlib.orm.content import UserBaseChart
 from comcatlib.orm.group import GroupMemberUser
 from comcatlib.orm.menu import BaseChartMenu
@@ -18,10 +17,10 @@ from comcatlib.orm.menu import BaseChartMenu
 __all__ = ['ENDPOINTS']
 
 
-def user_groups(user):
+def user_groups():
     """Yields all groups the given deployment is a member of."""
 
-    condition = GroupMemberUser.user == user
+    condition = GroupMemberUser.user == USER.id
 
     for gmu in GroupMemberUser.select().where(condition):
         yield gmu.group
@@ -31,8 +30,8 @@ def user_groups(user):
 def get_user_base_charts():
     """Yields base charts, the current user has access to."""
 
-    condition = UserBaseChart.user == current_token.user
-    condition |= GroupBaseChart.group << set(user_groups(current_token.user))
+    condition = UserBaseChart.user == USER.id
+    condition |= GroupBaseChart.group << set(user_groups())
     condition &= BaseChart.trashed == 0     # Exclude trashed charts.
     return BaseChart.select().join(UserBaseChart, JOIN.LEFT_OUTER).join_from(
         BaseChart, GroupBaseChart, JOIN.LEFT_OUTER).where(condition)
@@ -56,7 +55,7 @@ def jsonify_base_chart(base_chart):
     return json
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def list_():
     """Lists available charts."""
 

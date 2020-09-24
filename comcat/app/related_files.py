@@ -1,6 +1,6 @@
 """Read-only endpoint for data-related files from HISFS."""
 
-from comcatlib import oauth
+from comcatlib import REQUIRE_OAUTH
 from comcatlib.messages import NO_SUCH_FILE
 from wsgilib import Binary
 
@@ -25,7 +25,7 @@ def allowed_files():
     return files
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def get(ident):
     """Gets a data-related hisfs file."""
 

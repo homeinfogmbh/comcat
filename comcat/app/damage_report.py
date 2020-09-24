@@ -1,9 +1,9 @@
 """Damage report endpoints."""
 
-from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 
-from comcatlib import oauth
+from comcatlib import REQUIRE_OAUTH
+from comcatlib import USER
 from comcatlib import User
 from comcatlib import UserDamageReport
 from comcatlib import DamageReportAttachment
@@ -30,7 +30,7 @@ DENIED_FIELDS = {'address', 'timestamp', 'checked'}
 def _get_damage_report_condition():
     """Damage report selection condition."""
 
-    return UserDamageReport.user == current_token.user
+    return UserDamageReport.user == USER.id
 
 
 def _get_user_damage_reports():
@@ -48,7 +48,7 @@ def _get_user_damage_report(report_id):
     try:
         return _get_user_damage_reports().where(condition).get()
     except DamageReport.DoesNotExist:
-        raise NO_SUCH_DAMAGE_REPORT
+        raise NO_SUCH_DAMAGE_REPORT from None
 
 
 def _get_damage_reports():
@@ -68,7 +68,7 @@ def _get_damage_report(report_id):
     try:
         return DamageReport.select().join(UserDamageReport).join(User).get()
     except DamageReport.DoesNotExist:
-        raise NO_SUCH_DAMAGE_REPORT
+        raise NO_SUCH_DAMAGE_REPORT from None
 
 
 def _get_attachments(report_id):
@@ -90,43 +90,42 @@ def _get_attachment(attachment_id):
     try:
         return select.where(condition).get()
     except DamageReportAttachment.DoesNotExist:
-        raise NO_SUCH_ATTACHMENT
+        raise NO_SUCH_ATTACHMENT from None
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def list_damage_reports():
     """Returns a list of sent damage report."""
 
     return JSON([report.to_json() for report in _get_damage_reports()])
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def get_damage_report(report_id):
     """Returns a damage report."""
 
     return JSON(_get_damage_report(report_id).to_json())
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def submit_damage_report():
     """Submits a new damage report."""
 
-    address = current_token.user.tenement.address
+    address = USER.tenement.address
 
     if address is None:
         raise MISSING_ADDRESS
 
     damage_report = DamageReport.from_json(
-        request.json, current_token.user.customer, address,
-        skip=DENIED_FIELDS)
+        request.json, USER.customer, address, skip=DENIED_FIELDS)
     damage_report.save()
     user_damage_report = UserDamageReport(
-        user=current_token.user, damage_report=damage_report)
+        user=USER.id, damage_report=damage_report)
     user_damage_report.save()
     return DAMAGE_REPORT_SUBMITTED.update(id=user_damage_report.id)
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def delete_damage_report(report_id):
     """Deletes the given damage report."""
 
@@ -142,14 +141,14 @@ def delete_damage_report(report_id):
     return DAMAGE_REPORT_ALREADY_PROCESSED
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def list_attachments(report_id):
     """Returns a list of available attachments for the damage report."""
 
     return JSON([attachment.id for attachment in _get_attachments(report_id)])
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def get_attachment(attachment_id):
     """Returns an image from the damage report."""
 
@@ -157,7 +156,7 @@ def get_attachment(attachment_id):
     return JSON(attachment.to_json())
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def submit_attachment():
     """Adds an attachment for the given damage report."""
 
@@ -171,7 +170,7 @@ def submit_attachment():
     return ATTACHMENT_ADDED.update(id=attachment.id)
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def delete_attachment(attachment_id):
     """Removes the respective attachment."""
 

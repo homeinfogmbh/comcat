@@ -1,8 +1,6 @@
 """Local news endpoint."""
 
-from authlib.integrations.flask_oauth2 import current_token
-
-from comcatlib import oauth
+from comcatlib import REQUIRE_OAUTH, USER
 from comcatlib.messages import MISSING_ADDRESS
 from comcatlib.messages import NEWS_NOT_ENABLED
 from comcatlib.messages import NO_SUCH_ARTICLE
@@ -18,17 +16,17 @@ def _get_address():
     """Returns the local news address."""
 
     try:
-        AccessToken.get(AccessToken.customer == current_token.user.customer)
+        AccessToken.get(AccessToken.customer == USER.customer)
     except AccessToken.DoesNotExist:
-        raise NEWS_NOT_ENABLED
+        raise NEWS_NOT_ENABLED from None
 
     try:
-        address = current_token.user.tenement.address
+        address = USER.tenement.address
     except AttributeError:
-        raise MISSING_ADDRESS
+        raise MISSING_ADDRESS from None
 
     if address is None:
-        raise MISSING_ADDRESS
+        raise MISSING_ADDRESS from None
 
     return address
 
@@ -54,7 +52,7 @@ def _get_local_news_article(article_id):
     try:
         return Article.select().join(Tag).where(condition).get()
     except Article.DoesNotExist:
-        raise NO_SUCH_ARTICLE
+        raise NO_SUCH_ARTICLE from None
 
 
 def _get_local_news_image(image_id):
@@ -67,10 +65,10 @@ def _get_local_news_image(image_id):
     try:
         return select.where(condition).get()
     except Image.DoesNotExist:
-        raise NO_SUCH_ARTICLE_IMAGE
+        raise NO_SUCH_ARTICLE_IMAGE from None
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def get_local_news_article(article_id):
     """Get a single local news article."""
 
@@ -78,7 +76,7 @@ def get_local_news_article(article_id):
     return JSON(article.to_json(preview=True))
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def get_local_news_articles():
     """Lists local news."""
 
@@ -86,7 +84,7 @@ def get_local_news_articles():
     return JSON([article.to_json(preview=True) for article in articles])
 
 
-@oauth('comcat')
+@REQUIRE_OAUTH('comcat')
 def get_local_news_image(image_id):
     """Returns a local news image."""
 
