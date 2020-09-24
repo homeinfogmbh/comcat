@@ -10,19 +10,24 @@ from comcat.app.charts import get_user_base_charts
 __all__ = ['ENDPOINTS']
 
 
-def allowed_files():
-    """Yields files the current user is allowed to access."""
+class NoSuchFile(Exception):
+    """Indicates that the respective file could not be found."""
 
-    files = {}
+
+def get_file(ident):
+    """Yields files the current user is allowed to access."""
 
     for base_chart in get_user_base_charts():
         try:
-            for file in base_chart.chart.files:
-                files[file.id] = file
+            files = base_chart.chart.files
         except AttributeError:
             continue
 
-    return files
+        for file in files:
+            if file.id == ident:
+                return file
+
+    raise NoSuchFile()
 
 
 @REQUIRE_OAUTH('comcat')
@@ -30,8 +35,8 @@ def get(ident):
     """Gets a data-related hisfs file."""
 
     try:
-        file = allowed_files()[ident]
-    except KeyError:
+        file = get_file(ident)
+    except NoSuchFile:
         return NO_SUCH_FILE
 
     return Binary(file.bytes)

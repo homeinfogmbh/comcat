@@ -18,7 +18,7 @@ from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
 from damage_report import Attachment, DamageReport
 from wsgilib import JSON
 
-from comcat.app.user_files import get_file
+from comcat.app.user_files import get_user_file
 
 
 __all__ = ['ENDPOINTS']
@@ -49,29 +49,18 @@ def _get_damage_reports():
     """Yields damage reports for the current user."""
 
     condition = UserDamageReport.user == USER.id
-    select = DamageReport.select().join(UserDamageReport).join(User)
-    return select.where(condition)
+    return DamageReport.select().join(UserDamageReport).where(condition)
 
 
 def _get_damage_report(report_id):
     """Returns a damage report with the given ID."""
 
-    condition = UserDamageReport.user == USER.id
-    condition &= UserDamageReport.id == report_id
+    condition = UserDamageReport.id == report_id
 
     try:
-        return DamageReport.select().join(UserDamageReport).join(User).get()
+        return _get_damage_reports().where(condition).get()
     except DamageReport.DoesNotExist:
         raise NO_SUCH_DAMAGE_REPORT from None
-
-
-def _get_attachments(report_id):
-    """Returns the attachments of the given damage report."""
-
-    select = Attachment.select().join(DamageReport).join(UserDamageReport)
-    condition = UserDamageReport.user == USER.id
-    condition &= DamageReport.id == report_id
-    return select.where(condition)
 
 
 def _get_attachment(attachment_id):
@@ -131,30 +120,15 @@ def delete_damage_report(report_id):
 
 
 @REQUIRE_OAUTH('comcat')
-def list_attachments(report_id):
-    """Returns a list of available attachments for the damage report."""
-
-    return JSON([attachment.id for attachment in _get_attachments(report_id)])
-
-
-@REQUIRE_OAUTH('comcat')
-def get_attachment(attachment_id):
-    """Returns an image from the damage report."""
-
-    attachment = _get_attachment(attachment_id)
-    return JSON(attachment.to_json())
-
-
-@REQUIRE_OAUTH('comcat')
 def submit_attachment():
     """Adds an attachment for the given damage report."""
 
     user_damage_report_id = request.json.pop('userDamageReport')
     file_id = request.json.pop('file')
     user_damage_report = _get_user_damage_report(user_damage_report_id)
-    file = get_file(file_id)
+    user_file = get_user_file(file_id)
     attachment = Attachment(
-        damage_report=user_damage_report.damage_report, file=file.file)
+        damage_report=user_damage_report.damage_report, file=user_file.file)
     attachment.save()
     return ATTACHMENT_ADDED.update(id=attachment.id)
 
@@ -173,8 +147,6 @@ ENDPOINTS = (
     (['GET'], '/damage-report/<int:report_id>', get_damage_report),
     (['POST'], '/damage-report', submit_damage_report),
     (['DELETE'], '/damage-report/<int:report_id>', delete_damage_report),
-    (['GET'], '/damage-report/<int:report_id>/attachment', list_attachments),
-    (['GET'], '/damage-report/attachment/<int:attachment_id>', get_attachment),
     (['POST'], '/damage-report/attachment', submit_attachment),
     (['DELETE'], '/damage-report/attachment/<int:attachment_id>',
      delete_attachment),
