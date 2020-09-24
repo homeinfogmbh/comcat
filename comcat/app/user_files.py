@@ -4,11 +4,9 @@ from functools import wraps
 
 from flask import request
 
-from comcatlib import REQUIRE_OAUTH, USER
+from comcatlib import REQUIRE_OAUTH, USER, add_file, UserFile
 from comcatlib.messages import NO_SUCH_FILE
-from comcatlib.orm.files import File, Quota
-from hisfs.exceptions import QuotaExceeded
-from hisfs.messages import FILE_CREATED, FILE_DELETED, QUOTA_EXCEEDED
+from hisfs.messages import FILE_CREATED, FILE_DELETED
 from wsgilib import Binary, JSON
 
 
@@ -18,12 +16,12 @@ __all__ = ['ENDPOINTS', 'get_file']
 def get_file(file_id):
     """Returns the file with the given ID."""
 
-    condition = File.id == file_id
-    condition &= File.user == USER.id
+    condition = UserFile.id == file_id
+    condition &= UserFile.user == USER.id
 
     try:
-        return File.get(condition)
-    except File.DoesNotExist:
+        return UserFile.get(condition)
+    except UserFile.DoesNotExist:
         raise NO_SUCH_FILE from None
 
 
@@ -43,16 +41,8 @@ def post():
     """Adds a new file."""
 
     bytes_ = request.get_data()
-    quota = Quota.for_customer(USER.customer_id)
-
-    try:
-        quota.alloc(len(bytes_))
-    except QuotaExceeded:
-        return QUOTA_EXCEEDED
-
-    file = File.add(USER.id, bytes_)
-    file.save()
-    return FILE_CREATED.update(id=file.id)
+    user_file = add_file(bytes_)
+    return FILE_CREATED.update(id=user_file.id)
 
 
 @REQUIRE_OAUTH('comcat')
