@@ -6,7 +6,6 @@ from comcatlib import REQUIRE_OAUTH
 from comcatlib import USER
 from comcatlib import User
 from comcatlib import UserDamageReport
-from comcatlib import DamageReportAttachment
 from comcatlib.messages import ATTACHMENT_ADDED
 from comcatlib.messages import ATTACHMENT_DELETED
 from comcatlib.messages import DAMAGE_REPORT_ALREADY_PROCESSED
@@ -15,7 +14,7 @@ from comcatlib.messages import DAMAGE_REPORT_SUBMITTED
 from comcatlib.messages import MISSING_ADDRESS
 from comcatlib.messages import NO_SUCH_ATTACHMENT
 from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
-from damage_report import DamageReport
+from damage_report import Attachment, DamageReport
 from wsgilib import JSON
 
 from comcat.app.user_files import get_file
@@ -27,16 +26,10 @@ __all__ = ['ENDPOINTS']
 DENIED_FIELDS = {'address', 'timestamp', 'checked'}
 
 
-def _get_damage_report_condition():
-    """Damage report selection condition."""
-
-    return UserDamageReport.user == USER.id
-
-
 def _get_user_damage_reports():
     """Yields all damage reports of the user."""
 
-    condition = _get_damage_report_condition()
+    condition = UserDamageReport.user == USER.id
     return UserDamageReport.select().join(User).where(condition)
 
 
@@ -54,7 +47,7 @@ def _get_user_damage_report(report_id):
 def _get_damage_reports():
     """Yields damage reports for the current user."""
 
-    condition = _get_damage_report_condition()
+    condition = UserDamageReport.user == USER.id
     select = DamageReport.select().join(UserDamageReport).join(User)
     return select.where(condition)
 
@@ -62,7 +55,7 @@ def _get_damage_reports():
 def _get_damage_report(report_id):
     """Returns a damage report with the given ID."""
 
-    condition = _get_damage_report_condition()
+    condition = UserDamageReport.user == USER.id
     condition &= UserDamageReport.id == report_id
 
     try:
@@ -74,22 +67,22 @@ def _get_damage_report(report_id):
 def _get_attachments(report_id):
     """Returns the attachments of the given damage report."""
 
-    select = DamageReportAttachment.select().join(UserDamageReport).join(User)
-    condition = _get_damage_report_condition()
-    condition &= UserDamageReport.damage_report == report_id
+    select = Attachment.select().join(DamageReport).join(UserDamageReport)
+    condition = UserDamageReport.user == USER.id
+    condition &= DamageReport.id == report_id
     return select.where(condition)
 
 
 def _get_attachment(attachment_id):
     """Returns the respective attachment."""
 
-    select = DamageReportAttachment.select().join(UserDamageReport).join(User)
-    condition = _get_damage_report_condition()
-    condition &= DamageReportAttachment.id == attachment_id
+    select = Attachment.select().join(DamageReport).join(UserDamageReport)
+    condition = UserDamageReport.user == USER.id
+    condition &= Attachment.id == attachment_id
 
     try:
         return select.where(condition).get()
-    except DamageReportAttachment.DoesNotExist:
+    except Attachment.DoesNotExist:
         raise NO_SUCH_ATTACHMENT from None
 
 
@@ -164,8 +157,8 @@ def submit_attachment():
     file_id = request.json.pop('file')
     user_damage_report = _get_user_damage_report(user_damage_report_id)
     file = get_file(file_id)
-    attachment = DamageReportAttachment(
-        user_damage_report=user_damage_report, file=file)
+    attachment = Attachment(
+        damage_report=user_damage_report.damage_report, file=file.file)
     attachment.save()
     return ATTACHMENT_ADDED.update(id=attachment.id)
 
