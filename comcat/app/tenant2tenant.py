@@ -68,7 +68,7 @@ def _get_deletable_message(ident):
         try:
             return TenantMessage[ident]
         except TenantMessage.DoesNotExist:
-            raise NO_SUCH_MESSAGE
+            raise NO_SUCH_MESSAGE from None
 
     condition = TenantMessage.customer == USER.customer
     condition &= TenantMessage.id == ident
@@ -77,7 +77,7 @@ def _get_deletable_message(ident):
         try:
             return TenantMessage.select().where(condition).get()
         except TenantMessage.DoesNotExist:
-            raise NO_SUCH_MESSAGE
+            raise NO_SUCH_MESSAGE from None
 
 
     condition &= UserTenantMessage.user == USER.id
@@ -86,7 +86,7 @@ def _get_deletable_message(ident):
     try:
         return select.where(condition).get()
     except TenantMessage.DoesNotExist:
-        raise NO_SUCH_MESSAGE
+        raise NO_SUCH_MESSAGE from None
 
 
 def _add_message():

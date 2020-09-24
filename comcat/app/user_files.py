@@ -26,7 +26,7 @@ def get_file(file_id):
     try:
         return File.get(condition)
     except File.DoesNotExist:
-        raise NO_SUCH_FILE
+        raise NO_SUCH_FILE from None
 
 
 def with_file(function):
