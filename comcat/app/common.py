@@ -11,20 +11,16 @@ __all__ = ['APPLICATION']
 
 
 APPLICATION = Flask('comcat')
+APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 
-
-def set_secret_key():
-    """Sets the secret key."""
-
-    with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
-        APPLICATION.secret_key = keyfile.read().strip()
+with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
+    APPLICATION.secret_key = keyfile.read().strip()
 
 
 @APPLICATION.before_first_request
 def before_first_request():
     """Initializes the app."""
 
-    APPLICATION.config['SESSION_TYPE'] = 'filesystem'
     init_app(APPLICATION)
     session.clear()
 
