@@ -34,8 +34,8 @@ def get_user_base_charts():
     condition = UserBaseChart.user == current_token.user
     condition |= GroupBaseChart.group << set(user_groups(current_token.user))
     condition &= BaseChart.trashed == 0     # Exclude trashed charts.
-    return BaseChart.select().join(UserBaseChart, JOIN.LEFT_OUTER).switch(
-        BaseChart).join(GroupBaseChart, JOIN.LEFT_OUTER).where(condition)
+    return BaseChart.select().join(UserBaseChart, JOIN.LEFT_OUTER).join_from(
+        BaseChart, GroupBaseChart, JOIN.LEFT_OUTER).where(condition)
 
 
 def get_menus(base_chart):
