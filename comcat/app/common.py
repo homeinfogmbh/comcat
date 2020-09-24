@@ -2,7 +2,8 @@
 
 from flask import Flask, session
 
-from comcatlib import init_app
+from comcatlib import UserExpired, UserLocked, init_app
+from comcatlib.messages.user import USER_EXPIRED, USER_LOCKED
 from wsgilib import JSONMessage, Response
 
 
@@ -31,3 +32,17 @@ def errorhandler(message):
     """Returns the respective message."""
 
     return message
+
+
+@APPLICATION.errorhandler(UserExpired)
+def user_expired(_):
+    """Handles expired user account."""
+
+    return USER_EXPIRED
+
+
+@APPLICATION.errorhandler(UserLocked)
+def user_locked(_):
+    """Handles locked user account."""
+
+    return USER_LOCKED
