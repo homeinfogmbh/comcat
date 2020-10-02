@@ -12,8 +12,6 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Flask('comcat')
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
-APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
-print('DEBUG:', APPLICATION.config, flush=True)
 
 with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
     APPLICATION.secret_key = keyfile.read().strip()
