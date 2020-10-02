@@ -18,4 +18,4 @@ def generate_initialization_nonce():
     return nonce.uuid.hex
 
 
-ENDPOINTS = [('GET', '/initnonce', generate_initialization_nonce)]
+ENDPOINTS = [(['GET'], '/initnonce', generate_initialization_nonce)]
