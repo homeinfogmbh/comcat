@@ -2,7 +2,12 @@
 
 from flask import Flask, session
 
-from comcatlib import UserExpired, UserLocked, init_app
+from comcatlib import REQUIRE_OAUTH
+from comcatlib import USER
+from comcatlib import UserExpired
+from comcatlib import UserLocked
+from comcatlib import init_app
+from comcatlib import InitializationNonce
 from comcatlib.messages.user import USER_EXPIRED, USER_LOCKED
 from wsgilib import JSONMessage, Response
 
@@ -45,3 +50,15 @@ def user_locked(_):
     """Handles locked user account."""
 
     return USER_LOCKED
+
+
+@REQUIRE_OAUTH('comcat')
+def generate_initialization_nonce():
+    """Generates a new initialization nonce."""
+
+    try:
+        nonce = InitializationNonce.get(InitializationNonce.user == USER.id)
+    except InitializationNonce.DoesNotExist:
+        nonce = InitializationNonce.add(user=USER.id)
+
+    return nonce.uuid.hex
