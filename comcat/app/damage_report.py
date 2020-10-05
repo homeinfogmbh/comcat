@@ -107,8 +107,7 @@ def submit_damage_report():
 def delete_damage_report(report_id):
     """Deletes the given damage report."""
 
-    user_damage_report = _get_user_damage_report(report_id)
-    damage_report = user_damage_report.damage_report
+    damage_report = _get_damage_report(report_id)
 
     if not damage_report.checked:
         # Deletion of corresponding damage report will also
@@ -120,13 +119,12 @@ def delete_damage_report(report_id):
 
 
 @REQUIRE_OAUTH('comcat')
-def submit_attachment():
+def add_attachment():
     """Adds an attachment for the given damage report."""
 
-    user_damage_report_id = request.json.pop('userDamageReport')
-    file_id = request.json.pop('file')
-    user_damage_report = _get_user_damage_report(user_damage_report_id)
-    user_file = get_user_file(file_id)
+    user_damage_report = _get_user_damage_report(
+        request.json.pop('userDamageReport'))
+    user_file = get_user_file(request.json.pop('file'))
     attachment = Attachment(
         damage_report=user_damage_report.damage_report, file=user_file.file)
     attachment.save()
@@ -147,7 +145,7 @@ ENDPOINTS = (
     (['GET'], '/damage-report/<int:report_id>', get_damage_report),
     (['POST'], '/damage-report', submit_damage_report),
     (['DELETE'], '/damage-report/<int:report_id>', delete_damage_report),
-    (['POST'], '/damage-report/attachment', submit_attachment),
+    (['POST'], '/damage-report/attachment', add_attachment),
     (['DELETE'], '/damage-report/attachment/<int:attachment_id>',
      delete_attachment),
 )
