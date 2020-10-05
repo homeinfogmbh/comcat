@@ -80,14 +80,15 @@ def _get_attachment(attachment_id):
 def list_damage_reports():
     """Returns a list of sent damage report."""
 
-    return JSON([report.to_json() for report in _get_damage_reports()])
+    return JSON([
+        report.to_json(attachments=True) for report in _get_damage_reports()])
 
 
 @REQUIRE_OAUTH('comcat')
 def get_damage_report(report_id):
     """Returns a damage report."""
 
-    return JSON(_get_damage_report(report_id).to_json())
+    return JSON(_get_damage_report(report_id).to_json(attachments=True))
 
 
 @REQUIRE_OAUTH('comcat')
