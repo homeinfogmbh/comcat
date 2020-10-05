@@ -4,7 +4,7 @@ from io import BytesIO
 
 from flask import request
 from qrcode import make
-from wsgilib import Bytes
+from wsgilib import Binary
 
 from comcatlib import REQUIRE_OAUTH, USER, InitializationNonce
 
@@ -37,7 +37,7 @@ def get_qr_code():
 
     with BytesIO() as buf:
         qrcode.save(buf, format=format)
-        return Bytes(buf.read())
+        return Binary(buf.read())
 
 
 ENDPOINTS = [
