@@ -13,7 +13,7 @@ __all__ = ['APPLICATION']
 APPLICATION = Flask('comcat')
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
-APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {'authorization_code': 60}
+APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {'authorization_code': 86400}
 APPLICATION.config['DEBUG'] = True
 APPLICATION.config['TESTING'] = True
 
