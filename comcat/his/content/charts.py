@@ -46,9 +46,7 @@ def list_ubc(user=None):
 def get_ubc(ident):
     """Returns a UserBaseChart by its id and customer context."""
 
-    return UserBaseChart.select().join(User).where(
-        (UserBaseChart.id == ident) & (User.customer == CUSTOMER.id)
-    ).get()
+    return list_ubc().where(UserBaseChart.id == ident).get()
 
 
 @authenticated
