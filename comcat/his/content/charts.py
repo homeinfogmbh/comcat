@@ -1,7 +1,6 @@
 """Management of charts assigned to ComCat accounts."""
 
 from flask import request
-from peewee import JOIN
 
 from cmslib.functions.charts import get_chart
 from cmslib.messages.content import CONTENT_ADDED
@@ -34,13 +33,8 @@ def list_ubc(user=None):
     if user is not None:
         condition &= User.id == user
 
-    return UserBaseChart.select().join(
-        User, join_type=JOIN.LEFT_OUTER, on=USER_JOIN
-    ).join(
-        Tenement, join_type=JOIN.LEFT_OUTER, on=TENEMENT_JOIN
-    ).switch(User).join(
-        BaseChart, join_type=JOIN.LEFT_OUTER, on=BASE_CHART_JOIN
-    ).where(condition)
+    return UserBaseChart.select().join(User).join(Tenement).switch(
+        UserBaseChart).join(BaseChart).where(condition)
 
 
 def get_ubc(ident):
