@@ -17,11 +17,6 @@ from wsgilib import JSON
 __all__ = ['ROUTES']
 
 
-USER_JOIN = UserBaseChart.user == User.id
-BASE_CHART_JOIN = UserBaseChart.base_chart == BaseChart.id
-TENEMENT_JOIN = User.tenement == Tenement.id
-
-
 def list_ubc(user=None):
     """Yields the user's base charts of the
     current customer for the respective user.
