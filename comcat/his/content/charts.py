@@ -11,6 +11,7 @@ from cmslib.messages.content import NO_SUCH_CONTENT
 from cmslib.orm.charts import BaseChart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
+from mdb import Tenement
 from wsgilib import JSON
 
 
@@ -19,6 +20,7 @@ __all__ = ['ROUTES']
 
 USER_JOIN = UserBaseChart.user == User.id
 BASE_CHART_JOIN = UserBaseChart.base_chart == BaseChart.id
+TENEMENT_JOIN = User.tenement = Tenement.id
 
 
 def list_ubc(user=None):
@@ -26,15 +28,17 @@ def list_ubc(user=None):
     current customer for the respective user.
     """
 
-    condition = User.customer == CUSTOMER.id
+    condition = Tenement.customer == CUSTOMER.id
+    condition &= BaseChart.trashed == 0
 
     if user is not None:
         condition &= User.id == user
 
-    condition &= BaseChart.trashed == 0
     return UserBaseChart.select().join(
         User, join_type=JOIN.LEFT_OUTER, on=USER_JOIN
     ).join(
+        Tenement, join_type=JOIN.LEFT_OUTER, on=TENEMENT_JOIN
+    ).switch(User).join(
         BaseChart, join_type=JOIN.LEFT_OUTER, on=BASE_CHART_JOIN
     ).where(condition)
 
