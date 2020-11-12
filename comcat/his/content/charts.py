@@ -28,8 +28,8 @@ def list_ubc(user=None):
     if user is not None:
         condition &= User.id == user
 
-    return UserBaseChart.select().join(User).join(Tenement).switch(
-        UserBaseChart).join(BaseChart).where(condition)
+    return UserBaseChart.select().join(User).join(Tenement).join_from(
+        UserBaseChart, BaseChart).where(condition)
 
 
 def get_ubc(ident):
