@@ -5,16 +5,14 @@ from flask import request
 from cmslib.functions.charts import get_chart
 from cmslib.orm.charts import BaseChart
 from comcatlib.orm.menu import BaseChartMenu, Menu
+from comcatlib.messages import BASE_CHART_MENU_ADDED
+from comcatlib.messages import BASE_CHART_MENU_DELETED
+from comcatlib.messages import NO_SUCH_BASE_CHART_MENU
 from his import CUSTOMER, authenticated, authorized
-from wsgilib import JSON, JSONMessage
+from wsgilib import JSON
 
 
 __all__ = ['ROUTES']
-
-
-BASE_CHART_MENU_ADDED = JSONMessage('Base chart menu added.', 201)
-NO_SUCH_BASE_CHART_MENU = JSONMessage('No such base chart menu.', 404)
-BASE_CHART_MENU_DELETED = JSONMessage('Base chart menu deleted.', 200)
 
 
 def get_base_chart_menus(base_chart_id):

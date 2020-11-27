@@ -14,6 +14,7 @@ setup(
     packages=[
         'comcat',
         'comcat.app',
+        'comcat.app.damage_report',
         'comcat.his',
         'comcat.his.content'
     ],
