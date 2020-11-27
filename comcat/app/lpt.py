@@ -9,7 +9,7 @@ __all__ = ['ENDPOINTS']
 
 
 @REQUIRE_OAUTH('comcat')
-def get_departures():
+def get_departures() -> JSON:
     """Returns the departures."""
 
     stops, source = _get_departures(TENEMENT.address)

@@ -1,17 +1,20 @@
 """Local news endpoint."""
 
+from typing import Iterable
+
 from comcatlib import ADDRESS, CUSTOMER, REQUIRE_OAUTH
 from comcatlib.messages import NEWS_NOT_ENABLED
 from comcatlib.messages import NO_SUCH_ARTICLE
 from comcatlib.messages import NO_SUCH_ARTICLE_IMAGE
 from hinews import Article, AccessToken, Image, Tag
+from mdb import Address
 from wsgilib import Binary, JSON
 
 
 __all__ = ['ENDPOINTS']
 
 
-def _get_address():
+def _get_address() -> Address:
     """Returns the local news address."""
 
     try:
@@ -22,19 +25,19 @@ def _get_address():
     return ADDRESS
 
 
-def _get_city():
+def _get_city() -> str:
     """Returns the address's city."""
 
     return _get_address().city
 
 
-def _get_local_news_articles():
+def _get_local_news_articles() -> Iterable[Article]:
     """Yields local news articles."""
 
     return Article.select().join(Tag).where(Tag.tag == _get_city())
 
 
-def _get_local_news_article(article_id):
+def _get_local_news_article(article_id: int) -> Article:
     """Yields local news articles."""
 
     condition = Article.id == article_id
@@ -46,7 +49,7 @@ def _get_local_news_article(article_id):
         raise NO_SUCH_ARTICLE from None
 
 
-def _get_local_news_image(image_id):
+def _get_local_news_image(image_id: int) -> Image:
     """Yields local news articles."""
 
     condition = Image.id == image_id
@@ -60,7 +63,7 @@ def _get_local_news_image(image_id):
 
 
 @REQUIRE_OAUTH('comcat')
-def get_local_news_article(article_id):
+def get_local_news_article(article_id: int) -> JSON:
     """Get a single local news article."""
 
     article = _get_local_news_article(article_id)
@@ -68,7 +71,7 @@ def get_local_news_article(article_id):
 
 
 @REQUIRE_OAUTH('comcat')
-def get_local_news_articles():
+def get_local_news_articles() -> JSON:
     """Lists local news."""
 
     articles = _get_local_news_articles()
@@ -76,7 +79,7 @@ def get_local_news_articles():
 
 
 @REQUIRE_OAUTH('comcat')
-def get_local_news_image(image_id):
+def get_local_news_image(image_id: int) -> Binary:
     """Returns a local news image."""
 
     image = _get_local_news_image(image_id)

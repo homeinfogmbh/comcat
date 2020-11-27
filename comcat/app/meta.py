@@ -1,46 +1,42 @@
 """Meta backend."""
 
 from io import BytesIO
+from urllib.parse import urlencode
 
+from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 from qrcode import make
 from wsgilib import Binary
 
-from comcatlib import REQUIRE_OAUTH, USER, InitializationNonce
+from comcatlib import REQUIRE_OAUTH
+from comcatlib.functions import genpw
 
 
 __all__ = ['ENDPOINTS']
 
 
-def _get_nonce():
-    """Returns an existing Nonce or creates a new one."""
-
-    try:
-        return InitializationNonce.get(InitializationNonce.user == USER.id)
-    except InitializationNonce.DoesNotExist:
-        return InitializationNonce.add(user=USER.id)
+URL = 'de.homeinfo.comcat://register/{uid}/{passwd}'
 
 
-@REQUIRE_OAUTH('comcat')
-def generate_initialization_nonce():
-    """Generates a new initialization nonce."""
+def get_url() -> str:
+    """Returns the respective URL."""
 
-    return _get_nonce().uuid.hex
+    user = current_token.user
+    user.passwd = passwd = genpw()
+    user.save()
+    return URL.format(uid=user.id, passwd=urlencode(passwd))
 
 
 @REQUIRE_OAUTH('comcat')
-def get_qr_code():
+def get_qr_code() -> Binary:
     """Returns a QR code of the user's initialization nonce."""
 
     format = request.args.get('format', 'png')  # pylint: disable=W0622
-    qrcode = make(_get_nonce().url)
+    qrcode = make(get_url())
 
     with BytesIO() as buf:
         qrcode.save(buf, format=format)
         return Binary(buf.read())
 
 
-ENDPOINTS = [
-    (['GET'], '/init/nonce', generate_initialization_nonce),
-    (['GET'], '/init/qrcode', get_qr_code)
-]
+ENDPOINTS = [(['GET'], '/init/qrcode', get_qr_code)]
