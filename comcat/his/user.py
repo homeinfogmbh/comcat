@@ -94,23 +94,14 @@ def get_presentation(user):
     presentation = Presentation(user)
 
     try:
-        request.args['xml']
-    except KeyError:
-        try:
-            return JSON(presentation.to_json())
-        except AmbiguousConfigurationsError:
-            return AMBIGUOUS_CONFIGURATIONS
-        except NoConfigurationFound:
-            return NO_CONFIGURATION_ASSIGNED
+        if 'xml' in request.args:
+            return XML(presentation.to_dom())
 
-    try:
-        presentation_dom = presentation.to_dom()
+        return JSON(presentation.to_json())
     except AmbiguousConfigurationsError:
         return AMBIGUOUS_CONFIGURATIONS
     except NoConfigurationFound:
         return NO_CONFIGURATION_ASSIGNED
-
-    return XML(presentation_dom)
 
 
 ROUTES = (
