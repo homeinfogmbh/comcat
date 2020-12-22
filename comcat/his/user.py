@@ -1,33 +1,36 @@
 """Management of ComCat users."""
 
 from functools import wraps
+from typing import Callable, Union
 
 from flask import request
+
+from his import authenticated, authorized, root
+from wsgilib import JSON, JSONMessage, XML
 
 from cmslib.exceptions import AmbiguousConfigurationsError
 from cmslib.exceptions import NoConfigurationFound
 from cmslib.messages.presentation import NO_CONFIGURATION_ASSIGNED
 from cmslib.messages.presentation import AMBIGUOUS_CONFIGURATIONS
+
 from comcatlib import User, Presentation
 from comcatlib.messages import USER_ADDED
 from comcatlib.messages import USER_DELETED
 from comcatlib.messages import USER_PATCHED
-from his import CUSTOMER, authenticated, authorized, root
-from wsgilib import JSON, XML
 
-from comcat.his.functions import get_user, get_users
+from comcat.his.functions import get_tenement, get_user, get_users
 
 
 __all__ = ['ROUTES']
 
 
-def with_user(function):
+def with_user(function: Callable) -> Callable:
     """Decorator to run the respective function
     with a user as first argument.
     """
 
     @wraps(function)
-    def wrapper(ident, *args, **kwargs):
+    def wrapper(ident: int, *args, **kwargs):
         """Wraps the original function."""
         return function(get_user(ident), *args, **kwargs)
 
@@ -36,7 +39,7 @@ def with_user(function):
 
 @authenticated
 @authorized('comcat')
-def list_():
+def list_() -> JSON:
     """Lists ComCat users."""
 
     return JSON([user.to_json(cascade=True) for user in get_users()])
@@ -45,7 +48,7 @@ def list_():
 @authenticated
 @authorized('comcat')
 @with_user
-def get(user):
+def get(user: User) -> JSON:
     """Returns the respective ComCat user."""
 
     return JSON(user.to_json(cascade=True))
@@ -54,19 +57,20 @@ def get(user):
 @authenticated
 @authorized('comcat')
 @root
-def add():
+def add() -> JSONMessage:
     """Adds a new ComCat user."""
 
-    user = User.from_json(request.json, CUSTOMER.id, skip={'uuid'})
+    tenement = get_tenement(request.json.pop('tenement'))
+    passwd, user = User.from_json(request.json, tenement, skip={'uuid'})
     user.save()
-    return USER_ADDED.update(id=user.id, uuid=user.uuid.hex)
+    return USER_ADDED.update(id=user.id, uuid=user.uuid.hex, passwd=passwd)
 
 
 @authenticated
 @authorized('comcat')
 @root
 @with_user
-def patch(user):
+def patch(user: User) -> JSONMessage:
     """Updates the respective user."""
 
     user.patch_json(request.json)
@@ -78,7 +82,7 @@ def patch(user):
 @authorized('comcat')
 @root
 @with_user
-def delete(user):
+def delete(user: User) -> JSONMessage:
     """Deletes the respective user."""
 
     user.delete_instance()
@@ -88,7 +92,7 @@ def delete(user):
 @authenticated
 @authorized('comcat')
 @with_user
-def get_presentation(user):
+def get_presentation(user: User) -> Union[JSON, JSONMessage, XML]:
     """Returns the presentation for the respective terminal."""
 
     presentation = Presentation(user)

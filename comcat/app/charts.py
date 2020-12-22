@@ -1,6 +1,5 @@
 """ComCat app interface for charts."""
 
-from contextlib import suppress
 from typing import Generator, Iterable
 
 from peewee import JOIN
@@ -47,12 +46,8 @@ def get_menus(base_chart: BaseChart) -> Iterable[BaseChartMenu]:
 def jsonify_base_chart(base_chart: BaseChart) -> dict:
     """Returns a JSON-ish representation of the base chart."""
 
-    json = base_chart.chart.to_json()
+    json = base_chart.chart.to_json(skip={'schedule'})
     json['base']['menus'] = [menu.menu.value for menu in get_menus(base_chart)]
-
-    with suppress(KeyError):    # Remove unneeded schedules.
-        del json['base']['schedule']
-
     return json
 
 
