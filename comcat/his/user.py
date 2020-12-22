@@ -13,7 +13,8 @@ from cmslib.exceptions import NoConfigurationFound
 from cmslib.messages.presentation import NO_CONFIGURATION_ASSIGNED
 from cmslib.messages.presentation import AMBIGUOUS_CONFIGURATIONS
 
-from comcatlib import User, Presentation
+from comcatlib import DuplicateUser, User, Presentation
+from comcatlib.messages import DUPLICATE_USER
 from comcatlib.messages import USER_ADDED
 from comcatlib.messages import USER_DELETED
 from comcatlib.messages import USER_PATCHED
@@ -61,7 +62,12 @@ def add() -> JSONMessage:
     """Adds a new ComCat user."""
 
     tenement = get_tenement(request.json.pop('tenement'))
-    passwd, user = User.from_json(request.json, tenement, skip={'uuid'})
+
+    try:
+        passwd, user = User.from_json(request.json, tenement, skip={'uuid'})
+    except DuplicateUser:
+        return DUPLICATE_USER
+
     user.save()
     return USER_ADDED.update(id=user.id, uuid=user.uuid.hex, passwd=passwd)
 
