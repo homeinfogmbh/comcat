@@ -6,12 +6,12 @@ from flask import request
 from peewee import IntegrityError
 
 from his import authenticated, authorized, root
+from his.messages.customer import NO_SUCH_CUSTOMER
 from mdb import Address, Customer, Tenement
 from wsgilib import JSON, JSONMessage
 
 from comcatlib.messages import INVALID_ADDRESS
 from comcatlib.messages import NO_SUCH_ADDRESS
-from comcatlib.messages import NO_SUCH_CUSTOMER
 from comcatlib.messages import TENEMENT_ADDED
 from comcatlib.messages import TENEMENT_DELETED
 
