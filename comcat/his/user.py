@@ -69,7 +69,7 @@ def add() -> JSONMessage:
         return DUPLICATE_USER
 
     user.save()
-    return USER_ADDED.update(id=user.id, uuid=user.uuid.hex, passwd=passwd)
+    return USER_ADDED.update(id=user.id, passwd=passwd)
 
 
 @authenticated
