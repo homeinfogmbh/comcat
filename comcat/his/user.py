@@ -64,12 +64,12 @@ def add() -> JSONMessage:
     tenement = get_tenement(request.json.pop('tenement'))
 
     try:
-        user = User.from_json(request.json, tenement, skip={'uuid'})
+        user, passwd = User.from_json(request.json, tenement, skip={'uuid'})
     except DuplicateUser:
         return DUPLICATE_USER
 
     user.save()
-    return USER_ADDED.update(id=user.id, passwd=user.passwd.plaintext)
+    return USER_ADDED.update(id=user.id, passwd=passwd)
 
 
 @authenticated
