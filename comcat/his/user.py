@@ -62,9 +62,16 @@ def get(user: User) -> JSON:
 def resetpw(user: User) -> JSONMessage:
     """Generates a new, random password for the respective user."""
 
-    user.passwd = passwd = genpw()
+    try:
+        user.passwd = request.json.pop('passwd')
+    except (AttributeError, KeyError):
+        user.passwd = passwd = genpw()
+        result = USER_PATCHED.update(passwd=passwd)
+    else:
+        result = USER_PATCHED
+
     user.save()
-    return USER_PATCHED.update(passwd=passwd)
+    return result
 
 
 @authenticated
@@ -129,7 +136,7 @@ def get_presentation(user: User) -> Union[JSON, JSONMessage, XML]:
 ROUTES = (
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
-    ('GET', '/user/<int:ident>/pwgen', resetpw),
+    ('PUT', '/user/<int:ident>/pwgen', resetpw),
     ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
