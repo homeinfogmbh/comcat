@@ -14,6 +14,7 @@ from cmslib.messages.presentation import NO_CONFIGURATION_ASSIGNED
 from cmslib.messages.presentation import AMBIGUOUS_CONFIGURATIONS
 
 from comcatlib import DuplicateUser, User, Presentation
+from comcatlib.functions import genpw
 from comcatlib.messages import DUPLICATE_USER
 from comcatlib.messages import USER_ADDED
 from comcatlib.messages import USER_DELETED
@@ -31,9 +32,9 @@ def with_user(function: Callable) -> Callable:
     """
 
     @wraps(function)
-    def wrapper(ident: int, *args, **kwargs):
+    def wrapper(user: int, *args, **kwargs):
         """Wraps the original function."""
-        return function(get_user(ident), *args, **kwargs)
+        return function(get_user(user), *args, **kwargs)
 
     return wrapper
 
@@ -53,6 +54,17 @@ def get(user: User) -> JSON:
     """Returns the respective ComCat user."""
 
     return JSON(user.to_json(cascade=True))
+
+
+@authenticated
+@authorized('comcat')
+@with_user
+def resetpw(user: User) -> JSONMessage:
+    """Generates a new, random password for the respective user."""
+
+    user.passwd = passwd = genpw()
+    user.save()
+    return USER_PATCHED.update(passwd=passwd)
 
 
 @authenticated
@@ -117,6 +129,7 @@ def get_presentation(user: User) -> Union[JSON, JSONMessage, XML]:
 ROUTES = (
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
+    ('GET', '/user/<int:ident>/pwgen', patch),
     ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
