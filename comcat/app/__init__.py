@@ -1,5 +1,7 @@
 """Smartphone app endpoints."""
 
+from itertools import chain
+
 from comcat.app import charts
 from comcat.app import damage_report
 from comcat.app import local_news
@@ -14,19 +16,17 @@ from comcat.app.common import APPLICATION
 __all__ = ['APPLICATION']
 
 
-ENDPOINTS = {
-    'charts': charts.ENDPOINTS,
-    'damage_report': damage_report.ENDPOINTS,
-    'local_news': local_news.ENDPOINTS,
-    'lpt': lpt.ENDPOINTS,
-    'meta': meta.ENDPOINTS,
-    'related_files': related_files.ENDPOINTS,
-    'tenant2tenant': tenant2tenant.ENDPOINTS,
-    'user_files': user_files.ENDPOINTS
-}
+ENDPOINTS = [
+    *charts.ENDPOINTS,
+    *damage_report.ENDPOINTS,
+    *local_news.ENDPOINTS,
+    *lpt.ENDPOINTS,
+    *meta.ENDPOINTS,
+    *related_files.ENDPOINTS,
+    *tenant2tenant.ENDPOINTS,
+    *user_files.ENDPOINTS
+]
 
 
-for name, endpoints in ENDPOINTS.items():
-    for methods, path, function in endpoints:
-        APPLICATION.add_url_rule(path, f'{name}:{function}', function,
-                                 methods=methods)
+for methods, path, function in ENDPOINTS:
+    APPLICATION.add_url_rule(path, path, function, methods=methods)
