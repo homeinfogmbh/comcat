@@ -14,6 +14,7 @@ from comcatlib.messages import INVALID_ADDRESS
 from comcatlib.messages import NO_SUCH_ADDRESS
 from comcatlib.messages import TENEMENT_ADDED
 from comcatlib.messages import TENEMENT_DELETED
+from comcatlib.messages import TENEMENT_IN_USE
 
 from comcat.his.functions import get_tenement, get_tenements
 
@@ -90,7 +91,11 @@ def delete(ident: int) -> JSONMessage:
 
     tenement = get_tenement(ident)
     address = tenement.address
-    tenement.delete_instance()
+
+    try:
+        tenement.delete_instance()
+    except IntegrityError:
+        return TENEMENT_IN_USE
 
     try:
         address.delete_instance()
