@@ -32,9 +32,9 @@ def with_user(function: Callable) -> Callable:
     """
 
     @wraps(function)
-    def wrapper(user: int, *args, **kwargs):
+    def wrapper(ident: int, *args, **kwargs):
         """Wraps the original function."""
-        return function(get_user(user), *args, **kwargs)
+        return function(get_user(ident), *args, **kwargs)
 
     return wrapper
 
