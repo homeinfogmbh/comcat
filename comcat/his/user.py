@@ -129,7 +129,7 @@ def get_presentation(user: User) -> Union[JSON, JSONMessage, XML]:
 ROUTES = (
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
-    ('PUT', '/user/<int:ident>/pwgen', resetpw),
+    ('GET', '/user/<int:ident>/pwgen', resetpw),
     ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
