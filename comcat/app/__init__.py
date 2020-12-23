@@ -28,5 +28,5 @@ ENDPOINTS = {
 
 for name, endpoints in ENDPOINTS.items():
     for methods, path, function in endpoints:
-        name = f'{name}:{function}'
-        APPLICATION.route(path, methods=methods, endpoint=name)(function)
+        APPLICATION.add_url_rule(path, f'{name}:{function}', function,
+                                 methods=methods)
