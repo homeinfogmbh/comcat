@@ -62,16 +62,9 @@ def get(user: User) -> JSON:
 def resetpw(user: User) -> JSONMessage:
     """Generates a new, random password for the respective user."""
 
-    try:
-        user.passwd = request.json.pop('passwd')
-    except (AttributeError, KeyError):
-        user.passwd = passwd = genpw()
-        result = USER_PATCHED.update(passwd=passwd)
-    else:
-        result = USER_PATCHED
-
+    user.passwd = passwd = genpw()
     user.save()
-    return result
+    return USER_PATCHED.update(passwd=passwd)
 
 
 @authenticated
