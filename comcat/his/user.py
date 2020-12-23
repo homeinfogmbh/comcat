@@ -76,7 +76,7 @@ def add() -> JSONMessage:
     tenement = get_tenement(request.json.pop('tenement'))
 
     try:
-        user, passwd = User.from_json(request.json, tenement, skip={'uuid'})
+        user, passwd = User.from_json(request.json, tenement)
     except DuplicateUser:
         return DUPLICATE_USER
 
