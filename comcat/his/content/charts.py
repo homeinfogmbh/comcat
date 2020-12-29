@@ -1,5 +1,7 @@
 """Management of charts assigned to ComCat accounts."""
 
+from typing import Iterable
+
 from flask import request
 
 from cmslib.functions.charts import get_chart
@@ -11,13 +13,13 @@ from cmslib.orm.charts import BaseChart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
 from mdb import Tenement
-from wsgilib import JSON
+from wsgilib import JSON, JSONMessage
 
 
 __all__ = ['ROUTES']
 
 
-def list_ubc(user=None):
+def list_ubc(user: int = None) -> Iterable[UserBaseChart]:
     """Yields the user's base charts of the
     current customer for the respective user.
     """
@@ -32,7 +34,7 @@ def list_ubc(user=None):
         UserBaseChart, BaseChart).where(condition)
 
 
-def get_ubc(ident):
+def get_ubc(ident: int) -> UserBaseChart:
     """Returns a UserBaseChart by its id and customer context."""
 
     return list_ubc().where(UserBaseChart.id == ident).get()
@@ -40,7 +42,7 @@ def get_ubc(ident):
 
 @authenticated
 @authorized('comcat')
-def get(ident):
+def get(ident: int) -> JSON:
     """Returns the respective UserBaseChart."""
 
     return JSON(get_ubc(ident).to_json(chart=True))
@@ -48,7 +50,7 @@ def get(ident):
 
 @authenticated
 @authorized('comcat')
-def list_(user):
+def list_(user: int) -> JSON:
     """Returns a list of UserBaseCharts of the given user."""
 
     return JSON([ubc.to_json(chart=True) for ubc in list_ubc(user)])
@@ -56,7 +58,7 @@ def list_(user):
 
 @authenticated
 @authorized('comcat')
-def add():
+def add() -> JSONMessage:
     """Adds the chart to the respective user."""
 
     user_base_chart = UserBaseChart.from_json(request.json)
@@ -66,7 +68,7 @@ def add():
 
 @authenticated
 @authorized('comcat')
-def patch(ident):
+def patch(ident: int) -> JSONMessage:
     """Adds the chart to the respective user."""
 
     try:
@@ -81,7 +83,7 @@ def patch(ident):
 
 @authenticated
 @authorized('comcat')
-def delete(ident):
+def delete(ident: int) -> JSONMessage:
     """Deletes the chart from the respective user."""
 
     try:
@@ -95,7 +97,7 @@ def delete(ident):
 
 @authenticated
 @authorized('comcat')
-def chart_user_base_charts(ident):
+def chart_user_base_charts(ident: int) -> JSONMessage:
     """Returns a list of UserBaseChart for the given chart."""
 
     chart = get_chart(ident)

@@ -1,5 +1,7 @@
 """Base chart menu assignment handling."""
 
+from typing import Iterable
+
 from flask import request
 
 from cmslib.functions.charts import get_chart
@@ -9,13 +11,13 @@ from comcatlib.messages import BASE_CHART_MENU_ADDED
 from comcatlib.messages import BASE_CHART_MENU_DELETED
 from comcatlib.messages import NO_SUCH_BASE_CHART_MENU
 from his import CUSTOMER, authenticated, authorized
-from wsgilib import JSON
+from wsgilib import JSON, JSONMessage
 
 
 __all__ = ['ROUTES']
 
 
-def get_base_chart_menus(base_chart_id):
+def get_base_chart_menus(base_chart_id: int) -> Iterable[BaseChartMenu]:
     """Yields base chart menus for the given base chart."""
 
     condition = BaseChart.id == base_chart_id
@@ -23,7 +25,7 @@ def get_base_chart_menus(base_chart_id):
     return BaseChartMenu.select().join(BaseChart).where(condition)
 
 
-def get_base_chart_menu(base_chart_menu_id):
+def get_base_chart_menu(base_chart_menu_id: int) -> BaseChartMenu:
     """Returns the respective base chart menu."""
 
     condition = BaseChartMenu.id == base_chart_menu_id
@@ -33,7 +35,7 @@ def get_base_chart_menu(base_chart_menu_id):
 
 @authenticated
 @authorized('comcat')
-def list_(ident):
+def list_(ident: int) -> JSON:
     """Lists menus of the respective base chart."""
 
     chart = get_chart(ident)
@@ -43,7 +45,7 @@ def list_(ident):
 
 @authenticated
 @authorized('comcat')
-def add():
+def add() -> JSONMessage:
     """Adds a base chart menu."""
 
     base_chart = get_chart(request.json['chart']).base_id
@@ -55,7 +57,7 @@ def add():
 
 @authenticated
 @authorized('comcat')
-def delete(ident):
+def delete(ident: int) -> JSONMessage:
     """Removes the base chart menu with the given ID."""
 
     try:
