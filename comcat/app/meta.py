@@ -39,4 +39,4 @@ def get_qr_code() -> Binary:
         return Binary(buf.read())
 
 
-ENDPOINTS = [(['GET'], '/init/qrcode', get_qr_code)]
+ENDPOINTS = [(['GET'], '/init/qrcode', get_qr_code, 'get_qr_code')]

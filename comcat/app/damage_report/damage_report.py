@@ -85,8 +85,9 @@ def delete(report_id: int) -> JSONMessage:
 
 
 ENDPOINTS = (
-    (['GET'], '/damage-report', list_),
-    (['GET'], '/damage-report/<int:report_id>', get),
-    (['POST'], '/damage-report', post),
-    (['DELETE'], '/damage-report/<int:report_id>', delete)
+    (['GET'], '/damage-report', list_, 'list_damage_reports'),
+    (['GET'], '/damage-report/<int:report_id>', get, 'get_damage_report'),
+    (['POST'], '/damage-report', post, 'add_damage_report'),
+    (['DELETE'], '/damage-report/<int:report_id>', delete,
+     'delete_damage_report')
 )

@@ -28,5 +28,5 @@ ENDPOINTS = [
 ]
 
 
-for methods, path, function in ENDPOINTS:
-    APPLICATION.add_url_rule(path, path, function, methods=methods)
+for methods, path, function, name in ENDPOINTS:
+    APPLICATION.add_url_rule(path, name, function, methods=methods)

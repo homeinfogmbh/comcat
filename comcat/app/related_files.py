@@ -42,4 +42,4 @@ def get(ident):
     return Binary(file.bytes)
 
 
-ENDPOINTS = ((['GET'], '/related-file/<int:ident>', get),)
+ENDPOINTS = [(['GET'], '/related-file/<int:ident>', get, 'get_related_file')]

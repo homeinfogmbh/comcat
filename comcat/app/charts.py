@@ -58,4 +58,4 @@ def list_() -> JSON:
     return JSON([jsonify_base_chart(bc) for bc in get_user_base_charts()])
 
 
-ENDPOINTS = ((['GET'], '/charts', list_),)
+ENDPOINTS = [(['GET'], '/charts', list_, 'list_charts')]

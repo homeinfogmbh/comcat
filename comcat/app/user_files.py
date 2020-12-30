@@ -73,7 +73,7 @@ def delete(user_file):
 
 
 ENDPOINTS = (
-    (['POST'], '/user-file', post),
-    (['GET'], '/user-file/<int:ident>', get),
-    (['DELETE'], '/user-file/<int:ident>', delete)
+    (['POST'], '/user-file', post, 'add_user_file'),
+    (['GET'], '/user-file/<int:ident>', get, 'get_user_file'),
+    (['DELETE'], '/user-file/<int:ident>', delete, 'delete_user_file')
 )

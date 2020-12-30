@@ -131,7 +131,8 @@ def delete(ident):
 
 
 ENDPOINTS = (
-    (['GET'], '/tenant2tenant', list_),
-    (['POST'], '/tenant2tenant', post),
-    (['DELETE'], '/tenant2tenant/<int:ident>', delete)
+    (['GET'], '/tenant2tenant', list_, 'list_tenant2tenant_messages'),
+    (['POST'], '/tenant2tenant', post, 'add_tenant2tenant_message'),
+    (['DELETE'], '/tenant2tenant/<int:ident>', delete,
+     'delete_tenant2tenant_message')
 )
