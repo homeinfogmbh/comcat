@@ -13,7 +13,7 @@ from comcatlib.messages import DAMAGE_REPORT_ALREADY_PROCESSED
 from comcatlib.messages import DAMAGE_REPORT_DELETED
 from comcatlib.messages import DAMAGE_REPORT_SUBMITTED
 from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
-from damage_report import DamageReport
+from damage_report import DamageReport, email
 from wsgilib import JSON, JSONMessage
 
 
@@ -66,6 +66,7 @@ def post() -> JSONMessage:
     user_damage_report = UserDamageReport(
         user=USER.id, damage_report=damage_report)
     user_damage_report.save()
+    email(damage_report)
     return DAMAGE_REPORT_SUBMITTED.update(id=user_damage_report.id)
 
 
