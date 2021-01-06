@@ -23,14 +23,14 @@ __all__ = ['ENDPOINTS']
 DENIED_FIELDS = {'address', 'timestamp', 'checked'}
 
 
-def get_damage_reports() -> Iterable[UserDamageReport]:
+def get_damage_reports() -> Iterable[DamageReport]:
     """Yields damage reports for the current user."""
 
     condition = UserDamageReport.user == USER.id
     return DamageReport.select().join(UserDamageReport).where(condition)
 
 
-def get_damage_report(report_id: int) -> UserDamageReport:
+def get_damage_report(report_id: int) -> DamageReport:
     """Returns a damage report with the given ID."""
 
     condition = UserDamageReport.id == report_id
