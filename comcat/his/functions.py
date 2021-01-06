@@ -5,11 +5,20 @@ from typing import Iterable
 from his import ACCOUNT, CUSTOMER
 from mdb import Tenement
 
-from comcatlib import User
-from comcatlib.messages import NO_SUCH_TENEMENT, NO_SUCH_USER
+from comcatlib import User, UserDamageReport
+from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
+from comcatlib.messages import NO_SUCH_TENEMENT
+from comcatlib.messages import NO_SUCH_USER
 
 
-__all__ = ['get_tenement', 'get_tenements', 'get_user', 'get_users']
+__all__ = [
+    'get_tenement',
+    'get_tenements',
+    'get_user',
+    'get_users',
+    'get_user_damage_reports',
+    'get_user_damage_report'
+]
 
 
 def get_tenement(ident: int) -> Tenement:
@@ -42,7 +51,26 @@ def get_user(ident: int) -> User:
 def get_users() -> Iterable[User]:
     """Yields ComCat users of the current customer."""
 
-    if ACCOUNT.root:
-        return User.select().where(True)
+    select = User.select().join(Tenement)
 
-    return User.select().where(User.customer == CUSTOMER.id)
+    if ACCOUNT.root:
+        return select.where(True)
+
+    return select.where(Tenement.customer == CUSTOMER.id)
+
+
+def get_user_damage_reports() -> Iterable[UserDamageReport]:
+    """Yields damage reports for the current user."""
+
+    return UserDamageReport.select().join(User).join(Tenement).where(
+        Tenement.customer == CUSTOMER.id)
+
+
+def get_user_damage_report(ident: int) -> UserDamageReport:
+    """Returns a damage report with the given ID."""
+
+    try:
+        return get_user_damage_reports().where(
+            UserDamageReport.id == ident).get()
+    except UserDamageReport.DoesNotExist:
+        raise NO_SUCH_DAMAGE_REPORT from None
