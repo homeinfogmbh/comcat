@@ -2,7 +2,7 @@
 
 from his import Application
 
-from comcat.his import content, group, menu, tenement, user
+from comcat.his import content, damage_report, group, menu, tenement, user
 
 
 __all__ = ['APPLICATION']
@@ -10,6 +10,7 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Application('comcat')
 APPLICATION.add_routes(content.ROUTES)
+APPLICATION.add_routes(damage_report.ROUTES)
 APPLICATION.add_routes(group.ROUTES)
 APPLICATION.add_routes(menu.ROUTES)
 APPLICATION.add_routes(tenement.ROUTES)
