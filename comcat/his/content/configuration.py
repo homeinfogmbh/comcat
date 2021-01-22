@@ -4,9 +4,6 @@ from typing import Iterable
 
 from flask import request
 
-from cmslib.messages.content import CONTENT_ADDED
-from cmslib.messages.content import CONTENT_DELETED
-from cmslib.messages.content import NO_SUCH_CONTENT
 from comcatlib import User, UserConfiguration
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
@@ -55,7 +52,8 @@ def add() -> JSONMessage:
 
     user_configuration = UserConfiguration.from_json(request.json)
     user_configuration.save()
-    return CONTENT_ADDED.update(id=user_configuration.id)
+    return JSONMessage('User configuration added.', id=user_configuration.id,
+                       status=201)
 
 
 @authenticated
@@ -63,13 +61,10 @@ def add() -> JSONMessage:
 def delete(ident: int) -> JSONMessage:
     """Deletes the configuration from the respective user."""
 
-    try:
-        user_configuration = get_user_config(ident)
-    except UserConfiguration.DoesNotExist:
-        raise NO_SUCH_CONTENT from None
-
+    user_configuration = get_user_config(ident)
     user_configuration.delete_instance()
-    return CONTENT_DELETED.update(id=user_configuration.id)
+    return JSONMessage('User configuration deleted.', id=user_configuration.id,
+                       status=200)
 
 
 ROUTES = (
