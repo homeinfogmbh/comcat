@@ -1,10 +1,10 @@
 """Common error handlers."""
 
 from comcatlib import UserExpired, UserLocked, UserFile
-from hinews import AccessToken, Article
+from hinews import AccessToken, Article, Image
 from hisfs import File
 from tenant2tenant import TenantMessage
-from wsgilib import JSONMessage, Response, Image
+from wsgilib import JSONMessage, Response
 
 
 __all__ = ['ERRORS']
