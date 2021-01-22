@@ -4,9 +4,6 @@ from typing import Iterable
 
 from flask import request
 
-from cmslib.messages.content import CONTENT_ADDED
-from cmslib.messages.content import CONTENT_DELETED
-from cmslib.messages.content import NO_SUCH_CONTENT
 from comcatlib import User, UserMenu
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
@@ -53,7 +50,7 @@ def add() -> JSONMessage:
 
     user_menu = UserMenu.from_json(request.json)
     user_menu.save()
-    return CONTENT_ADDED.update(id=user_menu.id)
+    return JSONMessage('User menu added.', id=user_menu.id, status=201)
 
 
 @authenticated
@@ -61,13 +58,9 @@ def add() -> JSONMessage:
 def delete(ident: int) -> JSONMessage:
     """Deletes the menu from the respective account."""
 
-    try:
-        user_menu = get_user_menu(ident)
-    except UserMenu.DoesNotExist:
-        raise NO_SUCH_CONTENT from None
-
+    user_menu = get_user_menu(ident)
     user_menu.delete_instance()
-    return CONTENT_DELETED
+    return JSONMessage('User menu deleted.', status=200)
 
 
 ROUTES = (
