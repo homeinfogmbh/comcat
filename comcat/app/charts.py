@@ -27,20 +27,15 @@ def user_groups() -> Iterator[Group]:
         yield from gmu.group.parents
 
 
-def get_user_base_charts() -> ModelSelect:
+def get_base_charts() -> ModelSelect:
     """Yields base charts, the current user has access to."""
 
     condition = UserBaseChart.user == USER.id
     condition |= GroupBaseChart.group << set(user_groups())
-    condition &= BaseChart.trashed == 0     # Exclude trashed charts.
-    return UserBaseChart.select(cascade=True).where(condition)
+    condition &= BaseChart.trashed == 0
 
-
-def get_base_charts() -> Iterator[BaseChart]:
-    """Yields base charts, the current user has access to."""
-
-    for user_base_chart in get_user_base_charts():
-        yield user_base_chart.base_chart
+    return BaseChart.select().join(UserBaseChart).join_from(
+        BaseChart, GroupBaseChart).where(condition)
 
 
 def get_menus(base_chart: BaseChart) -> ModelSelect:
