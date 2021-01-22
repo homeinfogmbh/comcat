@@ -1,28 +1,24 @@
 """Local news endpoint."""
 
-from typing import Iterable
+from typing import Iterable, Union
 
 from comcatlib import ADDRESS, CUSTOMER, REQUIRE_OAUTH
-from comcatlib.messages import NEWS_NOT_ENABLED
-from comcatlib.messages import NO_SUCH_ARTICLE
-from comcatlib.messages import NO_SUCH_ARTICLE_IMAGE
 from hinews import Article, AccessToken, Image, Tag
 from mdb import Address
-from wsgilib import Binary, JSON
+from wsgilib import Binary, JSON, JSONMessage
 
 
 __all__ = ['ENDPOINTS']
 
 
-def _get_address() -> Address:
+def _get_address() -> Union[Address, JSONMessage]:
     """Returns the local news address."""
 
-    try:
-        AccessToken.get(AccessToken.customer == CUSTOMER.id)
-    except AccessToken.DoesNotExist:
-        raise NEWS_NOT_ENABLED from None
+    # Check authorization.
+    if AccessToken.get(AccessToken.customer == CUSTOMER.id):
+        return ADDRESS
 
-    return ADDRESS
+    return JSONMessage('Access token is falsy.', status=500)
 
 
 def _get_city() -> str:
@@ -42,11 +38,7 @@ def _get_local_news_article(article_id: int) -> Article:
 
     condition = Article.id == article_id
     condition &= Tag.tag == _get_city()
-
-    try:
-        return Article.select().join(Tag).where(condition).get()
-    except Article.DoesNotExist:
-        raise NO_SUCH_ARTICLE from None
+    return Article.select().join(Tag).where(condition).get()
 
 
 def _get_local_news_image(image_id: int) -> Image:
@@ -55,11 +47,7 @@ def _get_local_news_image(image_id: int) -> Image:
     condition = Image.id == image_id
     condition &= Tag.tag == _get_city()
     select = Image.select().join(Article).join(Tag)
-
-    try:
-        return select.where(condition).get()
-    except Image.DoesNotExist:
-        raise NO_SUCH_ARTICLE_IMAGE from None
+    return select.where(condition).get()
 
 
 @REQUIRE_OAUTH('comcat')
