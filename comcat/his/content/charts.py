@@ -5,10 +5,6 @@ from typing import Iterable
 from flask import request
 
 from cmslib.functions.charts import get_chart
-from cmslib.messages.content import CONTENT_ADDED
-from cmslib.messages.content import CONTENT_DELETED
-from cmslib.messages.content import CONTENT_PATCHED
-from cmslib.messages.content import NO_SUCH_CONTENT
 from cmslib.orm.charts import BaseChart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
@@ -63,7 +59,8 @@ def add() -> JSONMessage:
 
     user_base_chart = UserBaseChart.from_json(request.json)
     user_base_chart.save()
-    return CONTENT_ADDED.update(id=user_base_chart.id)
+    return JSONMessage('User base chart added.', id=user_base_chart.id,
+                       status=201)
 
 
 @authenticated
@@ -71,14 +68,11 @@ def add() -> JSONMessage:
 def patch(ident: int) -> JSONMessage:
     """Adds the chart to the respective user."""
 
-    try:
-        user_base_chart = get_ubc(ident)
-    except UserBaseChart.DoesNotExist:
-        return NO_SUCH_CONTENT
-
+    user_base_chart = get_ubc(ident)
     user_base_chart.patch_json(request.json)
     user_base_chart.save()
-    return CONTENT_PATCHED.update(id=user_base_chart.id)
+    return JSONMessage('User base chart patched.', id=user_base_chart.id,
+                       status=200)
 
 
 @authenticated
@@ -86,13 +80,10 @@ def patch(ident: int) -> JSONMessage:
 def delete(ident: int) -> JSONMessage:
     """Deletes the chart from the respective user."""
 
-    try:
-        user_base_chart = get_ubc(ident)
-    except UserBaseChart.DoesNotExist:
-        return NO_SUCH_CONTENT
-
+    user_base_chart = get_ubc(ident)
     user_base_chart.delete_instance()
-    return CONTENT_DELETED.update(id=user_base_chart.id)
+    return JSONMessage('User base chart deleted.', id=user_base_chart.id,
+                       status=200)
 
 
 @authenticated
