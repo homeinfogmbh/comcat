@@ -5,14 +5,11 @@ from datetime import datetime
 from flask import request
 from peewee import JOIN
 
-from tenant2tenant import MESSAGE_ADDED
-from tenant2tenant import MESSAGE_DELETED
-from tenant2tenant import NO_SUCH_MESSAGE
 #from tenant2tenant import email
 from tenant2tenant import Configuration
 from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
-from wsgilib import JSON
+from wsgilib import JSON, JSONMessage
 
 from comcatlib import ADDRESS, CUSTOMER, REQUIRE_OAUTH, USER
 from comcatlib.orm.tenant2tenant import UserTenantMessage
@@ -24,10 +21,11 @@ __all__ = ['ENDPOINTS']
 def _get_messages():
     """Yields the tenant-to-tenant messages the current user may access."""
 
+    select = TenantMessage.select(cascade=True)
+
     if USER.admin:
         # Admins can see all tenant-to-tenant messages of their company.
-        return TenantMessage.select().where(
-            TenantMessage.customer == CUSTOMER.id)
+        return select.where(TenantMessage.customer == CUSTOMER.id)
 
     condition = (
         (UserTenantMessage.user == USER.id)
@@ -51,7 +49,7 @@ def _get_messages():
             )
         )
     )
-    select = TenantMessage.select().join(UserTenantMessage, JOIN.LEFT_OUTER)
+    select = select.join(UserTenantMessage, JOIN.LEFT_OUTER)
     return select.where(condition)
 
 
@@ -64,19 +62,12 @@ def _get_deletable_message(ident):
     condition &= TenantMessage.id == ident
 
     if USER.admin:
-        try:
-            return TenantMessage.select().where(condition).get()
-        except TenantMessage.DoesNotExist:
-            raise NO_SUCH_MESSAGE from None
+        return TenantMessage.select().where(condition).get()
 
 
     condition &= UserTenantMessage.user == USER.id
     select = TenantMessage.select().join(UserTenantMessage)
-
-    try:
-        return select.where(condition).get()
-    except TenantMessage.DoesNotExist:
-        raise NO_SUCH_MESSAGE from None
+    return select.where(condition).get()
 
 
 def _add_message():
@@ -119,7 +110,8 @@ def post():
     user_tenant_message = UserTenantMessage(
         tenant_message=tenant_message, user=USER.id)
     user_tenant_message.save()
-    return MESSAGE_ADDED.update(id=tenant_message.id)
+    return JSONMessage('Tenant message added.', id=tenant_message.id,
+                       status=201)
 
 
 @REQUIRE_OAUTH('comcat')
@@ -127,12 +119,12 @@ def delete(ident):
     """Deletes a tenant-to-tenant message."""
 
     _get_deletable_message(ident).delete_instance()
-    return MESSAGE_DELETED
+    return JSONMessage('Tenant message deleted.', status=200)
 
 
-ENDPOINTS = (
+ENDPOINTS = [
     (['GET'], '/tenant2tenant', list_, 'list_tenant2tenant_messages'),
     (['POST'], '/tenant2tenant', post, 'add_tenant2tenant_message'),
     (['DELETE'], '/tenant2tenant/<int:ident>', delete,
      'delete_tenant2tenant_message')
-)
+]

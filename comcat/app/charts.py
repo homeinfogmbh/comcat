@@ -14,7 +14,7 @@ from comcatlib.orm.group import Group, GroupMemberUser
 from comcatlib.orm.menu import BaseChartMenu
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ENDPOINTS', 'get_base_charts']
 
 
 def user_groups() -> Iterator[Group]:
