@@ -1,8 +1,8 @@
 """ComCat app interface for charts."""
 
-from typing import Generator, Iterable
+from typing import Iterator
 
-from peewee import JOIN
+from peewee import ModelSelect
 
 from cmslib.orm.charts import BaseChart
 from cmslib.orm.content.group import GroupBaseChart
@@ -17,30 +17,37 @@ from comcatlib.orm.menu import BaseChartMenu
 __all__ = ['ENDPOINTS']
 
 
-def user_groups() -> Generator[Group, None, None]:
+def user_groups() -> Iterator[Group]:
     """Yields all groups the given deployment is a member of."""
 
     condition = GroupMemberUser.user == USER.id
 
-    for gmu in GroupMemberUser.select().where(condition):
+    for gmu in GroupMemberUser.select(cascade=True).where(condition):
         yield gmu.group
         yield from gmu.group.parents
 
 
-def get_user_base_charts() -> Iterable[BaseChart]:
+def get_user_base_charts() -> ModelSelect:
     """Yields base charts, the current user has access to."""
 
     condition = UserBaseChart.user == USER.id
     condition |= GroupBaseChart.group << set(user_groups())
     condition &= BaseChart.trashed == 0     # Exclude trashed charts.
-    return BaseChart.select().join(UserBaseChart, JOIN.LEFT_OUTER).join_from(
-        BaseChart, GroupBaseChart, JOIN.LEFT_OUTER).where(condition)
+    return UserBaseChart.select(cascade=True).where(condition)
 
 
-def get_menus(base_chart: BaseChart) -> Iterable[BaseChartMenu]:
+def get_base_charts() -> Iterator[BaseChart]:
+    """Yields base charts, the current user has access to."""
+
+    for user_base_chart in get_user_base_charts():
+        yield user_base_chart.base_chart
+
+
+def get_menus(base_chart: BaseChart) -> ModelSelect:
     """Yields the menus for the base chart."""
 
-    return BaseChartMenu.select().where(BaseChartMenu.base_chart == base_chart)
+    return BaseChartMenu.select(cascade=True).where(
+        BaseChartMenu.base_chart == base_chart)
 
 
 def jsonify_base_chart(base_chart: BaseChart) -> dict:
@@ -55,7 +62,7 @@ def jsonify_base_chart(base_chart: BaseChart) -> dict:
 def list_() -> JSON:
     """Lists available charts."""
 
-    return JSON([jsonify_base_chart(bc) for bc in get_user_base_charts()])
+    return JSON([jsonify_base_chart(bc) for bc in get_base_charts()])
 
 
 ENDPOINTS = [(['GET'], '/charts', list_, 'list_charts')]
