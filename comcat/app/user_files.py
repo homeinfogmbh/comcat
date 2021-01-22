@@ -55,7 +55,7 @@ def get(user_file):
     """Returns a user file."""
 
     if request.args.get('metadata'):
-        return JSON(user_file.metadata.to_json())
+        return JSON(user_file.to_json())
 
     if request.args.get('download'):
         return Binary(user_file.bytes, filename=user_file.name)
