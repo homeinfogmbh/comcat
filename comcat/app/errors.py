@@ -1,6 +1,6 @@
 """Common error handlers."""
 
-from comcatlib import UserExpired, UserLocked
+from comcatlib import UserExpired, UserLocked, UserFile
 from hinews import AccessToken, Article
 from hisfs import File
 from tenant2tenant import TenantMessage
@@ -23,5 +23,7 @@ ERRORS = {
     Image.DoesNotExist: lambda _: JSONMessage(
         'No such news image.', status=404),
     TenantMessage.DoesNotExist: lambda _: JSONMessage(
-        'No such tenant message.', status=404)
+        'No such tenant message.', status=404),
+    UserFile.DoesNotExist: lambda _: JSONMessage(
+        'No such user file.', status=404)
 }

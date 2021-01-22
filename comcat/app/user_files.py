@@ -5,9 +5,7 @@ from functools import wraps
 from flask import request
 
 from comcatlib import REQUIRE_OAUTH, USER, add_file, UserFile
-from comcatlib.messages import NO_SUCH_FILE
-from hisfs.messages import FILE_CREATED, FILE_DELETED
-from wsgilib import Binary, JSON
+from wsgilib import Binary, JSON, JSONMessage
 
 
 __all__ = ['ENDPOINTS', 'get_user_file']
@@ -23,10 +21,7 @@ def get_user_file(ident):
     else:
         condition &= UserFile.id == ident
 
-    try:
-        return UserFile.get(condition)
-    except UserFile.DoesNotExist:
-        raise NO_SUCH_FILE from None
+    return UserFile.select(cascade=True).where(condition).get()
 
 
 def with_user_file(function):
@@ -46,7 +41,9 @@ def post():
 
     bytes_ = request.get_data()
     user_file = add_file(bytes_)
-    return FILE_CREATED.update(id=user_file.id, file=user_file.file_id)
+    return JSONMessage(
+        'User file added.', id=user_file.id, file=user_file.file_id,
+        status=201)
 
 
 @REQUIRE_OAUTH('comcat')
@@ -69,11 +66,11 @@ def delete(user_file):
     """Deletes a user file."""
 
     user_file.delete_instance()
-    return FILE_DELETED
+    return JSONMessage('User file deleted.', status=200)
 
 
-ENDPOINTS = (
+ENDPOINTS = [
     (['POST'], '/user-file', post, 'add_user_file'),
     (['GET'], '/user-file/<int:ident>', get, 'get_user_file'),
     (['DELETE'], '/user-file/<int:ident>', delete, 'delete_user_file')
-)
+]
