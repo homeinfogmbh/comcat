@@ -26,8 +26,7 @@ def list_ubc(user: int = None) -> Iterable[UserBaseChart]:
     if user is not None:
         condition &= User.id == user
 
-    return UserBaseChart.select().join(User).join(Tenement).join_from(
-        UserBaseChart, BaseChart).where(condition)
+    return UserBaseChart.select(cascade=True).where(condition)
 
 
 def get_ubc(ident: int) -> UserBaseChart:

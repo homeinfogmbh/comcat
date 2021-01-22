@@ -15,15 +15,15 @@ __all__ = ['ROUTES']
 def list_user_menus(user: int) -> Iterable[UserMenu]:
     """Lists menus assignments for the given user."""
 
-    return UserMenu.select().join(User).where(
-        (User.id == user) & (User.customer == CUSTOMER))
+    return UserMenu.select(cascade=True).where(
+        (User.id == user) & (User.customer == CUSTOMER.id))
 
 
 def get_user_menu(ident: int) -> Iterable:
     """Returns the respective UserMenu for the current customer context."""
 
-    return UserMenu.select().join(User).where(
-        (UserMenu.id == ident) & (User.customer == CUSTOMER)
+    return UserMenu.select(cascade=True).where(
+        (UserMenu.id == ident) & (User.customer == CUSTOMER.id)
     ).get()
 
 

@@ -15,7 +15,7 @@ __all__ = ['ROUTES']
 def list_user_configs(user: int) -> Iterable[UserConfiguration]:
     """Lists configuration assignments of the given user."""
 
-    return UserConfiguration.select().join(User).where(
+    return UserConfiguration.select(cascade=True).where(
         (User.id == user) & (User.customer == CUSTOMER.id))
 
 
@@ -24,7 +24,7 @@ def get_user_config(ident: int) -> UserConfiguration:
     by its ID and customer context.
     """
 
-    return UserConfiguration.select().join(User).where(
+    return UserConfiguration.select(cascade=True).where(
         (UserConfiguration.id == ident) & (User.customer == CUSTOMER.id)
     ).get()
 
