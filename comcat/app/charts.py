@@ -52,7 +52,6 @@ def jsonify_base_chart(base_chart: BaseChart) -> dict:
 
     json = base_chart.chart.to_json(skip={'schedule'})
     json['base']['menus'] = [menu.menu.value for menu in get_menus(base_chart)]
-    print('JSON-ifyed base chart:', json, flush=True)
     return json
 
 
