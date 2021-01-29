@@ -21,7 +21,8 @@ __all__ = ['ENDPOINTS']
 def _get_messages():
     """Yields the tenant-to-tenant messages the current user may access."""
 
-    select = TenantMessage.select(cascade=True)
+    select = TenantMessage.select(cascade=True).join_from(
+        TenantMessage, UserTenantMessage, JOIN.LEFT_OUTER)
 
     if USER.admin:
         # Admins can see all tenant-to-tenant messages of their company.
@@ -49,7 +50,6 @@ def _get_messages():
             )
         )
     )
-    select = select.join(UserTenantMessage, JOIN.LEFT_OUTER)
     return select.where(condition)
 
 
