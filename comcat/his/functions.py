@@ -1,17 +1,30 @@
 """Common functions."""
 
-from typing import Iterable
+from typing import Iterable, Iterator, Union
 
+from peewee import ModelSelect
+
+from cmslib.orm.charts import BaseChart
+from cmslib.orm.group import Group
+from comcatlib import GroupMemberUser
+from comcatlib import InvalidAddress
+from comcatlib import MenuBaseChart
+from comcatlib import User
+from comcatlib import UserDamageReport
 from his import ACCOUNT, CUSTOMER
-from mdb import Tenement
+from mdb import Address, Customer, Tenement
 
-from comcatlib import User, UserDamageReport
-from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
-from comcatlib.messages import NO_SUCH_TENEMENT
-from comcatlib.messages import NO_SUCH_USER
+from comcat.his.grouptree import GroupTree
 
 
 __all__ = [
+    'get_address',
+    'get_customer',
+    'get_group_member_user',
+    'get_group_member_users',
+    'get_groups_tree',
+    'get_menu_base_chart',
+    'get_menu_base_charts',
     'get_tenement',
     'get_tenements',
     'get_user',
@@ -21,13 +34,70 @@ __all__ = [
 ]
 
 
+def get_address(address: Union[int, dict]) -> Address:
+    """Returns the specified address."""
+
+    if isinstance(address, int):
+        return Address.select().where(Address.id == address).get()
+
+    if isinstance(address, list):
+        if len(address) != 4:
+            raise InvalidAddress()
+
+        address = Address.add_by_address(address)
+
+        if not address.id:
+            address.save()
+
+        return address
+
+    raise InvalidAddress()
+
+
+def get_customer(ident: int) -> Customer:
+    """Returns the specified customer."""
+
+    return Customer.select(cascade=True).where(Customer.id == ident).get()
+
+
+def get_group_member_user(ident: int) -> GroupMemberUser:
+    """Returns the requested group <> user mapping."""
+
+    return get_group_member_users().where(GroupMemberUser.id == ident).get()
+
+
+def get_group_member_users() -> ModelSelect:
+    """Selects group <> user mappings."""
+
+    return GroupMemberUser.select(cascade=True).where(
+        Tenement.customer == CUSTOMER.id)
+
+
+def get_groups_tree() -> Iterator[GroupTree]:
+    """Returns the management tree."""
+
+    for root_group in Group.select(cascade=True).where(
+            (Group.customer == CUSTOMER.id) & (Group.parent >> None)):
+        yield GroupTree(root_group)
+
+
+def get_menu_base_chart(ident: int) -> MenuBaseChart:
+    """Returns the respective base chart menu."""
+
+    return get_menu_base_charts().where(MenuBaseChart.id == ident).get()
+
+
+def get_menu_base_charts() -> ModelSelect:
+    """Yields base chart menus for the given base chart."""
+
+    return MenuBaseChart.select(cascade=True).where(
+        BaseChart.customer == CUSTOMER.id)
+
+
 def get_tenement(ident: int) -> Tenement:
     """Returns the given tenement by ID for the current customer."""
 
-    try:
-        return get_tenements().where(Tenement.id == ident).get()
-    except Tenement.DoesNotExist:
-        raise NO_SUCH_TENEMENT from None
+    return get_tenements().where(Tenement.id == ident).get()#
 
 
 def get_tenements() -> Iterable[Tenement]:
@@ -42,10 +112,7 @@ def get_tenements() -> Iterable[Tenement]:
 def get_user(ident: int) -> User:
     """Returns the respective ComCat user of the current customer."""
 
-    try:
-        return get_users().where(User.id == ident).get()
-    except User.DoesNotExist:
-        raise NO_SUCH_USER from None
+    return get_users().where(User.id == ident).get()
 
 
 def get_users() -> Iterable[User]:
@@ -59,18 +126,15 @@ def get_users() -> Iterable[User]:
     return select.where(Tenement.customer == CUSTOMER.id)
 
 
+def get_user_damage_report(ident: int) -> UserDamageReport:
+    """Returns a damage report with the given ID."""
+
+    return get_user_damage_reports().where(
+        UserDamageReport.id == ident).get()
+
+
 def get_user_damage_reports() -> Iterable[UserDamageReport]:
     """Yields damage reports for the current user."""
 
     return UserDamageReport.select().join(User).join(Tenement).where(
         Tenement.customer == CUSTOMER.id)
-
-
-def get_user_damage_report(ident: int) -> UserDamageReport:
-    """Returns a damage report with the given ID."""
-
-    try:
-        return get_user_damage_reports().where(
-            UserDamageReport.id == ident).get()
-    except UserDamageReport.DoesNotExist:
-        raise NO_SUCH_DAMAGE_REPORT from None

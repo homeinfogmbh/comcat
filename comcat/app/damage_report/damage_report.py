@@ -1,7 +1,5 @@
 """Damage report attachment endpoints."""
 
-from typing import Iterable
-
 from flask import request
 
 from comcatlib import ADDRESS
@@ -9,36 +7,16 @@ from comcatlib import CUSTOMER
 from comcatlib import REQUIRE_OAUTH
 from comcatlib import USER
 from comcatlib import UserDamageReport
-from comcatlib.messages import DAMAGE_REPORT_ALREADY_PROCESSED
-from comcatlib.messages import DAMAGE_REPORT_DELETED
-from comcatlib.messages import DAMAGE_REPORT_SUBMITTED
-from comcatlib.messages import NO_SUCH_DAMAGE_REPORT
 from damage_report import DamageReport, email
 from wsgilib import JSON, JSONMessage
+
+from comcat.app.functions import get_damage_reports, get_damage_report
 
 
 __all__ = ['ENDPOINTS']
 
 
 DENIED_FIELDS = {'address', 'timestamp', 'checked'}
-
-
-def get_damage_reports() -> Iterable[DamageReport]:
-    """Yields damage reports for the current user."""
-
-    condition = UserDamageReport.user == USER.id
-    return DamageReport.select().join(UserDamageReport).where(condition)
-
-
-def get_damage_report(report_id: int) -> DamageReport:
-    """Returns a damage report with the given ID."""
-
-    condition = UserDamageReport.id == report_id
-
-    try:
-        return get_damage_reports().where(condition).get()
-    except DamageReport.DoesNotExist:
-        raise NO_SUCH_DAMAGE_REPORT from None
 
 
 @REQUIRE_OAUTH('comcat')
@@ -67,7 +45,8 @@ def post() -> JSONMessage:
         user=USER.id, damage_report=damage_report)
     user_damage_report.save()
     email(damage_report)
-    return DAMAGE_REPORT_SUBMITTED.update(id=user_damage_report.id)
+    return JSONMessage(
+        'Damage report submitted.', id=user_damage_report.id, status=201)
 
 
 @REQUIRE_OAUTH('comcat')
@@ -80,9 +59,9 @@ def delete(report_id: int) -> JSONMessage:
         # Deletion of corresponding damage report will also
         # delete user-damage report via database cascading.
         damage_report.delete_instance()
-        return DAMAGE_REPORT_DELETED
+        return JSONMessage('Damage report deleted.', status=200)
 
-    return DAMAGE_REPORT_ALREADY_PROCESSED
+    return JSONMessage('Damage report already processed.', status=403)
 
 
 ENDPOINTS = (

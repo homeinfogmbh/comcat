@@ -6,12 +6,13 @@ from peewee import ModelSelect
 
 from cmslib.orm.charts import BaseChart
 from cmslib.orm.content.group import GroupBaseChart
+from cmslib.orm.group import Group
 from wsgilib import JSON
 
 from comcatlib import REQUIRE_OAUTH, USER
-from comcatlib.orm.content import UserBaseChart
-from comcatlib.orm.group import Group, GroupMemberUser
-from comcatlib.orm.menu import BaseChartMenu
+from comcatlib import UserBaseChart
+from comcatlib import GroupMemberUser
+from comcatlib import MenuBaseChart
 
 
 __all__ = ['ENDPOINTS', 'get_base_charts']
@@ -42,8 +43,8 @@ def get_base_charts() -> ModelSelect:
 def get_menus(base_chart: BaseChart) -> ModelSelect:
     """Yields the menus for the base chart."""
 
-    return BaseChartMenu.select(cascade=True).where(
-        BaseChartMenu.base_chart == base_chart)
+    return MenuBaseChart.select(cascade=True).where(
+        MenuBaseChart.base_chart == base_chart)
 
 
 def jsonify_base_chart(base_chart: BaseChart) -> dict:

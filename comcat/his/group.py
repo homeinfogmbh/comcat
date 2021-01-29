@@ -1,46 +1,38 @@
 """ComCat accounts as members in groups."""
 
 from __future__ import annotations
-from typing import Iterator
 
 from flask import request
 
-from cmslib.messages.group import MEMBER_ADDED
-from cmslib.messages.group import MEMBER_DELETED
-from cmslib.messages.group import NO_SUCH_MEMBER
-from cmslib.orm.group import Group
 from cmslib.functions.group import get_group
-from comcatlib import GroupMemberUser, User
-from his import CUSTOMER, authenticated, authorized
+from comcatlib import GroupMemberUser
+from his import authenticated, authorized, require_json
 from wsgilib import JSON, JSONMessage
 
+from comcat.his.functions import get_group_member_user
+from comcat.his.functions import get_group_member_users
+from comcat.his.functions import get_groups_tree
 from comcat.his.functions import get_user
+from comcat.his.grouptree import GroupTree
 
 
 __all__ = ['ROUTES']
 
 
-def get_groups_tree() -> Iterator[GroupContent]:
-    """Returns the management tree."""
+@authenticated
+@authorized('comcat')
+def list_() -> JSON:
+    """Lists group <> user mappings."""
 
-    for root_group in Group.select().where(
-            (Group.customer == CUSTOMER.id) & (Group.parent >> None)):
-        yield GroupContent(root_group)
+    return JSON([gmu.to_json() for gmu in get_group_member_users()])
 
 
 @authenticated
 @authorized('comcat')
-def get(gid: int) -> JSON:
-    """Returns the group's mamber mappings for ComCat users."""
+def get(ident: int) -> JSON:
+    """Returns the respective group <> user mapping."""
 
-    group = get_group(gid)
-    group_members = []
-
-    for group_member_user in GroupMemberUser.select().where(
-            GroupMemberUser.group == group):
-        group_members.append(group_member_user.to_json())
-
-    return JSON(group_members)
+    return JSON(get_group_member_user(ident).to_json())
 
 
 @authenticated
@@ -48,25 +40,25 @@ def get(gid: int) -> JSON:
 def groups_tree() -> JSON:
     """Returns a tree view of the groups."""
 
-    return JSON([group.to_json() for group in get_groups_tree()])
+    return JSON([tree.to_json() for tree in get_groups_tree()])
 
 
 @authenticated
 @authorized('dscms4')
-def groups_subtree(gid: int) -> JSON:
+def groups_subtree(ident: int) -> JSON:
     """Lists the groups."""
 
-    group_content = GroupContent(get_group(gid))
-    return JSON(group_content.to_json(recursive=False))
+    return JSON(GroupTree(get_group(ident)).to_json(recursive=False))
 
 
 @authenticated
 @authorized('comcat')
-def add(gid: int) -> JSONMessage:
+@require_json(dict)
+def add() -> JSONMessage:
     """Adds the ComCat user to the respective group."""
 
-    group = get_group(gid)
-    user = get_user(request.json['user'])
+    group = get_group(request.json.pop('group'))
+    user = get_user(request.json.pop('user'))
 
     try:
         group_member_user = GroupMemberUser.get(
@@ -76,66 +68,24 @@ def add(gid: int) -> JSONMessage:
         group_member_user = GroupMemberUser(group=group, user=user)
         group_member_user.save()
 
-    return MEMBER_ADDED.update(id=group_member_user.id)
+    return JSONMessage(
+        'Group member added.', id=group_member_user.id, status=201)
 
 
 @authenticated
 @authorized('comcat')
-def delete(gid: int, user: int) -> JSONMessage:
+def delete(ident: int) -> JSONMessage:
     """Deletes the respective user from the group."""
 
-    try:
-        group_member_user = GroupMemberUser.get(
-            (GroupMemberUser.group == get_group(gid))
-            & (GroupMemberUser.user == user))
-    except GroupMemberUser.DoesNotExist:
-        raise NO_SUCH_MEMBER from None
-
-    group_member_user.delete_instance()
-    return MEMBER_DELETED
-
-
-class GroupContent:
-    """Represents content of a group."""
-
-    def __init__(self, group: Group):
-        """Sets the respective group."""
-        self.group = group
-
-    @property
-    def children(self) -> Iterator[GroupContent]:
-        """Yields children of this group."""
-        for group in Group.select().where(Group.parent == self.group):
-            yield GroupContent(group)
-
-    @property
-    def users(self) -> Iterator[User]:
-        """Yields users of this group."""
-        for group_member_user in GroupMemberUser.select().where(
-                GroupMemberUser.group == self.group):
-            yield group_member_user.user
-
-    def to_json(self, recursive: bool = True) -> dict:
-        """Recursively converts the group content into a JSON-ish dict."""
-        json = self.group.to_json(parent=False, skip=('customer',))
-
-        if recursive:
-            children = [
-                group.to_json(recursive=True) for group in self.children]
-        else:
-            children = [
-                group.group.to_json(parent=False, skip=('customer',))
-                for group in self.children]
-
-        json['children'] = children
-        json['users'] = [user.to_json() for user in self.users]
-        return json
+    get_group_member_user(ident).delete_instance()
+    return JSONMessage('Group member user deleted.', status=200)
 
 
 ROUTES = (
-    ('GET', '/group/<int:gid>/user', get),
+    ('GET', '/group/user', list_),
+    ('GET', '/group/user/<int:ident>', get),
     ('GET', '/grouptree', groups_tree),
-    ('GET', '/grouptree/<int:gid>', groups_subtree),
-    ('POST', '/group/<int:gid>/user', add),
-    ('DELETE', '/group/<int:gid>/user/<int:user>', delete)
+    ('GET', '/grouptree/<int:ident>', groups_subtree),
+    ('POST', '/group/user', add),
+    ('DELETE', '/group/user/<int:ident>', delete)
 )

@@ -1,57 +1,19 @@
 """Tenements management."""
 
-from typing import Union
-
 from flask import request
 from peewee import IntegrityError
 
 from his import authenticated, authorized, root
-from his.messages.customer import NO_SUCH_CUSTOMER
-from mdb import Address, Customer, Tenement
+from mdb import Tenement
 from wsgilib import JSON, JSONMessage
 
-from comcatlib.messages import INVALID_ADDRESS
-from comcatlib.messages import NO_SUCH_ADDRESS
-from comcatlib.messages import TENEMENT_ADDED
-from comcatlib.messages import TENEMENT_DELETED
-from comcatlib.messages import TENEMENT_IN_USE
-
-from comcat.his.functions import get_tenement, get_tenements
+from comcat.his.functions import get_address
+from comcat.his.functions import get_customer
+from comcat.his.functions import get_tenement
+from comcat.his.functions import get_tenements
 
 
 __all__ = ['ROUTES']
-
-
-def get_address(address: Union[int, dict]) -> Address:
-    """Returns the specified address."""
-
-    if isinstance(address, int):
-        try:
-            return Address[address]
-        except Address.DoesNotExist:
-            raise NO_SUCH_ADDRESS from None
-
-    if isinstance(address, list):
-        if len(address) != 4:
-            raise INVALID_ADDRESS
-
-        address = Address.add_by_address(address)
-
-        if not address.id:
-            address.save()
-
-        return address
-
-    raise INVALID_ADDRESS
-
-
-def get_customer(ident: int) -> Customer:
-    """Returns the specified customer."""
-
-    try:
-        return Customer[ident]
-    except Customer.DoesNotExist:
-        raise NO_SUCH_CUSTOMER from None
 
 
 @authenticated
@@ -80,7 +42,7 @@ def add() -> JSONMessage:
     address = get_address(request.json.pop('address'))
     tenement = Tenement.from_json(request.json, customer, address)
     tenement.save()
-    return TENEMENT_ADDED.update(id=tenement.id)
+    return JSONMessage('Tenement added.', id=tenement.id, status=201)
 
 
 @authenticated
@@ -95,7 +57,7 @@ def delete(ident: int) -> JSONMessage:
     try:
         tenement.delete_instance()
     except IntegrityError:
-        return TENEMENT_IN_USE
+        return JSONMessage('The tenement is in use.', status=400)
 
     try:
         address.delete_instance()
@@ -104,7 +66,8 @@ def delete(ident: int) -> JSONMessage:
     else:
         address_deleted = True
 
-    return TENEMENT_DELETED.update(address_deleted=address_deleted)
+    return JSONMessage(
+        'Tenement deleted.', address_deleted=address_deleted, status=200)
 
 
 ROUTES = (
