@@ -4,9 +4,7 @@ from typing import Iterator
 
 from peewee import ModelSelect
 
-from cmslib.orm.charts import BaseChart
-from cmslib.orm.content.group import GroupBaseChart
-from cmslib.orm.group import Group
+from cmslib import BaseChart, Group, GroupBaseChart
 from wsgilib import JSON
 
 from comcatlib import REQUIRE_OAUTH, USER

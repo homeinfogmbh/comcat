@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from flask import request
 
-from cmslib.functions.group import get_group
+from cmslib import get_group
 from comcatlib import GroupMemberUser
 from his import authenticated, authorized, require_json
 from wsgilib import JSON, JSONMessage

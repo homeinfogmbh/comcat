@@ -4,8 +4,7 @@ from typing import Iterable, Iterator, Union
 
 from peewee import ModelSelect
 
-from cmslib.orm.charts import BaseChart
-from cmslib.orm.group import Group
+from cmslib import BaseChart, Group
 from comcatlib import GroupMemberUser
 from comcatlib import InvalidAddress
 from comcatlib import MenuBaseChart

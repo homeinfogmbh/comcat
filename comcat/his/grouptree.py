@@ -3,7 +3,7 @@
 from __future__ import annotations
 from typing import Iterator
 
-from cmslib.orm.group import Group
+from cmslib import Group
 from comcatlib import GroupMemberUser, User
 
 

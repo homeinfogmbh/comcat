@@ -8,17 +8,8 @@ from flask import request
 from his import authenticated, authorized, root
 from wsgilib import JSON, JSONMessage, XML
 
-from cmslib.exceptions import AmbiguousConfigurationsError
-from cmslib.exceptions import NoConfigurationFound
-from cmslib.messages.presentation import NO_CONFIGURATION_ASSIGNED
-from cmslib.messages.presentation import AMBIGUOUS_CONFIGURATIONS
-
-from comcatlib import DuplicateUser, User, Presentation
+from comcatlib import User, Presentation
 from comcatlib.functions import genpw
-from comcatlib.messages import DUPLICATE_USER
-from comcatlib.messages import USER_ADDED
-from comcatlib.messages import USER_DELETED
-from comcatlib.messages import USER_PATCHED
 
 from comcat.his.functions import get_tenement, get_user, get_users
 
@@ -64,7 +55,7 @@ def resetpw(user: User) -> JSONMessage:
 
     user.passwd = passwd = genpw()
     user.save()
-    return USER_PATCHED.update(passwd=passwd)
+    return JSONMessage('Password reset.', passwd=passwd, status=200)
 
 
 @authenticated
@@ -74,14 +65,9 @@ def add() -> JSONMessage:
     """Adds a new ComCat user."""
 
     tenement = get_tenement(request.json.pop('tenement'))
-
-    try:
-        user, passwd = User.from_json(request.json, tenement)
-    except DuplicateUser:
-        return DUPLICATE_USER
-
+    user, passwd = User.from_json(request.json, tenement)
     user.save()
-    return USER_ADDED.update(id=user.id, passwd=passwd)
+    return JSONMessage('User added.', id=user.id, passwd=passwd, status=201)
 
 
 @authenticated
@@ -93,7 +79,7 @@ def patch(user: User) -> JSONMessage:
 
     user.patch_json(request.json)
     user.save()
-    return USER_PATCHED
+    return JSONMessage('User patched.', status=200)
 
 
 @authenticated
@@ -104,7 +90,7 @@ def delete(user: User) -> JSONMessage:
     """Deletes the respective user."""
 
     user.delete_instance()
-    return USER_DELETED
+    return JSONMessage('User deleted.', status=200)
 
 
 @authenticated
@@ -115,15 +101,10 @@ def get_presentation(user: User) -> Union[JSON, JSONMessage, XML]:
 
     presentation = Presentation(user)
 
-    try:
-        if 'xml' in request.args:
-            return XML(presentation.to_dom())
+    if 'xml' in request.args:
+        return XML(presentation.to_dom())
 
-        return JSON(presentation.to_json())
-    except AmbiguousConfigurationsError:
-        return AMBIGUOUS_CONFIGURATIONS
-    except NoConfigurationFound:
-        return NO_CONFIGURATION_ASSIGNED
+    return JSON(presentation.to_json())
 
 
 ROUTES = (

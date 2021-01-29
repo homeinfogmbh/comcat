@@ -2,7 +2,7 @@
 
 from flask import request
 
-from cmslib.functions.charts import get_base_chart
+from cmslib import get_base_chart
 from comcatlib.orm.menu import Menu, MenuBaseChart
 from his import authenticated, authorized
 from wsgilib import JSON, JSONMessage

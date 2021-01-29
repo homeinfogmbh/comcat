@@ -4,8 +4,7 @@ from typing import Iterable
 
 from flask import request
 
-from cmslib.functions.charts import get_chart
-from cmslib.orm.charts import BaseChart
+from cmslib import BaseChart, get_chart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
 from mdb import Tenement
