@@ -18,10 +18,12 @@ __all__ = ['ENDPOINTS', 'get_base_charts']
 
 def user_groups() -> Iterator[Group]:
     """Yields all groups the given deployment is a member of."""
+
     groups = Group.select(cascade=True).where(
         Group.customer == USER.tenement.customer_id)
-    condition = GroupMemberUser.user == USER.id
-    for gmu in GroupMemberUser.select(cascade=True).where(condition):
+
+    for gmu in GroupMemberUser.select(cascade=True).where(
+            GroupMemberUser.user == USER.id):
         yield from Groups(groups).rtree(gmu.group)
 
 
