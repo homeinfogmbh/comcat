@@ -4,7 +4,7 @@ from typing import Iterator
 
 from peewee import ModelSelect
 
-from cmslib import BaseChart, Group, GroupBaseChart
+from cmslib import BaseChart, Group, Groups, GroupBaseChart
 from wsgilib import JSON
 
 from comcatlib import REQUIRE_OAUTH, USER
@@ -19,11 +19,12 @@ __all__ = ['ENDPOINTS', 'get_base_charts']
 def user_groups() -> Iterator[Group]:
     """Yields all groups the given deployment is a member of."""
 
+    groups = Group.select(cascade=True).where(
+        Group.customer == USER.tenement.customer_id)
     condition = GroupMemberUser.user == USER.id
 
     for gmu in GroupMemberUser.select(cascade=True).where(condition):
-        yield gmu.group
-        yield from gmu.group.parents
+        yield Groups(groups).rtree(gmu.group)
 
 
 def get_base_charts() -> ModelSelect:
