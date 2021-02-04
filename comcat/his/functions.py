@@ -10,7 +10,7 @@ from comcatlib import InvalidAddress
 from comcatlib import MenuBaseChart
 from comcatlib import User
 from comcatlib import UserDamageReport
-from his import ACCOUNT, CUSTOMER
+from his import CUSTOMER
 from mdb import Address, Customer, Tenement
 
 from comcat.his.grouptree import GroupTree
@@ -102,10 +102,8 @@ def get_tenement(ident: int) -> Tenement:
 def get_tenements() -> Iterable[Tenement]:
     """Yields tenements of the current user."""
 
-    if ACCOUNT.root:
-        return Tenement.select().where(True)
-
-    return Tenement.select().where(Tenement.customer == CUSTOMER.id)
+    return Tenement.select(cascade=True).where(
+        Tenement.customer == CUSTOMER.id)
 
 
 def get_user(ident: int) -> User:
@@ -117,12 +115,7 @@ def get_user(ident: int) -> User:
 def get_users() -> Iterable[User]:
     """Yields ComCat users of the current customer."""
 
-    select = User.select().join(Tenement)
-
-    if ACCOUNT.root:
-        return select.where(True)
-
-    return select.where(Tenement.customer == CUSTOMER.id)
+    return User.select(cascade=True).where(Tenement.customer == CUSTOMER.id)
 
 
 def get_user_damage_report(ident: int) -> UserDamageReport:
