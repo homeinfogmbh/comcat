@@ -16,7 +16,7 @@ from comcat.app.functions import get_damage_reports, get_damage_report
 __all__ = ['ENDPOINTS']
 
 
-DENIED_FIELDS = {'address', 'timestamp', 'checked'}
+DENIED_FIELDS = {'address', 'annotation', 'timestamp', 'checked'}
 
 
 @REQUIRE_OAUTH('comcat')
