@@ -96,7 +96,7 @@ def get_menu_base_charts() -> ModelSelect:
 def get_tenement(ident: int) -> Tenement:
     """Returns the given tenement by ID for the current customer."""
 
-    return get_tenements().where(Tenement.id == ident).get()#
+    return get_tenements().where(Tenement.id == ident).get()
 
 
 def get_tenements() -> Iterable[Tenement]:
