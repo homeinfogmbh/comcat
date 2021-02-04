@@ -77,7 +77,12 @@ def add() -> JSONMessage:
 def patch(user: User) -> JSONMessage:
     """Updates the respective user."""
 
-    user.patch_json(request.json)
+    tenement = request.json.pop('tenement', None)
+
+    if tenement is not None:
+        tenement = get_tenement(tenement)
+
+    user.patch_json(request.json, tenement)
     user.save()
     return JSONMessage('User patched.', status=200)
 
