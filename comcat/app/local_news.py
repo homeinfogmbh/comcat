@@ -78,10 +78,10 @@ def get_local_news_image(image_id: int) -> Binary:
         return Binary(image.data)
 
 
-ENDPOINTS = (
+ENDPOINTS = [
+    (['GET'], '/local-news', get_local_news_articles, 'list_news_articles'),
     (['GET'], '/local-news/<int:article_id>', get_local_news_article,
      'get_news_article'),
-    (['GET'], '/local-news', get_local_news_articles, 'list_news_articles'),
-    (['GET'], '/local-news/<int:image_id>', get_local_news_image,
+    (['GET'], '/local-news/image/<int:image_id>', get_local_news_image,
      'get_news_image')
-)
+]
