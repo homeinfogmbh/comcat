@@ -1,4 +1,4 @@
-# Authorization Server:
+# Authorization Server
 
 ## Client registrieren
 
@@ -19,7 +19,7 @@ Content-Type: `application/json`
       "id": <int:client_database_id>,
       "client_id": <str:client_oauth_id>,
       ...
-       clientSecret": <str:client_secret>,
+      "clientSecret": <str:client_secret>,
       "authorizationNonce": <str:authorization_nonce>
     }
 
