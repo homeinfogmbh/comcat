@@ -70,9 +70,9 @@ def delete(ident: int) -> JSONMessage:
         'Tenement deleted.', address_deleted=address_deleted, status=200)
 
 
-ROUTES = (
+ROUTES = [
     ('GET', '/tenement', list_),
     ('GET', '/tenement/<int:ident>', get),
     ('POST', '/tenement', add),
     ('DELETE', '/tenement/<int:ident>', delete)
-)
+]

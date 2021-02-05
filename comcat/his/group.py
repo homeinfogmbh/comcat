@@ -81,11 +81,11 @@ def delete(ident: int) -> JSONMessage:
     return JSONMessage('Group member user deleted.', status=200)
 
 
-ROUTES = (
+ROUTES = [
     ('GET', '/group/user', list_),
     ('GET', '/group/user/<int:ident>', get),
     ('GET', '/grouptree', groups_tree),
     ('GET', '/grouptree/<int:ident>', groups_subtree),
     ('POST', '/group/user', add),
     ('DELETE', '/group/user/<int:ident>', delete)
-)
+]
