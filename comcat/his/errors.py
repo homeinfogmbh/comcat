@@ -4,6 +4,7 @@ from cmslib import AmbiguousConfigurationsError, NoConfigurationFound
 from comcatlib import DuplicateUser
 from comcatlib import InvalidAddress
 from comcatlib import GroupMemberUser
+from comcatlib import MenuBaseChart
 from comcatlib import User
 from comcatlib import UserBaseChart
 from comcatlib import UserConfiguration
@@ -28,6 +29,8 @@ ERRORS = {
         'No such group member.', status=404),
     InvalidAddress: lambda _: JSONMessage(
         'Invalid value for address.', status=400),
+    MenuBaseChart.DoesNotExist: lambda _: JSONMessage(
+        'No such menu base chart.', status=404),
     NoConfigurationFound: lambda _: JSONMessage(
         'No configuration found.', status=400),
     Tenement.DoesNotExist: lambda _: JSONMessage(
