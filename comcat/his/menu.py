@@ -23,6 +23,14 @@ def list_() -> JSON:
 
 @authenticated
 @authorized('comcat')
+def get(ident: int) -> JSON:
+    """Returns the menus of the respective base chart."""
+
+    return JSON(get_menu_base_chart(ident).to_json())
+
+
+@authenticated
+@authorized('comcat')
 def add() -> JSONMessage:
     """Adds a base chart menu."""
 
@@ -44,6 +52,7 @@ def delete(ident: int) -> JSONMessage:
 
 ROUTES = [
     ('GET', '/menu/base_chart', list_),
+    ('GET', '/menu/base_chart/<int:ident>', get),
     ('POST', '/menu/base_chart', add),
     ('DELETE', '/menu/base_chart/<int:ident>', delete)
 ]
