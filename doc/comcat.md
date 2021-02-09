@@ -1,5 +1,21 @@
 # Authorization Server
 
+## Boundaries
+
+* Token endpoint auth method: `client_secret_post`
+* Allowed redirect URLs:
+  - `https://comcat.homeinfo.de/oauth/authorize`
+  - `https://comcat.homeinfo.de/oauth/token`
+  - `de.homeinfo.comcat://auth`
+  - `de.homeinfo.comcat://token`
+* Allowed grant types:
+  - `authorization_code`
+  - `refresh_token`
+* Allowed response types:
+  - `code`
+  - `token`
+* Allowed scopes: `comcat`
+
 ## Client registrieren
 
 `POST` `https://comcat.homeinfo.de/client`
