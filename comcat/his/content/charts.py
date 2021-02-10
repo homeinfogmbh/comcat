@@ -4,11 +4,13 @@ from typing import Iterable
 
 from flask import request
 
-from cmslib import BaseChart, get_chart
+from cmslib import BaseChart, get_base_chart, get_chart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
 from mdb import Tenement
 from wsgilib import JSON, JSONMessage
+
+from comcat.his.functions import get_user
 
 
 __all__ = ['ROUTES']
@@ -55,7 +57,9 @@ def list_(user: int) -> JSON:
 def add() -> JSONMessage:
     """Adds the chart to the respective user."""
 
-    user_base_chart = UserBaseChart.from_json(request.json)
+    user = get_user(request.json.pop('user'))
+    base_chart = get_base_chart(request.json.pop('baseChart'))
+    user_base_chart = UserBaseChart.from_json(request.json, user, base_chart)
     user_base_chart.save()
     return JSONMessage('User base chart added.', id=user_base_chart.id,
                        status=201)
