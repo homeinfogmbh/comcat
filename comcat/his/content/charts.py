@@ -97,11 +97,11 @@ def chart_user_base_charts(ident: int) -> JSONMessage:
 
 
 ROUTES = (
-    ('GET', '/content/user/base-chart/<int:ident>', get),
-    ('GET', '/content/user/<int:user>/base-chart', list_),
-    ('POST', '/content/user/base-chart', add),
-    ('PATCH', '/content/user/base-chart/<int:ident>', patch),
-    ('DELETE', '/content/user/base-chart/<int:ident>', delete),
-    ('GET', '/content/user/user-base-charts/<int:ident>',
+    ('GET', '/content/user/base_chart/<int:ident>', get),
+    ('GET', '/content/user/<int:user>/base_chart', list_),
+    ('POST', '/content/user/base_chart', add),
+    ('PATCH', '/content/user/base_chart/<int:ident>', patch),
+    ('DELETE', '/content/user/base_chart/<int:ident>', delete),
+    ('GET', '/content/user/user_base_charts/<int:ident>',
      chart_user_base_charts)
 )
