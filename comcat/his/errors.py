@@ -34,7 +34,7 @@ ERRORS = {
     NoConfigurationFound: lambda _: JSONMessage(
         'No configuration found.', status=400),
     Tenement.DoesNotExist: lambda _: JSONMessage(
-        'The requested tenement does not eixst.', status=404),
+        'The requested tenement does not exist.', status=404),
     User.DoesNotExist: lambda _: JSONMessage(
         'No such user.', status=404),
     UserBaseChart.DoesNotExist: lambda _: JSONMessage(
