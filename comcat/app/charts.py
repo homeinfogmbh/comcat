@@ -2,12 +2,13 @@
 
 from typing import Iterator
 
-from peewee import ModelSelect
+from peewee import JOIN, ModelSelect
 
 from cmslib import BaseChart, Group, Groups, GroupBaseChart
 from wsgilib import JSON
 
-from comcatlib import REQUIRE_OAUTH, USER
+from comcatlib import REQUIRE_OAUTH
+from comcatlib import USER
 from comcatlib import UserBaseChart
 from comcatlib import GroupMemberUser
 from comcatlib import MenuBaseChart
@@ -35,8 +36,8 @@ def get_base_charts() -> ModelSelect:
     condition &= BaseChart.trashed == 0
 
     return BaseChart.select(cascade=True).join_from(
-        BaseChart, UserBaseChart).join_from(
-        BaseChart, GroupBaseChart).where(condition)
+        BaseChart, UserBaseChart, join_type=JOIN.LEFT_OUTER).join_from(
+        BaseChart, GroupBaseChart, join_type=JOIN.LEFT_OUTER).where(condition)
 
 
 def get_menus(base_chart: BaseChart) -> ModelSelect:
