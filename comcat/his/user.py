@@ -11,6 +11,7 @@ from wsgilib import JSON, JSONMessage, XML
 from comcatlib import User, Presentation
 from comcatlib.functions import genpw
 
+from comcat.functions import logout
 from comcat.his.functions import get_tenement, get_user, get_users
 
 
@@ -112,6 +113,16 @@ def get_presentation(user: User) -> Union[JSON, JSONMessage, XML]:
     return JSON(presentation.to_json())
 
 
+@authenticated
+@authorized('comcat')
+@with_user
+def logout_(user: User) -> JSONMessage:
+    """Deletes the respective user."""
+
+    logout(user)
+    return JSONMessage('User logged out.', status=200)
+
+
 ROUTES = [
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
@@ -119,5 +130,6 @@ ROUTES = [
     ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
-    ('GET', '/user/<int:ident>/presentation', get_presentation)
+    ('GET', '/user/<int:ident>/presentation', get_presentation),
+    ('DELETE', '/user/<int:ident>/logout', logout_)
 ]
