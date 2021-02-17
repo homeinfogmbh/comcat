@@ -5,6 +5,7 @@ from itertools import chain
 from comcat.app import charts
 from comcat.app import damage_report
 from comcat.app import local_news
+from comcat.app import logout
 from comcat.app import lpt
 from comcat.app import meta
 from comcat.app import related_files
@@ -20,6 +21,7 @@ ENDPOINTS = [
     *charts.ENDPOINTS,
     *damage_report.ENDPOINTS,
     *local_news.ENDPOINTS,
+    *logout.ROUTES,
     *lpt.ENDPOINTS,
     *meta.ENDPOINTS,
     *related_files.ENDPOINTS,
