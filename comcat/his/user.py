@@ -1,7 +1,6 @@
 """Management of ComCat users."""
 
-from functools import wraps
-from typing import Callable, Union
+from typing import Union
 
 from flask import request
 
@@ -12,23 +11,10 @@ from comcatlib import User, Presentation
 from comcatlib.functions import genpw
 
 from comcat.functions import logout
-from comcat.his.functions import get_tenement, get_user, get_users
+from comcat.his.functions import get_tenement, get_users, with_user
 
 
 __all__ = ['ROUTES']
-
-
-def with_user(function: Callable) -> Callable:
-    """Decorator to run the respective function
-    with a user as first argument.
-    """
-
-    @wraps(function)
-    def wrapper(ident: int, *args, **kwargs):
-        """Wraps the original function."""
-        return function(get_user(ident), *args, **kwargs)
-
-    return wrapper
 
 
 @authenticated

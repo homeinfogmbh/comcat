@@ -1,6 +1,7 @@
 """Common functions."""
 
-from typing import Iterable, Iterator, Union
+from functools import wraps
+from typing import Callable, Iterable, Iterator, Union
 
 from peewee import ModelSelect
 
@@ -29,7 +30,8 @@ __all__ = [
     'get_user',
     'get_users',
     'get_user_damage_reports',
-    'get_user_damage_report'
+    'get_user_damage_report',
+    'with_user'
 ]
 
 
@@ -130,3 +132,16 @@ def get_user_damage_reports() -> Iterable[UserDamageReport]:
 
     return UserDamageReport.select().join(User).join(Tenement).where(
         Tenement.customer == CUSTOMER.id)
+
+
+def with_user(function: Callable) -> Callable:
+    """Decorator to run the respective function
+    with a user as first argument.
+    """
+
+    @wraps(function)
+    def wrapper(ident: int, *args, **kwargs):
+        """Wraps the original function."""
+        return function(get_user(ident), *args, **kwargs)
+
+    return wrapper
