@@ -620,3 +620,7 @@ Content-Type: Anhängig vom Typ der angefragten Datei.
 
 ### Dateien löschen
 `DELETE` `https://comcat.homeinfo.de/user-file/<int:ident>`
+
+## Abmelden
+Diese Schnittstelle dient dazu, den aktuellen Benutzer abzumelden.
+`DELETE` `https://comcat.homeinfo.de/logout`
