@@ -17,4 +17,4 @@ def logout_() -> JSONMessage:
     return JSONMessage('Tokens deleted.', status=200)
 
 
-ROUTES = [('DELETE', '/logout', logout_)]
+ROUTES = [('DELETE', '/logout', logout_, 'user_logout')]
