@@ -75,7 +75,7 @@ def _add_message():
 
     message = request.json['message']
     tenant_message = TenantMessage.add(CUSTOMER.id, ADDRESS.id, message)
-    tenant_message.subject = request.json.get('subject') or None
+    tenant_message.subject = request.json.get('subject')
     visibility = request.json.get('visibility')
 
     if visibility:
