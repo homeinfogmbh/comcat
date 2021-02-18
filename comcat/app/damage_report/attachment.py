@@ -6,8 +6,9 @@ from comcatlib import REQUIRE_OAUTH
 from damage_report import Attachment
 from wsgilib import JSONMessage
 
-from comcat.app.user_files import get_user_file
-from comcat.app.functions import get_attachment, get_user_damage_report
+from comcat.app.functions import get_attachment
+from comcat.app.functions import get_user_damage_report
+from comcat.app.functions import get_user_file
 
 
 __all__ = ['ENDPOINTS']
