@@ -1,38 +1,14 @@
 """User files endpoint."""
 
-from functools import wraps
-
 from flask import request
 
-from comcatlib import REQUIRE_OAUTH, USER, add_file, UserFile
+from comcatlib import REQUIRE_OAUTH, add_file, UserFile
 from wsgilib import Binary, JSON, JSONMessage
 
-
-__all__ = ['ENDPOINTS', 'get_user_file']
-
-
-def get_user_file(ident: int) -> UserFile:
-    """Returns the user file with the given ID."""
-
-    condition = UserFile.user == USER.id
-
-    if request.args.get('direct', False):
-        condition &= UserFile.file == ident
-    else:
-        condition &= UserFile.id == ident
-
-    return UserFile.select(cascade=True).where(condition).get()
+from comcat.app.functions import with_user_file
 
 
-def with_user_file(function: Callable[..., Any]) -> Callable[..., Any]:
-    """Returns the respective user file."""
-
-    @wraps(function)
-    def wrapper(ident: int, *args, **kwargs):
-        """Wraps the decorated function."""
-        return function(get_user_file(ident), *args, **kwargs)
-
-    return wrapper
+__all__ = ['ENDPOINTS']
 
 
 @REQUIRE_OAUTH('comcat')
