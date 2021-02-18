@@ -54,7 +54,7 @@ def add() -> JSONMessage:
         return JSONMessage('User quota exceeded.', status=403)
 
     tenement = get_tenement(request.json.pop('tenement'))
-    user, passwd = User.from_json(request.json, tenement)
+    user, passwd = User.from_json(request.json, tenement, deny={'created'})
     user.save()
     return JSONMessage('User added.', id=user.id, passwd=passwd, status=201)
 
