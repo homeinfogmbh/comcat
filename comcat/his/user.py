@@ -4,11 +4,10 @@ from typing import Union
 
 from flask import request
 
-from his import authenticated, authorized, root
+from his import CUSTOMER, admin, authenticated, authorized
 from wsgilib import JSON, JSONMessage, XML
 
-from comcatlib import User, Presentation
-from comcatlib.functions import genpw
+from comcatlib import Presentation, Settings, User, genpw
 
 from comcat.functions import logout
 from comcat.his.functions import get_tenement, get_users, with_user
@@ -47,9 +46,12 @@ def resetpw(user: User) -> JSONMessage:
 
 @authenticated
 @authorized('comcat')
-@root
+@admin
 def add() -> JSONMessage:
     """Adds a new ComCat user."""
+
+    if not Settings.for_customer(CUSTOMER.id).allocate_user():
+        return JSONMessage('User quota exceeded.', status=403)
 
     tenement = get_tenement(request.json.pop('tenement'))
     user, passwd = User.from_json(request.json, tenement)
@@ -59,7 +61,7 @@ def add() -> JSONMessage:
 
 @authenticated
 @authorized('comcat')
-@root
+@admin
 @with_user
 def patch(user: User) -> JSONMessage:
     """Updates the respective user."""
@@ -69,14 +71,14 @@ def patch(user: User) -> JSONMessage:
     if tenement is not None:
         tenement = get_tenement(tenement)
 
-    user.patch_json(request.json, tenement)
+    user.patch_json(request.json, tenement, deny={'created'})
     user.save()
     return JSONMessage('User patched.', status=200)
 
 
 @authenticated
 @authorized('comcat')
-@root
+@admin
 @with_user
 def delete(user: User) -> JSONMessage:
     """Deletes the respective user."""
