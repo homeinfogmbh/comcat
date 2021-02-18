@@ -11,7 +11,7 @@ from wsgilib import Binary, JSON, JSONMessage
 __all__ = ['ENDPOINTS', 'get_user_file']
 
 
-def get_user_file(ident):
+def get_user_file(ident: int) -> UserFile:
     """Returns the user file with the given ID."""
 
     condition = UserFile.user == USER.id
@@ -28,7 +28,7 @@ def with_user_file(function):
     """Returns the respective user file."""
 
     @wraps(function)
-    def wrapper(ident, *args, **kwargs):
+    def wrapper(ident: int, *args, **kwargs):
         """Wraps the decorated function."""
         return function(get_user_file(ident), *args, **kwargs)
 
@@ -36,7 +36,7 @@ def with_user_file(function):
 
 
 @REQUIRE_OAUTH('comcat')
-def post():
+def post() -> JSONMessage:
     """Adds a new file."""
 
     bytes_ = request.get_data()
@@ -48,7 +48,7 @@ def post():
 
 @REQUIRE_OAUTH('comcat')
 @with_user_file
-def get(user_file):
+def get(user_file: UserFile) -> JSONMessage:
     """Returns a user file."""
 
     if request.args.get('metadata'):
@@ -62,7 +62,7 @@ def get(user_file):
 
 @REQUIRE_OAUTH('comcat')
 @with_user_file
-def delete(user_file):
+def delete(user_file: UserFile) -> JSONMessage:
     """Deletes a user file."""
 
     user_file.delete_instance()
