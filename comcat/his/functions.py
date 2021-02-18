@@ -127,7 +127,7 @@ def get_user_damage_report(ident: int) -> UserDamageReport:
         UserDamageReport.id == ident).get()
 
 
-def get_user_damage_reports() -> Iterable[UserDamageReport]:
+def get_user_damage_reports() -> ModelSelect:
     """Yields damage reports for the current user."""
 
     return UserDamageReport.select().join(User).join(Tenement).where(
