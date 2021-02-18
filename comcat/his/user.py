@@ -54,7 +54,7 @@ def add() -> JSONMessage:
         return JSONMessage('User quota exceeded.', status=403)
 
     tenement = get_tenement(request.json.pop('tenement'))
-    user, passwd = User.from_json(request.json, tenement, deny={'created'})
+    user, passwd = User.from_json(request.json, tenement, skip={'created'})
     user.save()
     return JSONMessage('User added.', id=user.id, passwd=passwd, status=201)
 
@@ -71,7 +71,7 @@ def patch(user: User) -> JSONMessage:
     if tenement is not None:
         tenement = get_tenement(tenement)
 
-    user.patch_json(request.json, tenement, deny={'created'})
+    user.patch_json(request.json, tenement, skip={'created'})
     user.save()
     return JSONMessage('User patched.', status=200)
 
