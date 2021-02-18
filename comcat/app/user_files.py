@@ -24,7 +24,7 @@ def get_user_file(ident: int) -> UserFile:
     return UserFile.select(cascade=True).where(condition).get()
 
 
-def with_user_file(function):
+def with_user_file(function: Callable[..., Any]) -> Callable[..., Any]:
     """Returns the respective user file."""
 
     @wraps(function)
