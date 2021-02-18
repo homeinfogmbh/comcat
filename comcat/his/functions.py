@@ -11,6 +11,7 @@ from comcatlib import InvalidAddress
 from comcatlib import MenuBaseChart
 from comcatlib import User
 from comcatlib import UserDamageReport
+from comcatlib import UserTenantMessage
 from his import CUSTOMER
 from mdb import Address, Customer, Tenement
 
@@ -31,6 +32,7 @@ __all__ = [
     'get_users',
     'get_user_damage_reports',
     'get_user_damage_report',
+    'get_user_tenant_messages',
     'with_user'
 ]
 
@@ -131,6 +133,13 @@ def get_user_damage_reports() -> ModelSelect:
     """Yields damage reports for the current user."""
 
     return UserDamageReport.select().join(User).join(Tenement).where(
+        Tenement.customer == CUSTOMER.id)
+
+
+def get_user_tenant_messages() -> ModelSelect:
+    """Yields user tenant messages."""
+
+    return UserTenantMessage.select(cascade=True).where(
         Tenement.customer == CUSTOMER.id)
 
 
