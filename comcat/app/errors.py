@@ -1,6 +1,10 @@
 """Common error handlers."""
 
-from comcatlib import UserDamageReport, UserExpired, UserLocked, UserFile
+from comcatlib import QuotaExceeded
+from comcatlib import UserDamageReport
+from comcatlib import UserExpired
+from comcatlib import UserLocked
+from comcatlib import UserFile
 from damage_report import Attachment, DamageReport
 from hinews import AccessToken, Article, Image
 from hisfs import File
@@ -24,6 +28,9 @@ ERRORS = {
     Image.DoesNotExist: lambda _: JSONMessage(
         'No such news image.', status=404),
     JSONMessage: lambda message: message,
+    QuotaExceeded: lambda error: JSONMessage(
+        'File quota exceeded.', quota=error.quota, free=error.free,
+        size=error.size, status=401),
     Response: lambda response: response,
     TenantMessage.DoesNotExist: lambda _: JSONMessage(
         'No such tenant message.', status=404),
