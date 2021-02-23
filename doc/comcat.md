@@ -118,7 +118,7 @@ Content-Type: `application/json`
 Über diese Schnittstelle können Schadensmeldungen abgefragt und eingestellt werden.
 
 ### Liste abfragen
-`GET` `https://comcat.homeinfo.de/damage_report`
+`GET` `https://comcat.homeinfo.de/damage-report`
 
 #### Beispielantwort
 Content-Type: `application/json`
