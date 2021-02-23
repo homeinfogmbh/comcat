@@ -145,7 +145,7 @@ Content-Type: `application/json`
 	]
 
 ### Einzelne Schadensmeldung abfragen
-`GET` `https://comcat.homeinfo.de/damage_report/<int:report_id>`
+`GET` `https://comcat.homeinfo.de/damage-report/<int:report_id>`
 
 #### Beispielantwort
 Content-Type: `application/json`
@@ -174,7 +174,7 @@ Content-Type: `application/json`
 	}
 
 ### Schadensmeldung übermitteln
-`POST` `https://comcat.homeinfo.de/damage_report`
+`POST` `https://comcat.homeinfo.de/damage-report`
 
 #### Beispieldatensatz
 Accept: `application/json`
@@ -194,10 +194,10 @@ Content-Type: `application/json`
 	}
 
 ### Schadensmeldung löschen
-`DELETE` `https://comcat.homeinfo.de/damage_report/<int:report_id>`
+`DELETE` `https://comcat.homeinfo.de/damage-report/<int:report_id>`
 
 ### Anhang zur Schadensmeldung hinzufügen
-`POST` `https://comcat.homeinfo.de/damage_report/attachment`
+`POST` `https://comcat.homeinfo.de/damage-report/attachment`
 
 #### Beispieldatensatz
 Accept: `application/json`
@@ -216,7 +216,7 @@ Content-Type: `application/json`
 	}
 
 ### Anhang von Schadensmeldung entfernen
-`DELETE` `https://comcat.homeinfo.de/damage_report/attachment/<int:attachment_id>`
+`DELETE` `https://comcat.homeinfo.de/damage-report/attachment/<int:attachment_id>`
 
 ## Lokalnachrichten
 Mit dieser Schnittstelle können Lokalnachrichten abgerufen werden.
