@@ -1,5 +1,7 @@
 """User files endpoint."""
 
+from typing import Union
+
 from flask import request
 
 from comcatlib import REQUIRE_OAUTH, add_file, UserFile
@@ -24,7 +26,7 @@ def post() -> JSONMessage:
 
 @REQUIRE_OAUTH('comcat')
 @with_user_file
-def get(user_file: UserFile) -> JSONMessage:
+def get(user_file: UserFile) -> Union[Binary, JSONMessage]:
     """Returns a user file."""
 
     if request.args.get('metadata'):
