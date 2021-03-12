@@ -1,5 +1,7 @@
 """ComCat application backend."""
 
+from datetime import timedelta
+
 from flask import Flask, session
 
 from comcatlib import init_app
@@ -14,7 +16,7 @@ APPLICATION = Flask('comcat')
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
 APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
-    'authorization_code': 30 * 24 * 60 * 60     # 30 days in seconds.
+    'authorization_code': timedelta(days=90).total_seconds()
 }
 APPLICATION.config['DEBUG'] = True
 APPLICATION.config['TESTING'] = True
