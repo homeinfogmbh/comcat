@@ -56,9 +56,11 @@ def jsonify_base_chart(base_chart: BaseChart) -> dict:
 
     with suppress(AttributeError):
         json['index'] = base_chart.userbasechart.index
+        print('Set UserBaseChart index.', flush=True)
 
     with suppress(AttributeError):
         json['index'] = base_chart.groupbasechart.index
+        print('Set GroupBaseChart index.', flush=True)
 
     return json
 
