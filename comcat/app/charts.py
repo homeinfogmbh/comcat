@@ -1,5 +1,6 @@
 """ComCat app interface for charts."""
 
+from contextlib import suppress
 from typing import Iterator
 
 from peewee import JOIN, ModelSelect
@@ -53,10 +54,10 @@ def jsonify_base_chart(base_chart: BaseChart) -> dict:
     json = base_chart.chart.to_json(skip={'schedule'})
     json['base']['menus'] = [menu.menu.value for menu in get_menus(base_chart)]
 
-    if base_chart.userbasechart:
+    with suppress(AttributeError):
         json['index'] = base_chart.userbasechart.index
 
-    if base_chart.groupbasechart:
+    with suppress(AttributeError):
         json['index'] = base_chart.groupbasechart.index
 
     return json
