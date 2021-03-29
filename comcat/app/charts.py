@@ -54,13 +54,11 @@ def jsonify_base_chart(base_chart: BaseChart) -> dict:
     json = base_chart.chart.to_json(skip={'schedule'})
     json['base']['menus'] = [menu.menu.value for menu in get_menus(base_chart)]
 
-    with suppress(AttributeError):
-        json['index'] = base_chart.userbasechart.index
-        print('Set UserBaseChart index.', flush=True)
+    for user_base_chart in base_chart.userbasechart_set:
+        json['index'] = user_base_chart.index
 
-    with suppress(AttributeError):
-        json['index'] = base_chart.groupbasechart.index
-        print('Set GroupBaseChart index.', flush=True)
+    for group_base_chart in base_chart.groupbasechart_set:
+        json['index'] = group_base_chart.index
 
     return json
 
