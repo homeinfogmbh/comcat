@@ -5,7 +5,6 @@ from datetime import datetime
 from flask import request
 from peewee import JOIN, ModelSelect
 
-#from tenant2tenant import email
 from tenant2tenant import Configuration
 from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
@@ -90,7 +89,6 @@ def _add_message() -> TenantMessage:
         tenant_message.end_date = now + configuration.release_time
 
     tenant_message.save()
-    #email(tenant_message)  # Notify customer about new message.
     return tenant_message
 
 
