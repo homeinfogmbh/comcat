@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from flask import request
-from peewee import JOIN
+from peewee import JOIN, ModelSelect
 
 #from tenant2tenant import email
 from tenant2tenant import Configuration
@@ -18,7 +18,7 @@ from comcatlib.orm.tenant2tenant import UserTenantMessage
 __all__ = ['ENDPOINTS']
 
 
-def _get_messages():
+def _get_messages() -> ModelSelect:
     """Yields the tenant-to-tenant messages the current user may access."""
 
     select = TenantMessage.select(cascade=True).join_from(
@@ -53,7 +53,7 @@ def _get_messages():
     return select.where(condition)
 
 
-def _get_deletable_message(ident):
+def _get_deletable_message(ident: int) -> ModelSelect:
     """Returns a tenant-to-tenant message
     that the current user may delete.
     """
@@ -70,7 +70,7 @@ def _get_deletable_message(ident):
     return select.where(condition).get()
 
 
-def _add_message():
+def _add_message() -> TenantMessage:
     """Adds a tenant message."""
 
     message = request.json['message']
@@ -96,14 +96,14 @@ def _add_message():
 
 
 @REQUIRE_OAUTH('comcat')
-def list_():
+def list_() -> JSON:
     """Lists all tenant-to-tenant messages."""
 
     return JSON([msg.to_json() for msg in _get_messages()])
 
 
 @REQUIRE_OAUTH('comcat')
-def post():
+def post() -> JSONMessage:
     """Adds a new tenant-to-tenant message."""
 
     tenant_message = _add_message()
@@ -115,7 +115,7 @@ def post():
 
 
 @REQUIRE_OAUTH('comcat')
-def delete(ident):
+def delete(ident: int) -> JSONMessage:
     """Deletes a tenant-to-tenant message."""
 
     _get_deletable_message(ident).delete_instance()
