@@ -64,7 +64,6 @@ def _get_deletable_message(ident: int) -> ModelSelect:
     if USER.admin:
         return TenantMessage.select().where(condition).get()
 
-
     condition &= UserTenantMessage.user == USER.id
     select = TenantMessage.select().join(UserTenantMessage)
     return select.where(condition).get()
