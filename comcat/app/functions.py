@@ -1,12 +1,8 @@
 """Damage-report related functions."""
 
-from functools import wraps
-from typing import Any, Callable
-
-from flask import request
 from peewee import ModelSelect
 
-from comcatlib import USER, UserDamageReport, UserFile
+from comcatlib import USER, UserDamageReport
 from damage_report import Attachment, DamageReport
 
 
@@ -15,9 +11,7 @@ __all__ = [
     'get_damage_report',
     'get_damage_reports',
     'get_user_damage_report',
-    'get_user_damage_reports',
-    'get_user_file',
-    'with_user_file'
+    'get_user_damage_reports'
 ]
 
 
@@ -53,28 +47,3 @@ def get_user_damage_report(ident: int) -> UserDamageReport:
     """Returns a damage report."""
 
     return get_user_damage_reports().where(UserDamageReport.id == ident).get()
-
-
-def get_user_file(ident: int, *, direct: bool = False) -> UserFile:
-    """Returns the user file with the given ID."""
-
-    condition = UserFile.user == USER.id
-
-    if direct:
-        condition &= UserFile.file == ident
-    else:
-        condition &= UserFile.id == ident
-
-    return UserFile.select(cascade=True).where(condition).get()
-
-
-def with_user_file(function: Callable[..., Any]) -> Callable[..., Any]:
-    """Returns the respective user file."""
-
-    @wraps(function)
-    def wrapper(ident: int, *args, **kwargs):
-        """Wraps the decorated function."""
-        direct = request.args.get('direct', False)
-        return function(get_user_file(ident, direct=direct), *args, **kwargs)
-
-    return wrapper
