@@ -38,7 +38,7 @@ def delete(attachment_id: int) -> JSONMessage:
 
 
 ENDPOINTS = (
-    (['POST'], '/damage-report/attachment/<int:ident>', post,
+    (['POST'], '/damage-report/<int:ident>/attachment', post,
      'add_damage_report_attachment'),
     (['DELETE'], '/damage-report/attachment/<int:attachment_id>', delete,
      'delete_damage_report_attachment')
