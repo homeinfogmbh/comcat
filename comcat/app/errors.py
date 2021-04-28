@@ -4,7 +4,6 @@ from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
 from comcatlib import UserLocked
-from comcatlib import UserFile
 from damage_report import Attachment, DamageReport
 from hinews import AccessToken, Article, Image
 from hisfs import File
@@ -37,7 +36,5 @@ ERRORS = {
     UserDamageReport.DoesNotExist: lambda _: JSONMessage(
         'No such user damage report.', status=404),
     UserExpired: lambda _: JSONMessage('This user is expired.', status=401),
-    UserFile.DoesNotExist: lambda _: JSONMessage(
-        'No such user file.', status=404),
     UserLocked: lambda _: JSONMessage('This user is locked.', status=401)
 }
