@@ -1,6 +1,5 @@
 """ComCat app interface for charts."""
 
-from contextlib import suppress
 from typing import Iterator
 
 from peewee import JOIN, ModelSelect
