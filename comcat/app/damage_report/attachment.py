@@ -5,13 +5,21 @@ from flask import request
 from comcatlib import REQUIRE_OAUTH
 from damage_report import Attachment
 from filedb import File
-from wsgilib import JSONMessage
+from wsgilib import Binary, JSONMessage
 
 from comcat.app.functions import get_attachment
 from comcat.app.functions import get_user_damage_report
 
 
 __all__ = ['ENDPOINTS']
+
+
+@REQUIRE_OAUTH('comcat')
+def get(ident: int) -> Binary:
+    """Returns the respective attachment data."""
+
+    attachment = get_attachment(ident)
+    return Binary(attachment.file.bytes)
 
 
 @REQUIRE_OAUTH('comcat')
@@ -29,17 +37,19 @@ def post(ident: int) -> JSONMessage:
 
 
 @REQUIRE_OAUTH('comcat')
-def delete(attachment_id: int) -> JSONMessage:
+def delete(ident: int) -> JSONMessage:
     """Removes the respective attachment."""
 
-    attachment = get_attachment(attachment_id)
+    attachment = get_attachment(ident)
     attachment.delete_instance()
     return JSONMessage('Attachment deleted.', status=200)
 
 
 ENDPOINTS = (
+    (['GET'], '/damage-report/attachment/<int:ident>', get,
+     'get_damage_report_attachment'),
     (['POST'], '/damage-report/<int:ident>/attachment', post,
      'add_damage_report_attachment'),
-    (['DELETE'], '/damage-report/attachment/<int:attachment_id>', delete,
+    (['DELETE'], '/damage-report/attachment/<int:ident>', delete,
      'delete_damage_report_attachment')
 )
