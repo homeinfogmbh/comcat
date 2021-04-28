@@ -43,7 +43,7 @@ def _get_messages() -> ModelSelect:
                     TenantMessage.visibility == Visibility.CUSTOMER
                 ) | (
                     # If the visibility is restricted to tenement, only
-                    # show entries of the same customer and address.
+                    # show entries of the same address.
                     (TenantMessage.visibility == Visibility.TENEMENT)
                     & (TenantMessage.address == ADDRESS.id)
                 )
