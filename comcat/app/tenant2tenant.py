@@ -28,6 +28,7 @@ def _get_messages() -> ModelSelect:
         return select.where(TenantMessage.customer == CUSTOMER.id)
 
     condition = (
+        # Always allow own messages.
         (UserTenantMessage.user == USER.id)
         | (
             # Show messages of the same customer
