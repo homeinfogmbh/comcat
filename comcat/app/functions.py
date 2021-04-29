@@ -20,7 +20,8 @@ def get_attachment(ident: int) -> Attachment:
 
     condition = UserDamageReport.user == USER.id
     condition &= Attachment.id == ident
-    return Attachment.select().join(UserDamageReport).where(condition).get()
+    return Attachment.select().join(DamageReport).join(UserDamageReport).where(
+        condition).get()
 
 
 def get_damage_reports() -> ModelSelect:
