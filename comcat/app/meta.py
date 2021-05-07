@@ -6,9 +6,9 @@ from urllib.parse import urlencode
 from authlib.integrations.flask_oauth2 import current_token
 from flask import request
 from qrcode import make
-from wsgilib import Binary
+from wsgilib import Binary, JSON
 
-from comcatlib import REQUIRE_OAUTH
+from comcatlib import REQUIRE_OAUTH, USER
 from comcatlib.functions import genpw
 
 
@@ -39,4 +39,19 @@ def get_qr_code() -> Binary:
         return Binary(buf.read())
 
 
-ENDPOINTS = [(['GET'], '/init/qrcode', get_qr_code, 'get_qr_code')]
+@REQUIRE_OAUTH('comcat')
+def user_info() -> JSON:
+    """Returns the user information."""
+
+    json = {
+        'id': USER.id,
+        'tenement': USER.tenement.id,
+        'customer': USER.tenement.customer_id
+    }
+    return JSON(json)
+
+
+ENDPOINTS = [
+    (['GET'], '/init/qrcode', get_qr_code, 'get_qr_code'),
+    (['GET'], '/user', get_qr_code, 'get_user_info')
+]
