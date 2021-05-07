@@ -53,5 +53,5 @@ def user_info() -> JSON:
 
 ENDPOINTS = [
     (['GET'], '/init/qrcode', get_qr_code, 'get_qr_code'),
-    (['GET'], '/user', get_qr_code, 'get_user_info')
+    (['GET'], '/user', user_info, 'get_user_info')
 ]
