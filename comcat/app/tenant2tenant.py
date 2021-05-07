@@ -93,11 +93,19 @@ def _add_message() -> TenantMessage:
     return tenant_message
 
 
+def _jsonify(tenant_message: TenantMessage) -> dict:
+    """Converts a tenant message to JSON."""
+
+    json = tenant_message.to_json()
+    json['user'] = tenant_message.usertenantmessage.user_id
+    return json
+
+
 @REQUIRE_OAUTH('comcat')
 def list_() -> JSON:
     """Lists all tenant-to-tenant messages."""
 
-    return JSON([msg.to_json() for msg in _get_messages()])
+    return JSON([_jsonify(msg) for msg in _get_messages()])
 
 
 @REQUIRE_OAUTH('comcat')
