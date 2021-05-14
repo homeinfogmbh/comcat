@@ -2,9 +2,10 @@
 
 from datetime import timedelta
 
-from flask import Flask, session
+from flask import session
 
 from comcatlib import init_app
+from wsgilib import Application
 
 from comcat.app.errors import ERRORS
 
@@ -12,7 +13,8 @@ from comcat.app.errors import ERRORS
 __all__ = ['APPLICATION']
 
 
-APPLICATION = Flask('comcat')
+CORS = {'origins': ['http://localhost:4200', 'https://testing.homeinfo.de']}
+APPLICATION = Application('comcat')
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
 APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
