@@ -13,7 +13,13 @@ from comcat.app.errors import ERRORS
 __all__ = ['APPLICATION']
 
 
-CORS = {'origins': ['http://localhost:4200', 'https://testing.homeinfo.de']}
+CORS = {
+    'origins': [
+        'http://localhost:4200',
+        'https://testing.homeinfo.de',
+        'https://webapphi.web.app'
+    ]
+}
 APPLICATION = Application('comcat')
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
