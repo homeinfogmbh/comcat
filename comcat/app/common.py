@@ -20,7 +20,7 @@ CORS = {
         'https://webapphi.web.app'
     ]
 }
-APPLICATION = Application('comcat')
+APPLICATION = Application('comcat', cors=CORS)
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
 APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
