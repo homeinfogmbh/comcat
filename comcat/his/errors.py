@@ -1,6 +1,6 @@
 """Common exceptions and error handlers."""
 
-from cmslib import AmbiguousConfigurationsError, NoConfigurationFound
+from cmslib import AmbiguousConfigurations, NoConfigurationFound
 from comcatlib import DuplicateUser
 from comcatlib import InvalidAddress
 from comcatlib import GroupMemberUser
@@ -20,7 +20,7 @@ __all__ = ['ERRORS']
 ERRORS = {
     Address.DoesNotExist: lambda _: JSONMessage(
         'No such address.', status=404),
-    AmbiguousConfigurationsError: lambda _: JSONMessage(
+    AmbiguousConfigurations: lambda _: JSONMessage(
         'Ambiguous configurations.', status=400),
     Customer.DoesNotExist: lambda _: JSONMessage(
         'No such customer.', status=404),
