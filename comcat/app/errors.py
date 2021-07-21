@@ -1,5 +1,6 @@
 """Common error handlers."""
 
+from cocmatlib import AlreadyRegistered
 from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
@@ -17,6 +18,8 @@ __all__ = ['ERRORS']
 ERRORS = {
     AccessToken.DoesNotExist: lambda _: JSONMessage(
         'News not enabled.', status=403),
+    AlreadyRegistered: lambda _: JSONMessage(
+        'Already registered.', status=409),
     Article.DoesNotExist: lambda _: JSONMessage(
         'No such news article.', status=404),
     Attachment.DoesNotExist: lambda _: JSONMessage(
