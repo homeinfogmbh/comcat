@@ -1,6 +1,7 @@
 """ComCat application backend."""
 
 from datetime import timedelta
+from pathlib import Path
 
 from flask import session
 
@@ -10,7 +11,7 @@ from wsgilib import Application
 from comcat.app.errors import ERRORS
 
 
-__all__ = ['APPLICATION']
+__all__ = ['APPLICATION', 'RECAPTCHA_SECRET']
 
 
 CORS = {
@@ -28,14 +29,23 @@ APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
 }
 APPLICATION.config['DEBUG'] = True
 APPLICATION.config['TESTING'] = True
-
-with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
-    APPLICATION.secret_key = keyfile.read().strip()
+KEYFILE = Path('/usr/local/etc/comcat.secret')
+RECAPTCHA = Path('/usr/local/etc/comcat.recaptcha')
+RECAPTCHA_SECRET = ''
 
 
 @APPLICATION.before_first_request
 def before_first_request():
     """Initializes the app."""
+
+
+    with KEYFILE.open('r') as keyfile:
+        APPLICATION.secret_key = keyfile.read().strip()
+
+    global RECAPTCHA_SECRET     # pylint: disable=W0603
+
+    with RECAPTCHA.open('r') as recaptcha:
+        RECAPTCHA_SECRET = recaptcha.read().strip()
 
     init_app(APPLICATION)
     session.clear()
