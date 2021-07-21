@@ -7,13 +7,13 @@ from wsgilib import JSONMessage, require_json
 
 from comcatlib import UserRegistration
 
-from comcat.app.common import RECAPTCHA_SECRET
+from comcat.app.common import RECAPTCHA_KEYS
 
 
 __all__ = ['ROUTES']
 
 
-@recaptcha(RECAPTCHA_SECRET)
+@recaptcha(lambda: RECAPTCHA_KEYS['secret'])
 @require_json(dict)
 def register() -> JSONMessage:
     """Register a new user."""
