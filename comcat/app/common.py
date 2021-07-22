@@ -18,6 +18,7 @@ __all__ = ['APPLICATION', 'RECAPTCHA_KEYS']
 CORS = {
     'origins': [
         'http://localhost:4200',
+        'capacitor://localhost:4200',
         'https://testing.homeinfo.de',
         'https://webapphi.web.app'
     ]
