@@ -1,6 +1,6 @@
 """Common error handlers."""
 
-from cocmatlib import AlreadyRegistered
+from comcatlib import AlreadyRegistered
 from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
