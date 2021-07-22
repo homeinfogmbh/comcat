@@ -6,8 +6,8 @@ from flask import request
 
 from cmslib import get_group
 from comcatlib import GroupMemberUser
-from his import authenticated, authorized, require_json
-from wsgilib import JSON, JSONMessage
+from his import authenticated, authorized
+from wsgilib import JSON, JSONMessage, require_json
 
 from comcat.his.functions import get_group_member_user
 from comcat.his.functions import get_group_member_users
