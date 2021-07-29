@@ -40,7 +40,6 @@ RECAPTCHA_KEYS = {}
 def before_first_request():
     """Initializes the app."""
 
-
     with KEYFILE.open('r') as keyfile:
         APPLICATION.secret_key = keyfile.read().strip()
 
