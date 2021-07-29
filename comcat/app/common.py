@@ -21,7 +21,8 @@ CORS = {
         'capacitor://localhost:4200',
         'https://testing.homeinfo.de',
         'https://webapphi.web.app'
-    ]
+    ],
+    'expose': ['Location']
 }
 APPLICATION = Application('comcat', cors=CORS)
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
