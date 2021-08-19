@@ -27,7 +27,7 @@ __all__ = ['ENDPOINTS']
 def _get_messages() -> ModelSelect:
     """Yields the tenant-to-tenant messages the current user may access."""
 
-    select = TenantMessage.select(cascade=True).join_from(
+    select = TenantMessage.select(User, cascade=True).join_from(
         TenantMessage, UserTenantMessage, JOIN.LEFT_OUTER).join(
         User, JOIN.LEFT_OUTER)
 
