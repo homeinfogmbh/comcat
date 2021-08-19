@@ -21,7 +21,7 @@ def list_() -> JSON:
 
     user = USER._get_current_object()   # pylint: disable=W0212
     tenant_messages = get_tenant_messages(user)
-    return JSON([jsonify_tenant_message(msg) for msg in tenant_messages])
+    return JSON([jsonify_tenant_message(msg, user) for msg in tenant_messages])
 
 
 @REQUIRE_OAUTH('comcat')
