@@ -10,8 +10,13 @@ from tenant2tenant import TenantMessage
 from tenant2tenant import Visibility
 from wsgilib import JSON, JSONMessage
 
-from comcatlib import ADDRESS, CUSTOMER, REQUIRE_OAUTH, USER
-from comcatlib.orm.tenant2tenant import UserTenantMessage
+from comcatlib import ADDRESS
+from comcatlib import CUSTOMER
+from comcatlib import DATABASE
+from comcatlib import REQUIRE_OAUTH
+from comcatlib import USER
+from comcatlib import User
+from comcatlib import UserTenantMessage
 
 
 __all__ = ['ENDPOINTS']
@@ -21,7 +26,8 @@ def _get_messages() -> ModelSelect:
     """Yields the tenant-to-tenant messages the current user may access."""
 
     select = TenantMessage.select(cascade=True).join_from(
-        TenantMessage, UserTenantMessage, JOIN.LEFT_OUTER)
+        TenantMessage, UserTenantMessage, JOIN.LEFT_OUTER).join(
+        User, JOIN.LEFT_OUTER)
 
     if USER.admin:
         # Admins can see all tenant-to-tenant messages of their company.
@@ -50,7 +56,7 @@ def _get_messages() -> ModelSelect:
             )
         )
     )
-    return select.where(condition)
+    return select.where(condition).execute(DATABASE)
 
 
 def _get_deletable_message(ident: int) -> ModelSelect:
