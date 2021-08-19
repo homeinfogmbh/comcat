@@ -8,8 +8,7 @@ from flask import request
 from qrcode import make
 from wsgilib import Binary, JSON
 
-from comcatlib import REQUIRE_OAUTH, USER
-from comcatlib.functions import genpw
+from comcatlib import REQUIRE_OAUTH, USER, genpw
 
 
 __all__ = ['ENDPOINTS']
