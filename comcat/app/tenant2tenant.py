@@ -18,6 +18,8 @@ from comcatlib import USER
 from comcatlib import User
 from comcatlib import UserTenantMessage
 
+from comcat.app.functions import is_own_message, get_sender_name
+
 
 __all__ = ['ENDPOINTS']
 
@@ -99,11 +101,20 @@ def _add_message() -> TenantMessage:
     return tenant_message
 
 
+def _jsonify(message: TenantMessage, *args, **kwargs) -> dict:
+    """Converts a tenant message into a JSON-ish dict."""
+
+    json = message.to_json(*args, **kwargs)
+    json['own'] = is_own_message(message)
+    json['sender'] = get_sender_name(message)
+    return json
+
+
 @REQUIRE_OAUTH('comcat')
 def list_() -> JSON:
     """Lists all tenant-to-tenant messages."""
 
-    return JSON([msg.to_json() for msg in _get_messages()])
+    return JSON([_jsonify(msg) for msg in _get_messages()])
 
 
 @REQUIRE_OAUTH('comcat')
