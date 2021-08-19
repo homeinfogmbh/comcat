@@ -75,8 +75,8 @@ def get_sender_name(message: TenantMessage) -> Optional[str]:
     except AttributeError:
         return None
 
-    for utm in user_tenant_messages:
+    for user_tenant_message in user_tenant_messages:
         with suppress(AttributeError):
-            return utm.user.name
+            return user_tenant_message.user.name
 
     return None
