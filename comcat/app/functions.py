@@ -60,23 +60,15 @@ def is_own_message(message: TenantMessage) -> bool:
     """Determines whether the tenant message is of the current user."""
 
     try:
-        user_tenant_messages = message.usertenantmessage_set
+        return message.usertenantmessage.user_id == USER.id
     except AttributeError:
         return False
-
-    return USER.id in {utm.user for utm in user_tenant_messages}
 
 
 def get_sender_name(message: TenantMessage) -> Optional[str]:
     """Returns the sender name if available."""
 
     try:
-        user_tenant_messages = message.usertenantmessage_set
+        return message.usertenantmessage.user.name
     except AttributeError:
         return None
-
-    for user_tenant_message in user_tenant_messages:
-        with suppress(AttributeError):
-            return user_tenant_message.user.name
-
-    return None
