@@ -1,13 +1,9 @@
 """Damage-report related functions."""
 
-from contextlib import suppress
-from typing import Optional
-
 from peewee import ModelSelect
 
 from comcatlib import USER, UserDamageReport
 from damage_report import Attachment, DamageReport
-from tenant2tenant import TenantMessage
 
 
 __all__ = [
@@ -15,9 +11,7 @@ __all__ = [
     'get_damage_report',
     'get_damage_reports',
     'get_user_damage_report',
-    'get_user_damage_reports',
-    'is_own_message',
-    'get_sender_name'
+    'get_user_damage_reports'
 ]
 
 
@@ -54,21 +48,3 @@ def get_user_damage_report(ident: int) -> UserDamageReport:
     """Returns a damage report."""
 
     return get_user_damage_reports().where(UserDamageReport.id == ident).get()
-
-
-def is_own_message(message: TenantMessage) -> bool:
-    """Determines whether the tenant message is of the current user."""
-
-    try:
-        return message.usertenantmessage.user_id == USER.id
-    except AttributeError:
-        return False
-
-
-def get_sender_name(message: TenantMessage) -> Optional[str]:
-    """Returns the sender name if available."""
-
-    try:
-        return message.usertenantmessage.user.name
-    except AttributeError:
-        return None
