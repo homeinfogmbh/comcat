@@ -58,7 +58,7 @@ def _get_messages() -> ModelSelect:
             )
         )
     )
-    return select.where(condition).execute(DATABASE)
+    return select.where(condition).group_by(TenantMessage.id).execute(DATABASE)
 
 
 def _get_deletable_message(ident: int) -> ModelSelect:
