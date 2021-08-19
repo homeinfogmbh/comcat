@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from flask import request
-from peewee import JOIN, ModelSelect
+from peewee import JOIN, ModelCursorWrapper, ModelSelect
 
 from tenant2tenant import Configuration
 from tenant2tenant import TenantMessage
@@ -24,7 +24,7 @@ from comcat.app.functions import is_own_message, get_sender_name
 __all__ = ['ENDPOINTS']
 
 
-def _get_messages() -> ModelSelect:
+def _select_messages() -> ModelSelect:
     """Yields the tenant-to-tenant messages the current user may access."""
 
     select = TenantMessage.select(
@@ -59,7 +59,13 @@ def _get_messages() -> ModelSelect:
             )
         )
     )
-    return select.where(condition).group_by(TenantMessage.id).execute(DATABASE)
+    return select.where(condition)
+
+
+def _get_messages() -> ModelCursorWrapper:
+    """Yields messages."""
+
+    return _select_messages().execute(DATABASE)
 
 
 def _get_deletable_message(ident: int) -> ModelSelect:
