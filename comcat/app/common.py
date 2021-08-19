@@ -31,12 +31,14 @@ RECAPTCHA = Path('/usr/local/etc/comcat.recaptcha')
 RECAPTCHA_KEYS = {}
 
 
+# Needs to be set before "APPLICATION.before_first_request" is run.
+with KEYFILE.open('r') as keyfile:
+    APPLICATION.secret_key = keyfile.read().strip()
+
+
 @APPLICATION.before_first_request
 def before_first_request():
     """Initializes the app."""
-
-    with KEYFILE.open('r') as keyfile:
-        APPLICATION.secret_key = keyfile.read().strip()
 
     with RECAPTCHA.open('r') as recaptcha:
         RECAPTCHA_KEYS.update(load(recaptcha))
