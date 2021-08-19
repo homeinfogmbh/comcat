@@ -10,7 +10,7 @@ from comcatlib import UserRegistration
 from comcat.app.common import RECAPTCHA_KEYS
 
 
-__all__ = ['ROUTES']
+__all__ = ['ENDPOINTS']
 
 
 @recaptcha(lambda: RECAPTCHA_KEYS['secret'])
@@ -23,4 +23,4 @@ def register() -> JSONMessage:
     return JSONMessage('User registered', status=201)
 
 
-ROUTES = [('POST', '/register', register, 'register_user')]
+ENDPOINTS = [(['POST'], '/register', register, 'register_user')]

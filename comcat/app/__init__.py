@@ -8,6 +8,7 @@ from comcat.app import local_news
 from comcat.app import logout
 from comcat.app import lpt
 from comcat.app import meta
+from comcat.app import registration
 from comcat.app import related_files
 from comcat.app import tenant2tenant
 from comcat.app.common import APPLICATION
@@ -20,9 +21,10 @@ ENDPOINTS = [
     *charts.ENDPOINTS,
     *damage_report.ENDPOINTS,
     *local_news.ENDPOINTS,
-    *logout.ROUTES,
+    *logout.ENDPOINTS,
     *lpt.ENDPOINTS,
     *meta.ENDPOINTS,
+    *registration.ENDPOINTS,
     *related_files.ENDPOINTS,
     *tenant2tenant.ENDPOINTS
 ]

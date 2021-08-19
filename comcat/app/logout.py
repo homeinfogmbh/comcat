@@ -7,7 +7,7 @@ from wsgilib import JSONMessage
 from comcat.functions import logout
 
 
-__all__ = ['ROUTES']
+__all__ = ['ENDPOINTS']
 
 
 def logout_() -> JSONMessage:
@@ -17,4 +17,4 @@ def logout_() -> JSONMessage:
     return JSONMessage('Tokens deleted.', status=200)
 
 
-ROUTES = [(['DELETE'], '/logout', logout_, 'user_logout')]
+ENDPOINTS = [(['DELETE'], '/logout', logout_, 'user_logout')]
