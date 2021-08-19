@@ -26,14 +26,13 @@ APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
 }
 APPLICATION.config['DEBUG'] = True
 APPLICATION.config['TESTING'] = True
-KEYFILE = Path('/usr/local/etc/comcat.secret')
-RECAPTCHA = Path('/usr/local/etc/comcat.recaptcha')
-RECAPTCHA_KEYS = {}
-
 
 # Needs to be set before "APPLICATION.before_first_request" is run.
-with KEYFILE.open('r') as keyfile:
+with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
     APPLICATION.secret_key = keyfile.read().strip()
+
+RECAPTCHA = Path('/usr/local/etc/comcat.recaptcha')
+RECAPTCHA_KEYS = {}
 
 
 @APPLICATION.before_first_request
