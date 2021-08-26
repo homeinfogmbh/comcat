@@ -26,7 +26,7 @@ def accept(ident: int) -> JSONMessage:
     tenement = get_tenement(request.json.get('tenement'))
     user = user_registration.to_user(tenement)
     user.save()
-    user_registration.notify(True)
+    user_registration.notify()
     return JSONMessage('Added user.', id=user.id, status=201)
 
 
@@ -35,7 +35,6 @@ def deny(ident: int) -> JSONMessage:
 
     user_registration = get_user_registration(ident)
     user_registration.delete_instance()
-    user_registration.notify(False)
     return JSONMessage('User registration denied.', status=200)
 
 
