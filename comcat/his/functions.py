@@ -11,6 +11,7 @@ from comcatlib import InvalidAddress
 from comcatlib import MenuBaseChart
 from comcatlib import User
 from comcatlib import UserDamageReport
+from comcatlib import UserRegistration
 from comcatlib import UserTenantMessage
 from his import CUSTOMER
 from mdb import Address, Customer, Tenement
@@ -30,6 +31,8 @@ __all__ = [
     'get_tenements',
     'get_user',
     'get_users',
+    'get_user_registration',
+    'get_user_registrations',
     'get_user_damage_reports',
     'get_user_damage_report',
     'get_user_tenant_messages',
@@ -120,6 +123,19 @@ def get_users() -> Iterable[User]:
     """Yields ComCat users of the current customer."""
 
     return User.select(cascade=True).where(Tenement.customer == CUSTOMER.id)
+
+
+def get_user_registration(ident: int) -> UserRegistration:
+    """Returns the selected user registration."""
+
+    return get_user_registrations().where(UserRegistration.id == ident).get()
+
+
+def get_user_registrations() -> ModelSelect:
+    """Selects user registrations of the current customer."""
+
+    return UserRegistration.select(cascade=True).where(
+        UserRegistration.customer == CUSTOMER.id)
 
 
 def get_user_damage_report(ident: int) -> UserDamageReport:
