@@ -24,9 +24,9 @@ def accept(ident: int) -> JSONMessage:
 
     user_registration = get_user_registration(ident)
     tenement = get_tenement(request.json.get('tenement'))
-    user = user_registration.to_user(tenement)
+    user, passwd = user_registration.confirm(tenement)
     user.save()
-    user_registration.notify()
+    user_registration.notify(passwd)
     return JSONMessage('Added user.', id=user.id, status=201)
 
 
