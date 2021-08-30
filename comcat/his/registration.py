@@ -2,6 +2,7 @@
 
 from flask import request
 
+from his import authenticated, authorized
 from wsgilib import JSON, JSONMessage, require_json
 
 from comcat.his.functions import get_tenement
@@ -12,12 +13,16 @@ from comcat.his.functions import get_user_registration
 __all__ = ['ROUTES']
 
 
+@authenticated
+@authorized('comcat')
 def list_() -> JSON:
     """Lists user registrations."""
 
     return JSON([ur.to_json() for ur in get_user_registrations()])
 
 
+@authenticated
+@authorized('comcat')
 @require_json(dict)
 def accept(ident: int) -> JSONMessage:
     """Accept a registration."""
@@ -30,6 +35,8 @@ def accept(ident: int) -> JSONMessage:
     return JSONMessage('Added user.', id=user.id, status=201)
 
 
+@authenticated
+@authorized('comcat')
 def deny(ident: int) -> JSONMessage:
     """Deny a registration."""
 
