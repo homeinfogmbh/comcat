@@ -3,7 +3,14 @@
 from flask import request
 
 from comcatlib import REQUIRE_OAUTH, TENEMENT, USER
-from marketplace import add_offer, get_offer, get_offers, add_image, get_image
+from marketplace import ImageTooLarge
+from marketplace import InvalidPrice
+from marketplace import MaxImagesReached
+from marketplace import add_offer
+from marketplace import get_offer
+from marketplace import get_offers
+from marketplace import add_image
+from marketplace import get_image
 from wsgilib import Binary, JSON, JSONMessage
 
 
@@ -31,7 +38,12 @@ def add() -> JSONMessage:
     """Adds a new offer."""
 
     user = USER._get_current_object()   # pylint: disable=W0212
-    offer = add_offer(request.json, user)
+
+    try:
+        offer = add_offer(request.json, user)
+    except InvalidPrice:
+        return JSONMessage('Invalid price.', status=400)
+
     return JSONMessage('Offer added.', id=offer.id, status=201)
 
 
@@ -60,7 +72,14 @@ def add_img(offer: int, index: int) -> JSONMessage:
 
     user = USER._get_current_object()   # pylint: disable=W0212
     offer = get_offer(offer, user=user)
-    add_image(offer, request.get_data(), index)
+
+    try:
+        add_image(offer, request.get_data(), index)
+    except ImageTooLarge:
+        return JSONMessage('Image too large.', status=400)
+    except MaxImagesReached:
+        return JSONMessage('Maximum amount of images reached.', status=400)
+
     return JSONMessage('Image added.', status=201)
 
 
