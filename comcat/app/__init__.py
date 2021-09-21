@@ -7,6 +7,7 @@ from comcat.app import damage_report
 from comcat.app import local_news
 from comcat.app import logout
 from comcat.app import lpt
+from comcat.app import marketplace
 from comcat.app import meta
 from comcat.app import registration
 from comcat.app import related_files
@@ -23,6 +24,7 @@ ENDPOINTS = [
     *local_news.ENDPOINTS,
     *logout.ENDPOINTS,
     *lpt.ENDPOINTS,
+    *marketplace.ENDPOINTS,
     *meta.ENDPOINTS,
     *registration.ENDPOINTS,
     *related_files.ENDPOINTS,
