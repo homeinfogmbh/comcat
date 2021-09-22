@@ -11,6 +11,7 @@ from wsgilib import Application
 
 from comcat.app import errors
 from comcat.app import damage_report
+from comcat.app import local_news
 
 
 __all__ = ['APPLICATION', 'RECAPTCHA_KEYS']
@@ -27,7 +28,6 @@ APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
 }
 APPLICATION.config['DEBUG'] = True
 APPLICATION.config['TESTING'] = True
-ERRORS = {**errors.ERRORS, **damage_report.ERRORS}
 
 # Needs to be set before "APPLICATION.before_first_request" is run.
 with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
@@ -47,6 +47,11 @@ def before_first_request():
     init_app(APPLICATION)
     session.clear()
 
+ERRORS = {
+    **errors.ERRORS,
+    **damage_report.ERRORS,
+    **local_news.ERRORS
+}
 
 for exception, handler in ERRORS.items():
     APPLICATION.register_error_handler(exception, handler)
