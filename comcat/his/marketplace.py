@@ -30,8 +30,7 @@ def delete(ident: int) -> JSONMessage:
 def get_img(ident: int) -> Binary:
     """Returns an offer image."""
 
-    image = get_image(ident, customer=CUSTOMER.id)
-    return Binary(image.file.bytes)
+    return Binary(get_image(ident, customer=CUSTOMER.id).file.bytes)
 
 
 @authenticated
