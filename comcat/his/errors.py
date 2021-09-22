@@ -25,7 +25,7 @@ ERRORS = {
         'Ambiguous configurations.', status=400),
     Customer.DoesNotExist: lambda _: JSONMessage(
         'No such customer.', status=404),
-    DuplicateUser: lambda _: JSONMessage('Duplicate user.', 400),
+    DuplicateUser: lambda _: JSONMessage('Duplicate user.', status=400),
     GroupMemberUser.DoesNotExist: lambda _: JSONMessage(
         'No such group member.', status=404),
     Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404),
