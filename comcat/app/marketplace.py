@@ -37,10 +37,8 @@ def get(ident: int) -> JSON:
 def add() -> JSONMessage:
     """Adds a new offer."""
 
-    user = USER._get_current_object()   # pylint: disable=W0212
-
     try:
-        offer = add_offer(request.json, user)
+        offer = add_offer(request.json, USER.id)
     except InvalidPrice:
         return JSONMessage('Invalid price.', status=400)
 
@@ -51,8 +49,7 @@ def add() -> JSONMessage:
 def delete(ident: int) -> JSONMessage:
     """Deletes an offer."""
 
-    user = USER._get_current_object()   # pylint: disable=W0212
-    offer = get_offer(ident, user=user)
+    offer = get_offer(ident, user=USER.id)
     offer.delete_instance()
     return JSONMessage('Offer deleted.', status=200)
 
@@ -61,8 +58,7 @@ def delete(ident: int) -> JSONMessage:
 def get_img(ident: int) -> Binary:
     """Returns an Image."""
 
-    offer = get_offer(ident, customer=TENEMENT.customer)
-    image = get_image(ident, offer)
+    image = get_image(ident, get_offer(ident, customer=TENEMENT.customer))
     return Binary(image.file.bytes)
 
 
@@ -70,8 +66,7 @@ def get_img(ident: int) -> Binary:
 def add_img(offer: int, index: int) -> JSONMessage:
     """Adds an Image."""
 
-    user = USER._get_current_object()   # pylint: disable=W0212
-    offer = get_offer(offer, user=user)
+    offer = get_offer(offer, user=USER.id)
 
     try:
         add_image(offer, request.get_data(), index)
@@ -87,9 +82,7 @@ def add_img(offer: int, index: int) -> JSONMessage:
 def delete_img(ident: int) -> JSONMessage:
     """Deletes an Image."""
 
-    user = USER._get_current_object()   # pylint: disable=W0212
-    offer = get_offer(ident, user=user)
-    image = get_image(ident, offer)
+    image = get_image(ident, get_offer(ident, user=USER.id))
     image.delete_instance()
     return JSONMessage('image deleted.', status=200)
 
