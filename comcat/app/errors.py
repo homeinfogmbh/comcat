@@ -6,8 +6,9 @@ from comcatlib import UserDamageReport
 from comcatlib import UserExpired
 from comcatlib import UserLocked
 from damage_report import Attachment, DamageReport
-from hinews import AccessToken, Article, Image
+from hinews import AccessToken, Article, Image as NewsImage
 from hisfs import File
+from marketplace import Offer, Image as OfferImage
 from tenant2tenant import TenantMessage
 from wsgilib import JSONMessage, Response
 
@@ -27,9 +28,12 @@ ERRORS = {
     DamageReport.DoesNotExist: lambda _: JSONMessage(
         'No such damage report.', status=404),
     File.DoesNotExist: lambda _: JSONMessage('No such file.', status=404),
-    Image.DoesNotExist: lambda _: JSONMessage(
+    NewsImage.DoesNotExist: lambda _: JSONMessage(
         'No such news image.', status=404),
     JSONMessage: lambda message: message,
+    Offer.DoesNotExist: lambda _: JSONMessage('No such offer.', status=404),
+    OfferImage.DoesNotExist: lambda _: JSONMessage(
+        'No such image.', status=404),
     QuotaExceeded: lambda error: JSONMessage(
         'File quota exceeded.', quota=error.quota, free=error.free,
         size=error.size, status=401),
