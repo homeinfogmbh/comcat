@@ -1,11 +1,11 @@
 """Customer-side administration of the market place service."""
 
 from his import CUSTOMER, authenticated, authorized
-from marketplace import get_offer, get_offers, get_image
+from marketplace import ERRORS, get_offer, get_offers, get_image
 from wsgilib import Binary, JSON, JSONMessage
 
 
-__all__ = ['ROUTES']
+__all__ = ['ROUTES', 'ERRORS']
 
 
 @authenticated

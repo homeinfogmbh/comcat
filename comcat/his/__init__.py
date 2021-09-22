@@ -10,7 +10,7 @@ from comcat.his import menu
 from comcat.his import tenant2tenant
 from comcat.his import tenement
 from comcat.his import user
-from comcat.his.errors import ERRORS
+from comcat.his import errors
 
 
 __all__ = ['APPLICATION']
@@ -22,6 +22,7 @@ ROUTES = (
     *menu.ROUTES, *tenant2tenant.ROUTES, *tenement.ROUTES, *user.ROUTES
 )
 APPLICATION.add_routes(ROUTES)
+ERRORS = {**errors.ERRORS, **marketplace.ERRORS}
 
 
 for exception, handler in ERRORS.items():

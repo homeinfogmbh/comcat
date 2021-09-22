@@ -10,7 +10,6 @@ from comcatlib import UserBaseChart
 from comcatlib import UserConfiguration
 from comcatlib import UserDamageReport
 from comcatlib import UserMenu
-from marketplace import Offer, Image
 from mdb import Address, Customer, Tenement
 from wsgilib import JSONMessage
 
@@ -28,14 +27,12 @@ ERRORS = {
     DuplicateUser: lambda _: JSONMessage('Duplicate user.', status=400),
     GroupMemberUser.DoesNotExist: lambda _: JSONMessage(
         'No such group member.', status=404),
-    Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404),
     InvalidAddress: lambda _: JSONMessage(
         'Invalid value for address.', status=400),
     MenuBaseChart.DoesNotExist: lambda _: JSONMessage(
         'No such menu base chart.', status=404),
     NoConfigurationFound: lambda _: JSONMessage(
         'No configuration found.', status=400),
-    Offer.DoesNotExist: lambda _: JSONMessage('No such offer.', status=404),
     Tenement.DoesNotExist: lambda _: JSONMessage(
         'The requested tenement does not exist.', status=404),
     User.DoesNotExist: lambda _: JSONMessage(
