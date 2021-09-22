@@ -5,7 +5,6 @@ from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
 from comcatlib import UserLocked
-from marketplace import Offer, Image as OfferImage
 from tenant2tenant import TenantMessage
 from wsgilib import JSONMessage, Response
 
@@ -17,9 +16,6 @@ ERRORS = {
     AlreadyRegistered: lambda _: JSONMessage(
         'Already registered.', status=409),
     JSONMessage: lambda message: message,
-    Offer.DoesNotExist: lambda _: JSONMessage('No such offer.', status=404),
-    OfferImage.DoesNotExist: lambda _: JSONMessage(
-        'No such image.', status=404),
     QuotaExceeded: lambda error: JSONMessage(
         'File quota exceeded.', quota=error.quota, free=error.free,
         size=error.size, status=401),

@@ -11,10 +11,18 @@ from marketplace import get_offer
 from marketplace import get_offers
 from marketplace import add_image
 from marketplace import get_image
+from marketplace import Offer
+from marketplace import Image
 from wsgilib import Binary, JSON, JSONMessage
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ENDPOINTS', 'ERRORS']
+
+
+ERRORS = {
+    Offer.DoesNotExist: lambda _: JSONMessage('No such offer.', status=404),
+    Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404)
+}
 
 
 @REQUIRE_OAUTH('comcat')
