@@ -5,7 +5,6 @@ from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
 from comcatlib import UserLocked
-from damage_report import Attachment, DamageReport
 from hinews import AccessToken, Article, Image as NewsImage
 from hisfs import File
 from marketplace import Offer, Image as OfferImage
@@ -23,10 +22,6 @@ ERRORS = {
         'Already registered.', status=409),
     Article.DoesNotExist: lambda _: JSONMessage(
         'No such news article.', status=404),
-    Attachment.DoesNotExist: lambda _: JSONMessage(
-        'No such attachment.', status=404),
-    DamageReport.DoesNotExist: lambda _: JSONMessage(
-        'No such damage report.', status=404),
     File.DoesNotExist: lambda _: JSONMessage('No such file.', status=404),
     NewsImage.DoesNotExist: lambda _: JSONMessage(
         'No such news image.', status=404),

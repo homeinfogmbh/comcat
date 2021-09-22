@@ -9,7 +9,8 @@ from flask import session
 from comcatlib import init_app
 from wsgilib import Application
 
-from comcat.app.errors import ERRORS
+from comcat.app import errors
+from comcat.app import damage_report
 
 
 __all__ = ['APPLICATION', 'RECAPTCHA_KEYS']
@@ -26,6 +27,7 @@ APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
 }
 APPLICATION.config['DEBUG'] = True
 APPLICATION.config['TESTING'] = True
+ERRORS = {**errors.ERRORS, **damage_report.ERRORS}
 
 # Needs to be set before "APPLICATION.before_first_request" is run.
 with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
