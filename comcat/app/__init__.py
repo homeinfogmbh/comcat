@@ -34,7 +34,8 @@ ENDPOINTS = [
 ERRORS = {
     **errors.ERRORS,
     **damage_report.ERRORS,
-    **local_news.ERRORS
+    **local_news.ERRORS,
+    **related_files.ERRORS
 }
 
 

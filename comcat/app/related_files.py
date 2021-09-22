@@ -2,12 +2,12 @@
 
 from comcatlib import REQUIRE_OAUTH
 from hisfs import File
-from wsgilib import Binary
+from wsgilib import Binary, JSONMessage
 
 from comcat.app.charts import get_base_charts
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ENDPOINTS', 'ERRORS']
 
 
 def get_file(ident: int):
@@ -33,3 +33,4 @@ def get(ident):
 
 
 ENDPOINTS = [(['GET'], '/related-file/<int:ident>', get, 'get_related_file')]
+ERRORS = {File.DoesNotExist: lambda _: JSONMessage('No such file.', status=404)}
