@@ -4,9 +4,6 @@ from flask import request
 
 from comcatlib import REQUIRE_OAUTH, TENEMENT, USER
 from marketplace import ERRORS
-from marketplace import ImageTooLarge
-from marketplace import InvalidPrice
-from marketplace import MaxImagesReached
 from marketplace import add_offer
 from marketplace import get_offer
 from marketplace import get_offers
@@ -38,11 +35,7 @@ def get(ident: int) -> JSON:
 def add() -> JSONMessage:
     """Adds a new offer."""
 
-    try:
-        offer = add_offer(request.json, USER.id)
-    except InvalidPrice:
-        return JSONMessage('Invalid price.', status=400)
-
+    offer = add_offer(request.json, USER.id)
     return JSONMessage('Offer added.', id=offer.id, status=201)
 
 
@@ -67,16 +60,8 @@ def get_img(ident: int) -> Binary:
 def add_img(offer: int, index: int) -> JSONMessage:
     """Adds an Image."""
 
-    offer = get_offer(offer, user=USER.id)
-
-    try:
-        add_image(offer, request.get_data(), index)
-    except ImageTooLarge:
-        return JSONMessage('Image too large.', status=400)
-    except MaxImagesReached:
-        return JSONMessage('Maximum amount of images reached.', status=400)
-
-    return JSONMessage('Image added.', status=201)
+    image = add_image(get_offer(offer, user=USER.id), request.get_data(), index)
+    return JSONMessage('Image added.', id=image.id, status=201)
 
 
 @REQUIRE_OAUTH('comcat')
