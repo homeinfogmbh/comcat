@@ -4,6 +4,7 @@ from itertools import chain
 
 from comcat.app import charts
 from comcat.app import damage_report
+from comcat.app import errors
 from comcat.app import local_news
 from comcat.app import logout
 from comcat.app import lpt
@@ -30,7 +31,16 @@ ENDPOINTS = [
     *related_files.ENDPOINTS,
     *tenant2tenant.ENDPOINTS
 ]
+ERRORS = {
+    **errors.ERRORS,
+    **damage_report.ERRORS,
+    **local_news.ERRORS
+}
 
 
 for methods, path, function, name in ENDPOINTS:
     APPLICATION.add_url_rule(path, name, function, methods=methods)
+
+
+for exception, handler in ERRORS.items():
+    APPLICATION.register_error_handler(exception, handler)

@@ -9,10 +9,6 @@ from flask import session
 from comcatlib import init_app
 from wsgilib import Application
 
-from comcat.app import errors
-from comcat.app import damage_report
-from comcat.app import local_news
-
 
 __all__ = ['APPLICATION', 'RECAPTCHA_KEYS']
 
@@ -46,12 +42,3 @@ def before_first_request():
 
     init_app(APPLICATION)
     session.clear()
-
-ERRORS = {
-    **errors.ERRORS,
-    **damage_report.ERRORS,
-    **local_news.ERRORS
-}
-
-for exception, handler in ERRORS.items():
-    APPLICATION.register_error_handler(exception, handler)
