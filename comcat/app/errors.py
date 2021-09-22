@@ -5,7 +5,6 @@ from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
 from comcatlib import UserLocked
-from tenant2tenant import TenantMessage
 from wsgilib import JSONMessage, Response
 
 
@@ -20,8 +19,6 @@ ERRORS = {
         'File quota exceeded.', quota=error.quota, free=error.free,
         size=error.size, status=401),
     Response: lambda response: response,
-    TenantMessage.DoesNotExist: lambda _: JSONMessage(
-        'No such tenant message.', status=404),
     UserDamageReport.DoesNotExist: lambda _: JSONMessage(
         'No such user damage report.', status=404),
     UserExpired: lambda _: JSONMessage('This user is expired.', status=401),

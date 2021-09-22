@@ -10,9 +10,16 @@ from comcatlib import add_user_tenant_message
 from comcatlib import get_deletable_tenant_message
 from comcatlib import get_tenant_messages
 from comcatlib import jsonify_tenant_message
+from tenant2tenant import TenantMessage
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ENDPOINTS', 'ERRORS']
+
+
+ERRORS = {
+    TenantMessage.DoesNotExist: lambda _: JSONMessage(
+        'No such tenant message.', status=404)
+}
 
 
 @REQUIRE_OAUTH('comcat')
