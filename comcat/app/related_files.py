@@ -10,6 +10,9 @@ from comcat.app.charts import get_base_charts
 __all__ = ['ENDPOINTS', 'ERRORS']
 
 
+ERRORS = {File.DoesNotExist: lambda _: JSONMessage('No such file.', status=404)}
+
+
 def get_file(ident: int):
     """Yields files the current user is allowed to access."""
 
@@ -33,4 +36,3 @@ def get(ident):
 
 
 ENDPOINTS = [(['GET'], '/related-file/<int:ident>', get, 'get_related_file')]
-ERRORS = {File.DoesNotExist: lambda _: JSONMessage('No such file.', status=404)}

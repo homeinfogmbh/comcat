@@ -8,3 +8,4 @@ __all__ = ['ENDPOINTS', 'ERRORS']
 
 
 ENDPOINTS = (*attachment.ENDPOINTS, *damage_report.ENDPOINTS)
+ERRORS = {**attachment.ERRORS, **damage_report.ERRORS}

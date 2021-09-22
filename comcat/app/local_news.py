@@ -11,6 +11,15 @@ from wsgilib import Binary, JSON, JSONMessage
 __all__ = ['ENDPOINTS', 'ERRORS']
 
 
+ERRORS = {
+    AccessToken.DoesNotExist: lambda _: JSONMessage(
+        'News not enabled.', status=403),
+    Article.DoesNotExist: lambda _: JSONMessage(
+        'No such news article.', status=404),
+    Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404)
+}
+
+
 def _get_address() -> Union[Address, JSONMessage]:
     """Returns the local news address."""
 
@@ -85,11 +94,3 @@ ENDPOINTS = [
     (['GET'], '/local-news/image/<int:image_id>', get_local_news_image,
      'get_news_image')
 ]
-
-ERRORS = {
-    AccessToken.DoesNotExist: lambda _: JSONMessage(
-        'News not enabled.', status=403),
-    Article.DoesNotExist: lambda _: JSONMessage(
-        'No such news article.', status=404),
-    Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404)
-}
