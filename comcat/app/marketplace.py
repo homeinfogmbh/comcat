@@ -58,7 +58,7 @@ def delete(ident: int) -> JSONMessage:
 def get_img(ident: int) -> Binary:
     """Returns an Image."""
 
-    image = get_image(ident, get_offer(ident, customer=TENEMENT.customer))
+    image = get_image(ident, customer=TENEMENT.customer)
     return Binary(image.file.bytes)
 
 
@@ -82,8 +82,7 @@ def add_img(offer: int, index: int) -> JSONMessage:
 def delete_img(ident: int) -> JSONMessage:
     """Deletes an Image."""
 
-    image = get_image(ident, get_offer(ident, user=USER.id))
-    image.delete_instance()
+    get_image(ident, user=USER.id).delete_instance()
     return JSONMessage('image deleted.', status=200)
 
 
