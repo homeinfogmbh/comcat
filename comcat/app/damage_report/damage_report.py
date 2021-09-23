@@ -13,7 +13,7 @@ from wsgilib import JSON, JSONMessage
 from comcat.app.functions import get_damage_reports, get_damage_report
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 DENIED_FIELDS = {'address', 'annotation', 'timestamp', 'checked'}
@@ -64,10 +64,9 @@ def delete(report_id: int) -> JSONMessage:
     return JSONMessage('Damage report already processed.', status=403)
 
 
-ENDPOINTS = (
-    (['GET'], '/damage-report', list_, 'list_damage_reports'),
-    (['GET'], '/damage-report/<int:report_id>', get, 'get_damage_report'),
-    (['POST'], '/damage-report', post, 'add_damage_report'),
-    (['DELETE'], '/damage-report/<int:report_id>', delete,
-     'delete_damage_report')
+ROUTES = (
+    (['GET'], '/damage-report', list_),
+    (['GET'], '/damage-report/<int:report_id>', get),
+    (['POST'], '/damage-report', post),
+    (['DELETE'], '/damage-report/<int:report_id>', delete)
 )

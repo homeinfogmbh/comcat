@@ -14,7 +14,7 @@ from comcatlib import GroupMemberUser
 from comcatlib import MenuBaseChart
 
 
-__all__ = ['ENDPOINTS', 'get_base_charts']
+__all__ = ['ROUTES', 'get_base_charts']
 
 
 def user_groups() -> Iterator[Group]:
@@ -69,4 +69,4 @@ def list_() -> JSON:
     return JSON([jsonify_base_chart(bc) for bc in get_base_charts()])
 
 
-ENDPOINTS = [(['GET'], '/charts', list_, 'list_charts')]
+ROUTES = [(['GET'], '/charts', list_)]

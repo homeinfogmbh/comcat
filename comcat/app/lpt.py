@@ -5,7 +5,7 @@ from lptlib import get_departures as _get_departures
 from wsgilib import JSON
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 @REQUIRE_OAUTH('comcat')
@@ -17,4 +17,4 @@ def get_departures() -> JSON:
     return JSON({'source': source, 'stops': stops})
 
 
-ENDPOINTS = [(['GET'], '/lpt', get_departures, 'get_lpt_departures')]
+ROUTES = [(['GET'], '/lpt', get_departures)]

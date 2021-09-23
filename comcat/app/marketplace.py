@@ -12,7 +12,7 @@ from marketplace import get_image
 from wsgilib import Binary, JSON, JSONMessage
 
 
-__all__ = ['ENDPOINTS', 'ERRORS']
+__all__ = ['ROUTES', 'ERRORS']
 
 
 @REQUIRE_OAUTH('comcat')
@@ -72,13 +72,12 @@ def delete_img(ident: int) -> JSONMessage:
     return JSONMessage('image deleted.', status=200)
 
 
-ENDPOINTS = [
-    (['GET'], '/marketplace', list_, 'list_offers'),
-    (['GET'], '/marketplace/<int:ident>', get, 'get_offer'),
-    (['POST'], '/marketplace', add, 'add_offer'),
-    (['DELETE'], '/marketplace/<int:ident>', delete, 'delete_offer'),
-    (['GET'], '/marketplace/image/<int:ident>', get_img, 'get_image'),
-    (['POST'], '/marketplace/<int:offer>/image/<int:index>', add_img,
-     'add_image'),
-    (['DELETE'], '/marketplace/image/<int:ident>', delete_img, 'delete_image')
+ROUTES = [
+    (['GET'], '/marketplace', list_),
+    (['GET'], '/marketplace/<int:ident>', get),
+    (['POST'], '/marketplace', add),
+    (['DELETE'], '/marketplace/<int:ident>', delete),
+    (['GET'], '/marketplace/image/<int:ident>', get_img),
+    (['POST'], '/marketplace/<int:offer>/image/<int:index>', add_img),
+    (['DELETE'], '/marketplace/image/<int:ident>', delete_img)
 ]

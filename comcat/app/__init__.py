@@ -19,17 +19,17 @@ from comcat.app.common import APPLICATION
 __all__ = ['APPLICATION']
 
 
-ENDPOINTS = [
-    *charts.ENDPOINTS,
-    *damage_report.ENDPOINTS,
-    *local_news.ENDPOINTS,
-    *logout.ENDPOINTS,
-    *lpt.ENDPOINTS,
-    *marketplace.ENDPOINTS,
-    *meta.ENDPOINTS,
-    *registration.ENDPOINTS,
-    *related_files.ENDPOINTS,
-    *tenant2tenant.ENDPOINTS
+ROUTES = [
+    *charts.ROUTES,
+    *damage_report.ROUTES,
+    *local_news.ROUTES,
+    *logout.ROUTES,
+    *lpt.ROUTES,
+    *marketplace.ROUTES,
+    *meta.ROUTES,
+    *registration.ROUTES,
+    *related_files.ROUTES,
+    *tenant2tenant.ROUTES
 ]
 ERRORS = {
     **errors.ERRORS,
@@ -41,9 +41,5 @@ ERRORS = {
 }
 
 
-for methods, path, function, name in ENDPOINTS:
-    APPLICATION.add_url_rule(path, name, function, methods=methods)
-
-
-for exception, handler in ERRORS.items():
-    APPLICATION.register_error_handler(exception, handler)
+APPLICATION.add_routes(ROUTES)
+APPLICATION.register_error_handlers(ERRORS)

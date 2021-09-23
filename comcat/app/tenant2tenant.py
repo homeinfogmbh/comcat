@@ -13,7 +13,7 @@ from comcatlib import jsonify_tenant_message
 from tenant2tenant import TenantMessage
 
 
-__all__ = ['ENDPOINTS', 'ERRORS']
+__all__ = ['ROUTES', 'ERRORS']
 
 
 ERRORS = {
@@ -50,9 +50,8 @@ def delete(ident: int) -> JSONMessage:
     return JSONMessage('Tenant message deleted.', status=200)
 
 
-ENDPOINTS = [
-    (['GET'], '/tenant2tenant', list_, 'list_tenant2tenant_messages'),
-    (['POST'], '/tenant2tenant', post, 'add_tenant2tenant_message'),
-    (['DELETE'], '/tenant2tenant/<int:ident>', delete,
-     'delete_tenant2tenant_message')
+ROUTES = [
+    (['GET'], '/tenant2tenant', list_),
+    (['POST'], '/tenant2tenant', post),
+    (['DELETE'], '/tenant2tenant/<int:ident>', delete)
 ]

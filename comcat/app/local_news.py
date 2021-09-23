@@ -8,7 +8,7 @@ from mdb import Address
 from wsgilib import Binary, JSON, JSONMessage
 
 
-__all__ = ['ENDPOINTS', 'ERRORS']
+__all__ = ['ROUTES', 'ERRORS']
 
 
 ERRORS = {
@@ -87,10 +87,8 @@ def get_local_news_image(image_id: int) -> Binary:
         return Binary(image.data)
 
 
-ENDPOINTS = [
-    (['GET'], '/local-news', get_local_news_articles, 'list_news_articles'),
-    (['GET'], '/local-news/<int:article_id>', get_local_news_article,
-     'get_news_article'),
-    (['GET'], '/local-news/image/<int:image_id>', get_local_news_image,
-     'get_news_image')
+ROUTES = [
+    (['GET'], '/local-news', get_local_news_articles),
+    (['GET'], '/local-news/<int:article_id>', get_local_news_article),
+    (['GET'], '/local-news/image/<int:image_id>', get_local_news_image)
 ]

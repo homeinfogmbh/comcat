@@ -11,7 +11,7 @@ from comcat.app.functions import get_attachment
 from comcat.app.functions import get_user_damage_report
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 @REQUIRE_OAUTH('comcat')
@@ -45,11 +45,8 @@ def delete(ident: int) -> JSONMessage:
     return JSONMessage('Attachment deleted.', status=200)
 
 
-ENDPOINTS = (
-    (['GET'], '/damage-report/attachment/<int:ident>', get,
-     'get_damage_report_attachment'),
-    (['POST'], '/damage-report/<int:ident>/attachment', post,
-     'add_damage_report_attachment'),
-    (['DELETE'], '/damage-report/attachment/<int:ident>', delete,
-     'delete_damage_report_attachment')
+ROUTES = (
+    (['GET'], '/damage-report/attachment/<int:ident>', get),
+    (['POST'], '/damage-report/<int:ident>/attachment', post),
+    (['DELETE'], '/damage-report/attachment/<int:ident>', delete)
 )

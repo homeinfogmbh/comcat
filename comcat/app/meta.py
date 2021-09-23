@@ -11,7 +11,7 @@ from wsgilib import Binary, JSON
 from comcatlib import REQUIRE_OAUTH, USER, genpw
 
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 URL = 'de.homeinfo.comcat://register/{uid}/{passwd}'
@@ -50,7 +50,7 @@ def user_info() -> JSON:
     return JSON(json)
 
 
-ENDPOINTS = [
-    (['GET'], '/init/qrcode', get_qr_code, 'get_qr_code'),
-    (['GET'], '/user', user_info, 'get_user_info')
+ROUTES = [
+    (['GET'], '/init/qrcode', get_qr_code),
+    (['GET'], '/user', user_info)
 ]

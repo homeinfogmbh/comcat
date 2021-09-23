@@ -1,16 +1,13 @@
 """Read-only endpoint for data-related files from HISFS."""
 
 from comcatlib import REQUIRE_OAUTH
-from hisfs import File
-from wsgilib import Binary, JSONMessage
+from hisfs import ERRORS, File
+from wsgilib import Binary
 
 from comcat.app.charts import get_base_charts
 
 
-__all__ = ['ENDPOINTS', 'ERRORS']
-
-
-ERRORS = {File.DoesNotExist: lambda _: JSONMessage('No such file.', status=404)}
+__all__ = ['ROUTES', 'ERRORS']
 
 
 def get_file(ident: int):
@@ -35,4 +32,4 @@ def get(ident):
     return Binary(get_file(ident).bytes)
 
 
-ENDPOINTS = [(['GET'], '/related-file/<int:ident>', get, 'get_related_file')]
+ROUTES = [(['GET'], '/related-file/<int:ident>', get)]
