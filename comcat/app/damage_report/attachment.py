@@ -11,13 +11,7 @@ from comcat.app.functions import get_attachment
 from comcat.app.functions import get_user_damage_report
 
 
-__all__ = ['ENDPOINTS', 'ERRORS']
-
-
-ERRORS = {
-    Attachment.DoesNotExist: lambda _: JSONMessage(
-        'No such attachment.', status=404)
-}
+__all__ = ['ENDPOINTS']
 
 
 @REQUIRE_OAUTH('comcat')

@@ -13,14 +13,10 @@ from wsgilib import JSON, JSONMessage
 from comcat.app.functions import get_damage_reports, get_damage_report
 
 
-__all__ = ['ENDPOINTS', 'ERRORS']
+__all__ = ['ENDPOINTS']
 
 
 DENIED_FIELDS = {'address', 'annotation', 'timestamp', 'checked'}
-ERRORS = {
-    DamageReport.DoesNotExist: lambda _: JSONMessage(
-        'No such damage report.', status=404)
-}
 
 
 @REQUIRE_OAUTH('comcat')
