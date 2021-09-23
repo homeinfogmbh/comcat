@@ -18,12 +18,17 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Application('comcat')
 ROUTES = (
-    *content.ROUTES, *damage_report.ROUTES, *group.ROUTES, *marketplace.ROUTES,
-    *menu.ROUTES, *tenant2tenant.ROUTES, *tenement.ROUTES, *user.ROUTES
+    *content.ROUTES,
+    *damage_report.ROUTES,
+    *group.ROUTES,
+    *marketplace.ROUTES,
+    *menu.ROUTES,
+    *tenant2tenant.ROUTES,
+    *tenement.ROUTES,
+    *user.ROUTES
 )
-APPLICATION.add_routes(ROUTES)
 ERRORS = {**errors.ERRORS, **marketplace.ERRORS}
 
 
-for exception, handler in ERRORS.items():
-    APPLICATION.register_error_handler(exception, handler)
+APPLICATION.add_routes(ROUTES)
+APPLICATION.register_error_handlers(ERRORS)
