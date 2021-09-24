@@ -34,11 +34,11 @@ def list_own_topics() -> JSON:
 
 
 @REQUIRE_OAUTH('comcat')
-def list_responses(ident: int) -> JSON:
+def list_responses(topic: int) -> JSON:
     """Lists responses of a topic."""
 
     return JSON([
-        response.to_json() for response in get_visible_responses(ident, USER)
+        response.to_json() for response in get_visible_responses(topic, USER)
     ])
 
 
@@ -109,7 +109,7 @@ def delete_response(ident: int) -> JSONMessage:
 ROUTES = [
     (['GET'], '/tenantforum/topic', list_topics),
     (['GET'], '/tenantforum/topic/own', list_own_topics),
-    (['GET'], '/tenantforum/response', list_responses),
+    (['GET'], '/tenantforum/response/<int:topic>', list_responses),
     (['GET'], '/tenantforum/response/own', list_own_responses),
     (['POST'], '/tenantforum/topic', add_topic),
     (['POST'], '/tenantforum/response', add_response),
