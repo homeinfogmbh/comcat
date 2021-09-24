@@ -39,7 +39,8 @@ ERRORS = {
     **local_news.ERRORS,
     **marketplace.ERRORS,
     **related_files.ERRORS,
-    **tenant2tenant.ERRORS
+    **tenant2tenant.ERRORS,
+    **tenantforum.ERRORS
 }
 
 

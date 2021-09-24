@@ -3,6 +3,7 @@
 from flask import request
 
 from comcatlib import REQUIRE_OAUTH, USER
+from tenantforum import ERRORS
 from tenantforum import get_visible_topics
 from tenantforum import get_visible_topic
 from tenantforum import get_own_topics
@@ -15,7 +16,7 @@ from tenantforum import Response
 from wsgilib import JSON, JSONMessage
 
 
-__all__ = ['ROUTES']
+__all__ = ['ROUTES', 'ERRORS']
 
 
 @REQUIRE_OAUTH('comcat')
