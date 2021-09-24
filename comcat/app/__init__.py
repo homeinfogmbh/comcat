@@ -13,6 +13,7 @@ from comcat.app import meta
 from comcat.app import registration
 from comcat.app import related_files
 from comcat.app import tenant2tenant
+from comcat.app import tenantforum
 from comcat.app.common import APPLICATION
 
 
@@ -29,7 +30,8 @@ ROUTES = [
     *meta.ROUTES,
     *registration.ROUTES,
     *related_files.ROUTES,
-    *tenant2tenant.ROUTES
+    *tenant2tenant.ROUTES,
+    *tenantforum.ROUTES
 ]
 ERRORS = {
     **errors.ERRORS,
