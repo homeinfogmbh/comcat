@@ -1,4 +1,4 @@
-# ComCat Marketplace
+# ComCat Tenant forum
 
 ## Listing visible topics
  `GET` `/tenantforum/topic`
