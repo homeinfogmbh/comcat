@@ -12,7 +12,6 @@ from comcat.app import marketplace
 from comcat.app import meta
 from comcat.app import registration
 from comcat.app import related_files
-from comcat.app import tenant2tenant
 from comcat.app import tenantforum
 from comcat.app.common import APPLICATION
 
@@ -30,7 +29,6 @@ ROUTES = [
     *meta.ROUTES,
     *registration.ROUTES,
     *related_files.ROUTES,
-    *tenant2tenant.ROUTES,
     *tenantforum.ROUTES
 ]
 ERRORS = {
@@ -39,7 +37,6 @@ ERRORS = {
     **local_news.ERRORS,
     **marketplace.ERRORS,
     **related_files.ERRORS,
-    **tenant2tenant.ERRORS,
     **tenantforum.ERRORS
 }
 
