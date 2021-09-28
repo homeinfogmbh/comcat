@@ -4,7 +4,7 @@ from flask import request
 
 from his import CUSTOMER, authenticated, authorized
 from tenantcalendar import ERRORS, list_events, get_event
-from wsgilib import JSON, JSONMessage
+from wsgilib import JSON, JSONMessage, get_datetime
 
 
 __all__ = ['ROUTES', 'ERRORS']
@@ -15,7 +15,9 @@ __all__ = ['ROUTES', 'ERRORS']
 def list_() -> JSON:
     """List events."""
 
-    return JSON([event.to_json() for event in list_events(CUSTOMER.id)])
+    return JSON([event.to_json() for event in list_events(
+        CUSTOMER.id, start=get_datetime('start'), end=get_datetime('end'))
+    ])
 
 
 @authenticated
