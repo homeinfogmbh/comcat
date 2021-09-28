@@ -7,6 +7,7 @@ from comcat.his import damage_report
 from comcat.his import group
 from comcat.his import marketplace
 from comcat.his import menu
+from comcat.his import tenantcalendar
 from comcat.his import tenantforum
 from comcat.his import tenement
 from comcat.his import user
@@ -23,11 +24,17 @@ ROUTES = (
     *group.ROUTES,
     *marketplace.ROUTES,
     *menu.ROUTES,
+    *tenantcalendar.ROUTES,
     *tenantforum.ROUTES,
     *tenement.ROUTES,
     *user.ROUTES
 )
-ERRORS = {**errors.ERRORS, **marketplace.ERRORS, **tenantforum.ERRORS}
+ERRORS = {
+    **errors.ERRORS,
+    **marketplace.ERRORS,
+    **tenantcalendar.ERRORS,
+    **tenantforum.ERRORS
+}
 
 
 APPLICATION.add_routes(ROUTES)
