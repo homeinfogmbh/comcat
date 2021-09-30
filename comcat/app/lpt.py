@@ -3,7 +3,7 @@
 from flask import request
 
 from comcatlib import REQUIRE_OAUTH, TENEMENT
-from lptlib import get_departures
+from lptlib import GeoCoordinates, get_departures
 from wsgilib import JSON
 
 
@@ -23,9 +23,8 @@ def get_home_departures() -> JSON:
 def get_current_departures() -> JSON:
     """Returns the departures of the given geo coordinates."""
 
-    latitude = float(request.json['latitude'])
-    longitude = float(request.json['longitude'])
-    stops, source = get_departures((latitude, longitude))
+    geo = GeoCoordinates(request.json['latitude'], request.json['longitude'])
+    stops, source = get_departures(geo)
     stops = [stop.to_json() for stop in stops]
     return JSON({'source': source, 'stops': stops})
 
