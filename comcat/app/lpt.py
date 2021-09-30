@@ -14,9 +14,8 @@ __all__ = ['ROUTES']
 def get_home_departures() -> JSON:
     """Returns the departures of the tenenemt address."""
 
-    stops, source = get_departures(TENEMENT.address)
-    stops = [stop.to_json() for stop in stops]
-    return JSON({'source': source, 'stops': stops})
+    stops = get_departures(TENEMENT.address)
+    return JSON(stops.to_json())
 
 
 @REQUIRE_OAUTH('comcat')
@@ -24,9 +23,8 @@ def get_current_departures() -> JSON:
     """Returns the departures of the given geo coordinates."""
 
     geo = GeoCoordinates(request.json['latitude'], request.json['longitude'])
-    stops, source = get_departures(geo)
-    stops = [stop.to_json() for stop in stops]
-    return JSON({'source': source, 'stops': stops})
+    stops = get_departures(geo)
+    return JSON(stops.to_json())
 
 
 ROUTES = [
