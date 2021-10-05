@@ -2,7 +2,6 @@
 
 from datetime import timedelta
 from json import load
-from pathlib import Path
 
 from flask import session
 
@@ -10,7 +9,7 @@ from comcatlib import init_app
 from wsgilib import Application
 
 
-__all__ = ['APPLICATION', 'RECAPTCHA_KEYS']
+__all__ = ['APPLICATION']
 
 
 with open('/usr/local/etc/comcat.d/cors.json', 'r') as cors:
@@ -29,16 +28,11 @@ APPLICATION.config['TESTING'] = True
 with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
     APPLICATION.secret_key = keyfile.read().strip()
 
-RECAPTCHA = Path('/usr/local/etc/comcat.recaptcha')
-RECAPTCHA_KEYS = {}
 
 
 @APPLICATION.before_first_request
 def before_first_request():
     """Initializes the app."""
-
-    with RECAPTCHA.open('r') as recaptcha:
-        RECAPTCHA_KEYS.update(load(recaptcha))
 
     init_app(APPLICATION)
     session.clear()
