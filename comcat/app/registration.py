@@ -5,15 +5,13 @@ from flask import request
 from recaptcha import recaptcha
 from wsgilib import JSONMessage, require_json
 
-from comcatlib import UserRegistration
-
-from comcat.app.common import RECAPTCHA_KEYS
+from comcatlib import CONFIG, UserRegistration
 
 
 __all__ = ['ROUTES']
 
 
-@recaptcha(lambda: RECAPTCHA_KEYS['secret'])
+@recaptcha(CONFIG)
 @require_json(dict)
 def register() -> JSONMessage:
     """Register a new user."""
