@@ -32,7 +32,7 @@ def register() -> JSONMessage:
         return JSONMessage('You are already registered.', status=400)
 
     user_registration.save()
-    return JSONMessage('User registered', status=201)
+    return JSONMessage('User registered.', status=201)
 
 
 ROUTES = [(['POST'], '/register', register)]
