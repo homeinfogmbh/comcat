@@ -25,7 +25,7 @@ def register() -> JSONMessage:
     try:
         customer = get_comcat_customer(request.json.pop('customer'))
     except Customer.DoesNotExist:
-        return REGISTRATION_SUCCEEDED
+        return REGISTRATION_SUCCEEDED   # Mitigate customer sniffing.
 
     user_registration = UserRegistration.from_json(request.json, customer)
     user_registration.save()
