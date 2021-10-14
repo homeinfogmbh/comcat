@@ -2,6 +2,7 @@
 
 from itertools import chain
 
+from comcat.app import account
 from comcat.app import charts
 from comcat.app import damage_report
 from comcat.app import errors
@@ -21,6 +22,7 @@ __all__ = ['APPLICATION']
 
 
 ROUTES = [
+    *account.ROUTES,
     *charts.ROUTES,
     *damage_report.ROUTES,
     *local_news.ROUTES,
