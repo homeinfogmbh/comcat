@@ -14,9 +14,6 @@ from comcat.app.functions import get_comcat_customer
 __all__ = ['ROUTES']
 
 
-REGISTRATION_SUCCEEDED = JSONMessage('User registered', status=201)
-
-
 @recaptcha(CONFIG)
 @require_json(dict)
 def register() -> JSONMessage:
@@ -25,7 +22,7 @@ def register() -> JSONMessage:
     try:
         customer = get_comcat_customer(request.json.pop('customer'))
     except Customer.DoesNotExist:
-        return REGISTRATION_SUCCEEDED   # Mitigate customer sniffing.
+        return JSONMessage('No such customer.', status=404)
 
     try:
         user_registration = UserRegistration.add(
@@ -35,7 +32,7 @@ def register() -> JSONMessage:
         return JSONMessage('You are already registered.', status=400)
 
     user_registration.save()
-    return REGISTRATION_SUCCEEDED
+    return JSONMessage('User registered', status=201)
 
 
 ROUTES = [(['POST'], '/register', register)]
