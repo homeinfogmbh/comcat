@@ -6,7 +6,7 @@ from mdb import Customer
 from recaptcha import recaptcha
 from wsgilib import JSONMessage, require_json
 
-from comcatlib import CONFIG, UserRegistration
+from comcatlib import CONFIG, AlreadyRegistered, UserRegistration
 
 from comcat.app.functions import get_comcat_customer
 
@@ -27,7 +27,13 @@ def register() -> JSONMessage:
     except Customer.DoesNotExist:
         return REGISTRATION_SUCCEEDED   # Mitigate customer sniffing.
 
-    user_registration = UserRegistration.from_json(request.json, customer)
+    try:
+        user_registration = UserRegistration.add(
+            request.json['name'], request.json['email'],
+            request.json['tenantId'], customer)
+    except AlreadyRegistered:
+        return JSONMessage('You are already registered.', status=400)
+
     user_registration.save()
     return REGISTRATION_SUCCEEDED
 
