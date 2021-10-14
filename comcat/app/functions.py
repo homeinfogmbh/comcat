@@ -4,10 +4,12 @@ from peewee import ModelSelect
 
 from comcatlib import USER, UserDamageReport
 from damage_report import Attachment, DamageReport
+from mdb import Customer
 
 
 __all__ = [
     'get_attachment',
+    'get_comcat_customer',
     'get_damage_report',
     'get_damage_reports',
     'get_user_damage_report',
@@ -22,6 +24,12 @@ def get_attachment(ident: int) -> Attachment:
     condition &= Attachment.id == ident
     return Attachment.select().join(DamageReport).join(UserDamageReport).where(
         condition).get()
+
+
+def get_comcat_customer(ident: int) -> Customer:
+    """Returns a customer instance of a valid ComCat customer."""
+
+    return Customer.select(cascade=True).where(Customer.id == ident).get()
 
 
 def get_damage_reports() -> ModelSelect:
