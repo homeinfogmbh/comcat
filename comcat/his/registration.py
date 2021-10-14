@@ -2,6 +2,7 @@
 
 from flask import request
 
+from comcatlib import notify_user
 from his import authenticated, authorized
 from wsgilib import JSON, JSONMessage, require_json
 
@@ -31,7 +32,7 @@ def accept(ident: int) -> JSONMessage:
     tenement = get_tenement(request.json.get('tenement'))
     user, passwd = user_registration.confirm(tenement)
     user.save()
-    user_registration.notify(passwd)
+    notify_user(user_registration, passwd)
     return JSONMessage('Added user.', id=user.id, status=201)
 
 
