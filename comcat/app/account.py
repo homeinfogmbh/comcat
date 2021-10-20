@@ -33,11 +33,10 @@ def delete_account() -> JSONMessage:
     """Deletes the account."""
 
     try:
-        USER.login(request.json.get('passwd'))
+        USER.delete_account(request.json.get('passwd'))
     except InvalidPassword:
         return JSONMessage('Invalid password.', status=400)
 
-    USER.delete_instance()
     return JSONMessage('Account deleted.', status=200)
 
 
