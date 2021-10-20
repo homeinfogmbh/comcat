@@ -7,6 +7,7 @@ from comcat.his import damage_report
 from comcat.his import group
 from comcat.his import marketplace
 from comcat.his import menu
+from comcat.his import registration
 from comcat.his import tenantcalendar
 from comcat.his import tenantforum
 from comcat.his import tenement
@@ -24,6 +25,7 @@ ROUTES = (
     *group.ROUTES,
     *marketplace.ROUTES,
     *menu.ROUTES,
+    *registration.ROUTES,
     *tenantcalendar.ROUTES,
     *tenantforum.ROUTES,
     *tenement.ROUTES,
