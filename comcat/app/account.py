@@ -1,8 +1,14 @@
 """Account management."""
 
+from uuid import UUID
+
 from flask import request
 
-from comcatlib import REQUIRE_OAUTH, USER, InvalidPassword
+from comcatlib import REQUIRE_OAUTH
+from comcatlib import USER
+from comcatlib import InvalidPassword
+from comcatlib import confirm_email_change
+from comcatlib import request_email_change
 from wsgilib import JSON, JSONMessage
 
 
@@ -40,8 +46,34 @@ def delete_account() -> JSONMessage:
     return JSONMessage('Account deleted.', status=200)
 
 
+@REQUIRE_OAUTH('comcat')
+def _request_email_change() -> JSONMessage:
+    """Changes the password."""
+
+    request_email_change(USER, request.json['email'])
+
+
+def _confirm_email_change() -> JSONMessage:
+    """Confirms the email change."""
+
+    try:
+        uuid = UUID(request.json['uuid'])
+    except (KeyError, TypeError):
+        return JSONMessage('No UUID specified.', status=400)
+    except ValueError:
+        return JSONMessage('Invalid UUID specified.', status=400)
+
+    if not (passwd := request.json.get('passwd')):
+        return JSONMessage('No password specified.', status=400)
+
+    confirm_email_change(uuid, passwd)
+    return JSONMessage('Email address updated.', status=200)
+
+
 ROUTES = [
     (['GET'], '/account', get_account_info),
     (['PATCH'], '/account', change_account_info),
-    (['POST'], '/account/delete', delete_account)
+    (['POST'], '/account/delete', delete_account),
+    (['PATCH'], '/account/email', _request_email_change),
+    (['PUT'], '/account/email', _confirm_email_change)
 ]
