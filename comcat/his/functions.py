@@ -38,7 +38,7 @@ __all__ = [
 ]
 
 
-def get_address(address: Union[int, dict]) -> Address:
+def get_address(address: Union[int, list[str]]) -> Address:
     """Returns the specified address."""
 
     if isinstance(address, int):
@@ -48,7 +48,7 @@ def get_address(address: Union[int, dict]) -> Address:
         if len(address) != 4:
             raise InvalidAddress()
 
-        address = Address.add_by_address(address)
+        address = Address.add(*address)
 
         if not address.id:
             address.save()
