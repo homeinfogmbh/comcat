@@ -15,7 +15,8 @@ def list_() -> JSON:
     """Lists events."""
 
     return JSON([event.to_json() for event in list_events(
-        TENEMENT.customer, start=get_datetime('start'), end=get_datetime('end'))
+        TENEMENT.customer, start=get_datetime('start'),
+        end=get_datetime('end'))
     ])
 
 
