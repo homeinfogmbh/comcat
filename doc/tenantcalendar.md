@@ -24,8 +24,8 @@ A tenant-oriented calendar for ComCat
 ### URL parameters
 The following URL parameters are optional:
 
-* `start: <str(ISO 8601)>`: Filters for events whose start datetime is less or equal (<=) the given datetime.
-* `end: <str(ISO 8601)>`: Filters for events whose end datetime is greater than (>) the given datetime.
+* `start: <str(ISO 8601)>`: Filters for events whose start datetime is greater or equal (>=) the given datetime.
+* `end: <str(ISO 8601)>`: Filters for events whose end datetime is less than (<) the given datetime.
 
 ## Add an event
 `GET` `/tenantcalendar`
