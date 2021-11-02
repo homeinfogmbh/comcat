@@ -71,7 +71,7 @@ def patch(user: User) -> JSONMessage:
     if tenement is not None:
         tenement = get_tenement(tenement)
 
-    user.patch_json(request.json, tenement, skip={'created'})
+    user.patch_json(request.json, tenement=tenement, skip={'created'})
     user.save()
     return JSONMessage('User patched.', status=200)
 
