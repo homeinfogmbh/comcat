@@ -15,7 +15,7 @@ from wsgilib import JSON, JSONMessage
 __all__ = ['ROUTES']
 
 
-PATCH_FIELDS = {'phone'}
+PATCH_FIELDS = {'phone', 'mobile'}
 
 
 @REQUIRE_OAUTH('comcat')
