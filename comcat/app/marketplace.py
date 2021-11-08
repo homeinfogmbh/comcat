@@ -60,7 +60,8 @@ def get_img(ident: int) -> Binary:
 def add_img(offer: int, index: int) -> JSONMessage:
     """Adds an Image."""
 
-    image = add_image(get_offer(offer, user=USER.id), request.get_data(), index)
+    offer = get_offer(offer, user=USER.id)
+    image = add_image(offer, request.get_data(), index)
     return JSONMessage('Image added.', id=image.id, status=201)
 
 
