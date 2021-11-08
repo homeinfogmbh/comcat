@@ -1,6 +1,9 @@
 """Marketplace interface."""
 
+from traceback import format_exc
+
 from flask import request
+from peewee import IntegrityError
 
 from comcatlib import REQUIRE_OAUTH, TENEMENT, USER
 from marketplace import ERRORS
@@ -61,7 +64,13 @@ def add_img(offer: int, index: int) -> JSONMessage:
     """Adds an Image."""
 
     offer = get_offer(offer, user=USER.id)
-    image = add_image(offer, request.get_data(), index)
+
+    try:
+        image = add_image(offer, request.get_data(), index)
+    except IntegrityError:
+        return JSONMessage('Integrity error.', traceback=format_exc(),
+                           status=500)
+
     return JSONMessage('Image added.', id=image.id, status=201)
 
 
