@@ -1,7 +1,5 @@
 """Marketplace interface."""
 
-from traceback import format_exc
-
 from flask import request
 from peewee import IntegrityError
 
@@ -67,9 +65,9 @@ def add_img(offer: int, index: int) -> JSONMessage:
 
     try:
         image = add_image(offer, request.get_data(), index)
-    except IntegrityError:
-        return JSONMessage('Integrity error.', traceback=format_exc(),
-                           status=500)
+    except IntegrityError as error:
+        code, msg = error.args
+        return JSONMessage('Integrity error.', code=code, msg=msg, status=500)
 
     return JSONMessage('Image added.', id=image.id, status=201)
 
