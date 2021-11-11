@@ -1,5 +1,7 @@
 """Damage report attachment endpoints."""
 
+from contextlib import suppress
+
 from flask import request
 
 from comcatlib import ADDRESS
@@ -19,19 +21,29 @@ __all__ = ['ROUTES']
 DENIED_FIELDS = {'address', 'annotation', 'timestamp', 'checked'}
 
 
+def jsonify(damage_report: DamageReport) -> dict:
+    """JSONifys a damage report."""
+
+    json = damage_report.to_json(attachments=True)
+
+    with suppress(AttributeError):
+        json['user'] = damage_report.userdamagereport.id
+
+    return json
+
+
 @REQUIRE_OAUTH('comcat')
 def list_() -> JSON:
     """Returns a list of sent damage report."""
 
-    return JSON([
-        report.to_json(attachments=True) for report in get_damage_reports()])
+    return JSON([jsonify(report) for report in get_damage_reports()])
 
 
 @REQUIRE_OAUTH('comcat')
 def get(report_id: int) -> JSON:
     """Returns a damage report."""
 
-    return JSON(get_damage_report(report_id).to_json(attachments=True))
+    return JSON(jsonify(get_damage_report(report_id)))
 
 
 @REQUIRE_OAUTH('comcat')
