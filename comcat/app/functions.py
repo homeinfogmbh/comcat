@@ -35,7 +35,7 @@ def get_comcat_customer(ident: int) -> Customer:
 def get_damage_reports() -> ModelSelect:
     """Yields damage reports for the current user."""
 
-    return DamageReport.select(UserDamageReport.id, cascade=True).join_from(
+    return DamageReport.select(UserDamageReport.user, cascade=True).join_from(
         DamageReport, UserDamageReport).where(UserDamageReport.user == USER.id)
 
 

@@ -27,7 +27,7 @@ def jsonify(damage_report: DamageReport) -> dict:
     json = damage_report.to_json(attachments=True)
 
     with suppress(AttributeError):
-        json['user'] = damage_report.userdamagereport.id
+        json['user'] = damage_report.userdamagereport.user
 
     return json
 
