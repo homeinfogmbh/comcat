@@ -3,52 +3,76 @@
 from flask import request
 
 from comcatlib import REQUIRE_OAUTH, USER, TENEMENT
-from tenantcalendar import ERRORS, Event, list_events, get_event
+from tenantcalendar import ERRORS
+from tenantcalendar import UserEvent
+from tenantcalendar import list_customer_events
+from tenantcalendar import list_user_events
+from tenantcalendar import get_own_event
 from wsgilib import JSON, JSONMessage, get_datetime
 
 
 __all__ = ['ROUTES', 'ERRORS']
 
 
-@REQUIRE_OAUTH('comcat')
-def list_() -> JSON:
-    """Lists events."""
+CUSTOMER_FIELDS = {'title', 'start', 'end', 'text'}
 
-    return JSON([event.to_json() for event in list_events(
-        TENEMENT.customer, start=get_datetime('start'),
-        end=get_datetime('end'))
+
+@REQUIRE_OAUTH('comcat')
+def _list_customer_events() -> JSON:
+    """Lists customer events."""
+
+    return JSON([
+        customer_event.to_json() for customer_event in list_customer_events(
+            TENEMENT.customer, start=get_datetime('start'),
+            end=get_datetime('end')
+        )
     ])
 
 
 @REQUIRE_OAUTH('comcat')
-def add() -> JSONMessage:
-    """Adds an event."""
+def _list_user_events() -> JSON:
+    """Lists user events."""
 
-    event = Event.from_json(request.json, USER.id)
-    event.save()
-    return JSONMessage('Event added.', id=event.id, status=201)
+    return JSON([
+        user_event.to_json() for user_event in list_user_events(
+            TENEMENT.customer, start=get_datetime('start'),
+            end=get_datetime('end')
+        )
+    ])
 
 
 @REQUIRE_OAUTH('comcat')
-def patch(ident: int) -> JSONMessage:
+def add_user_event() -> JSONMessage:
+    """Adds a user event."""
+
+    user_event = UserEvent.from_json(
+        request.json, USER.id, only=CUSTOMER_FIELDS)
+    user_event.save()
+    return JSONMessage('User event added.', id=user_event.id, status=201)
+
+
+@REQUIRE_OAUTH('comcat')
+def patch_user_event(ident: int) -> JSONMessage:
     """Patches an event."""
 
-    event = get_event(ident, TENEMENT.customer).patch_json(request.json)
-    event.save()
-    return JSONMessage('Event patched.', status=200)
+    user_event = get_own_event(ident, USER.id)
+    user_event.patch_json(request.json, only=CUSTOMER_FIELDS)
+    user_event.save()
+    return JSONMessage('User event patched.', status=200)
 
 
 @REQUIRE_OAUTH('comcat')
-def delete(ident: int) -> JSONMessage:
+def delete_user_event(ident: int) -> JSONMessage:
     """Deletes an event."""
 
-    get_event(ident, TENEMENT.customer).delete_instance()
+    get_own_event(ident, USER.id).delete_instance()
     return JSONMessage('Event deleted.', status=200)
 
 
 ROUTES = [
-    ('GET', '/tenantcalendar', list_),
-    ('POST', '/tenantcalendar', add),
-    ('PATCH', '/tenantcalendar/<int:ident>', patch),
-    ('DELETE', '/tenantcalendar/<int:ident>', delete)
+    ('GET', '/tenantcalendar/customer-events', _list_customer_events),
+    ('GET', '/tenantcalendar/user-events', _list_user_events),
+    ('POST', '/tenantcalendar', add_user_event),
+    ('PATCH', '/tenantcalendar/<int:ident>', patch_user_event),
+    ('DELETE', '/tenantcalendar/<int:ident>', delete_user_event)
 ]
