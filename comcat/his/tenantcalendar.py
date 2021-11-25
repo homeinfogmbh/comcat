@@ -2,9 +2,10 @@
 
 from flask import request
 
-from his import CUSTOMER, Application, authenticated, authorized
+from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage, get_datetime
 
+from tenantcalendar.errors import ERRORS
 from tenantcalendar.functions import list_customer_events
 from tenantcalendar.functions import get_customer_event
 from tenantcalendar.functions import list_user_events
@@ -12,10 +13,9 @@ from tenantcalendar.functions import get_user_event
 from tenantcalendar.orm import CustomerEvent, UserEvent
 
 
-__all__ = ['APPLICATION']
+__all__ = ['ERRORS', 'ROUTES']
 
 
-APPLICATION = Application('tenantcalendar')
 CUSTOMER_FIELDS = {'title', 'start', 'end', 'text'}
 USER_FIELDS = {'title', 'email', 'phone', 'start', 'end', 'text'}
 
