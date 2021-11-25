@@ -21,7 +21,7 @@ USER_FIELDS = {'title', 'email', 'phone', 'start', 'end', 'text'}
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def _list_customer_events() -> JSON:
     """Lists customer events."""
 
@@ -32,7 +32,7 @@ def _list_customer_events() -> JSON:
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def _list_user_events() -> JSON:
     """Lists user events."""
 
@@ -41,7 +41,7 @@ def _list_user_events() -> JSON:
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def add_customer_event() -> JSONMessage:
     """Adds a customer event."""
 
@@ -52,7 +52,7 @@ def add_customer_event() -> JSONMessage:
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def patch_customer_event(ident: int) -> JSONMessage:
     """Patches a customer event."""
 
@@ -67,7 +67,7 @@ def patch_customer_event(ident: int) -> JSONMessage:
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def patch_user_event(ident: int) -> JSONMessage:
     """Patches a user event."""
 
@@ -82,7 +82,7 @@ def patch_user_event(ident: int) -> JSONMessage:
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def delete_customer_event(ident: int) -> JSONMessage:
     """Deletes a customer event."""
 
@@ -96,7 +96,7 @@ def delete_customer_event(ident: int) -> JSONMessage:
 
 
 @authenticated
-@authorized('tenantcalendar')
+@authorized('comcat')
 def delete_user_event(ident: int) -> JSONMessage:
     """Deletes a user event."""
 
@@ -110,11 +110,11 @@ def delete_user_event(ident: int) -> JSONMessage:
 
 
 ROUTES = [
-    ('GET', '/customer', _list_customer_events),
-    ('GET', '/user', _list_user_events),
-    ('POST', '/customer', add_customer_event),
-    ('PATCH', '/customer/<int:ident>', patch_customer_event),
-    ('PATCH', '/user/<int:ident>', patch_user_event),
-    ('DELETE', '/customer/<int:ident>', delete_customer_event),
-    ('DELETE', '/user/<int:ident>', delete_user_event)
+    ('GET', '/tenantcalendar/customer', _list_customer_events),
+    ('GET', '/tenantcalendar/user', _list_user_events),
+    ('POST', '/tenantcalendar/customer', add_customer_event),
+    ('PATCH', '/tenantcalendar/customer/<int:ident>', patch_customer_event),
+    ('PATCH', '/tenantcalendar/user/<int:ident>', patch_user_event),
+    ('DELETE', '/tenantcalendar/customer/<int:ident>', delete_customer_event),
+    ('DELETE', '/tenantcalendar/user/<int:ident>', delete_user_event)
 ]
