@@ -51,6 +51,7 @@ def _request_email_change() -> JSONMessage:
     """Changes the password."""
 
     request_email_change(USER, request.json['email'])
+    return JSONMessage('Email change request issued.', status=201)
 
 
 def _confirm_email_change() -> JSONMessage:
