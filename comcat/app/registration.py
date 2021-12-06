@@ -6,7 +6,7 @@ from mdb import Customer
 from recaptcha import recaptcha
 from wsgilib import JSONMessage, require_json
 
-from comcatlib import CONFIG, AlreadyRegistered, UserRegistration
+from comcatlib import AlreadyRegistered, UserRegistration, get_config
 
 from comcat.app.functions import get_comcat_customer
 
@@ -14,7 +14,7 @@ from comcat.app.functions import get_comcat_customer
 __all__ = ['ROUTES']
 
 
-@recaptcha(CONFIG)
+@recaptcha(get_config)
 @require_json(dict)
 def register() -> JSONMessage:
     """Register a new user."""
