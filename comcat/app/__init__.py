@@ -11,6 +11,7 @@ from comcat.app import local_news
 from comcat.app import logout
 from comcat.app import lpt
 from comcat.app import marketplace
+from comcat.app import messenger
 from comcat.app import meta
 from comcat.app import registration
 from comcat.app import related_files
@@ -31,6 +32,7 @@ ROUTES = [
     *logout.ROUTES,
     *lpt.ROUTES,
     *marketplace.ROUTES,
+    *messenger.ROUTES,
     *meta.ROUTES,
     *registration.ROUTES,
     *related_files.ROUTES,
@@ -42,6 +44,7 @@ ERRORS = {
     **damage_report.ERRORS,
     **local_news.ERRORS,
     **marketplace.ERRORS,
+    **messenger.ERRORS,
     **related_files.ERRORS,
     **tenantcalendar.ERRORS,
     **tenantforum.ERRORS
