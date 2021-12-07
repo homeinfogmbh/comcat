@@ -48,7 +48,7 @@ def delete_account() -> JSONMessage:
 
 @REQUIRE_OAUTH('comcat')
 def _request_email_change() -> JSONMessage:
-    """Changes the password."""
+    """Requests and email change."""
 
     request_email_change(USER.id, request.json['email'])
     return JSONMessage('Email change request issued.', status=201)
