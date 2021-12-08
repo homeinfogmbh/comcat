@@ -63,7 +63,7 @@ def add_attachment(message: int) -> JSONMessage:
 def delete_attachment(ident: int) -> JSONMessage:
     """Deletes an attachment."""
 
-    get_attachment(ident, USER.id, own=True).delete_instance()
+    get_attachment(ident, user=USER.id, own=True).delete_instance()
     return JSONMessage('Attachment deleted.', status=200)
 
 
