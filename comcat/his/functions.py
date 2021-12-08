@@ -1,7 +1,7 @@
 """Common functions."""
 
 from functools import wraps
-from typing import Callable, Iterable, Iterator, Union
+from typing import Callable, Iterator, Union
 
 from peewee import ModelSelect
 
@@ -104,7 +104,7 @@ def get_tenement(ident: int) -> Tenement:
     return get_tenements().where(Tenement.id == ident).get()
 
 
-def get_tenements() -> Iterable[Tenement]:
+def get_tenements() -> ModelSelect:
     """Yields tenements of the current user."""
 
     return Tenement.select(cascade=True).where(
@@ -117,7 +117,7 @@ def get_user(ident: int) -> User:
     return get_users().where(User.id == ident).get()
 
 
-def get_users() -> Iterable[User]:
+def get_users() -> ModelSelect:
     """Yields ComCat users of the current customer."""
 
     return User.select(cascade=True).where(Tenement.customer == CUSTOMER.id)
