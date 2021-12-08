@@ -29,13 +29,6 @@ def list_messages() -> JSON:
 
 
 @REQUIRE_OAUTH('comcat')
-def get_attachment_(ident: int) -> Binary:
-    """Returns attachment data."""
-
-    return Binary(get_attachment(ident, user=USER.id).file.bytes)
-
-
-@REQUIRE_OAUTH('comcat')
 def add_message() -> JSONMessage:
     """Adds a new message."""
 
@@ -45,6 +38,13 @@ def add_message() -> JSONMessage:
     message = Message(parent=reply_to, user=USER.id, text=request.json['text'])
     message.save()
     return JSONMessage('Messge added.', id=message.id, status=201)
+
+
+@REQUIRE_OAUTH('comcat')
+def get_attachment_(ident: int) -> Binary:
+    """Returns attachment data."""
+
+    return Binary(get_attachment(ident, user=USER.id).file.bytes)
 
 
 @REQUIRE_OAUTH('comcat')
