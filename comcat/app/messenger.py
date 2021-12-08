@@ -2,7 +2,10 @@
 
 from flask import request
 
-from ccmessenger import get_attachment, get_user_message, get_user_messages
+from ccmessenger import ERRORS
+from ccmessenger import get_attachment
+from ccmessenger import get_user_message
+from ccmessenger import get_user_messages
 from ccmessenger import Attachment
 from ccmessenger import Message
 from comcatlib import REQUIRE_OAUTH, USER
@@ -11,14 +14,6 @@ from wsgilib import Binary, JSON, JSONMessage
 
 
 __all__ = ['ERRORS', 'ROUTES']
-
-
-ERRORS = {
-    Message.DoesNotExist: lambda _: JSONMessage(
-        'No such message.', status=404),
-    Attachment.DoesNotExist: lambda _: JSONMessage(
-        'No such attachment.', status=404)
-}
 
 
 @REQUIRE_OAUTH('comcat')
