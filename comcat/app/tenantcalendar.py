@@ -14,7 +14,7 @@ from wsgilib import JSON, JSONMessage, get_datetime
 __all__ = ['ROUTES', 'ERRORS']
 
 
-CUSTOMER_FIELDS = {'title', 'start', 'end', 'text'}
+USER_FIELDS = {'title', 'start', 'end', 'text'}
 
 
 @REQUIRE_OAUTH('comcat')
@@ -46,7 +46,7 @@ def add_user_event() -> JSONMessage:
     """Adds a user event."""
 
     user_event = UserEvent.from_json(
-        request.json, USER.id, only=CUSTOMER_FIELDS)
+        request.json, USER.id, only=USER_FIELDS)
     user_event.save()
     return JSONMessage('User event added.', id=user_event.id, status=201)
 
@@ -56,7 +56,7 @@ def patch_user_event(ident: int) -> JSONMessage:
     """Patches an event."""
 
     user_event = get_own_event(ident, USER.id)
-    user_event.patch_json(request.json, only=CUSTOMER_FIELDS)
+    user_event.patch_json(request.json, only=USER_FIELDS)
     user_event.save()
     return JSONMessage('User event patched.', status=200)
 
