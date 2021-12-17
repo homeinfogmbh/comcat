@@ -14,7 +14,7 @@ from wsgilib import JSON, JSONMessage, get_datetime
 __all__ = ['ROUTES', 'ERRORS']
 
 
-USER_FIELDS = {'title', 'start', 'end', 'text'}
+USER_FIELDS = {'title', 'start', 'end', 'text', 'email', 'phone'}
 
 
 @REQUIRE_OAUTH('comcat')
