@@ -50,7 +50,7 @@ def delete_account() -> JSONMessage:
 def _request_email_change() -> JSONMessage:
     """Requests and email change."""
 
-    request_email_change(USER.id, request.json['email'])
+    request_email_change(USER, request.json['email'])
     return JSONMessage('Email change request issued.', status=201)
 
 
