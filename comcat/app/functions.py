@@ -2,7 +2,7 @@
 
 from peewee import ModelSelect
 
-from comcatlib import USER, UserDamageReport
+from comcatlib import USER, User, UserDamageReport
 from damage_report import Attachment, DamageReport
 from mdb import Customer
 
@@ -12,6 +12,7 @@ __all__ = [
     'get_comcat_customer',
     'get_damage_report',
     'get_damage_reports',
+    'get_user_by_email',
     'get_user_damage_report',
     'get_user_damage_reports'
 ]
@@ -43,6 +44,12 @@ def get_damage_report(ident: int) -> DamageReport:
     """Returns a damage report with the given ID."""
 
     return get_damage_reports().where(UserDamageReport.id == ident).get()
+
+
+def get_user_by_email(email: str) -> User:
+    """Returns a user by its email address."""
+
+    return User.select(cascade=True).where(User.email == email).get()
 
 
 def get_user_damage_reports() -> ModelSelect:
