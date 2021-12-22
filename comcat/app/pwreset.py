@@ -72,6 +72,6 @@ def confirm_pw_reset() -> JSONMessage:
 
 
 ROUTES = [
-    ('POST', '/pwreset/request', request_pw_reset),
-    ('POST', '/pwreset/confirm', confirm_pw_reset)
+    (['POST'], '/pwreset/request', request_pw_reset),
+    (['POST'], '/pwreset/confirm', confirm_pw_reset)
 ]
