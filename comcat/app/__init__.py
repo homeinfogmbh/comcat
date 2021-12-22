@@ -13,6 +13,7 @@ from comcat.app import lpt
 from comcat.app import marketplace
 from comcat.app import messenger
 from comcat.app import meta
+from comcat.app import pwreset
 from comcat.app import registration
 from comcat.app import related_files
 from comcat.app import tenantcalendar
@@ -34,6 +35,7 @@ ROUTES = [
     *marketplace.ROUTES,
     *messenger.ROUTES,
     *meta.ROUTES,
+    *pwreset.ROUTES,
     *registration.ROUTES,
     *related_files.ROUTES,
     *tenantcalendar.ROUTES,
