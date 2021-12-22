@@ -64,8 +64,8 @@ def confirm_pw_reset() -> JSONMessage:
         (user := nonce.user).passwd = request.json['passwd']
     except KeyError:
         return JSONMessage('No password provided.', status=400)
-    except PasswordTooShort:
-        return JSONMessage('Password too short.', status=400)
+    except PasswordTooShort as error:
+        return JSONMessage('Password too short.', min=error.minlen, status=400)
 
     user.save()
     return JSONMessage('Password reset.', status=200)
