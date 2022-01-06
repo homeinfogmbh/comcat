@@ -48,7 +48,8 @@ def add_customer_event() -> JSONMessage:
     customer_event = CustomerEvent.from_json(
         request.json, CUSTOMER.id, only=CUSTOMER_FIELDS)
     customer_event.save()
-    return JSONMessage('Customer event added.', status=201)
+    return JSONMessage('Customer event added.', id=customer_event.id,
+                       status=201)
 
 
 @authenticated
