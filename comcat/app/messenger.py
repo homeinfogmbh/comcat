@@ -43,11 +43,11 @@ def get_attachment_(ident: int) -> Binary:
 
 
 @REQUIRE_OAUTH('comcat')
-def add_attachment(message: int) -> JSONMessage:
+def add_attachment(ident: int) -> JSONMessage:
     """Adds a new attachment."""
 
     attachment = Attachment(
-        message=get_user_message(message, USER.id, own=True),
+        message=get_user_message(ident, USER.id, own=True),
         file=File.from_bytes(request.get_data(), save=True)
     )
     attachment.save()
