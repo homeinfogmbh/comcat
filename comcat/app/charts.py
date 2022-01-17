@@ -25,7 +25,7 @@ def user_groups() -> Iterator[Group]:
 
     for gmu in GroupMemberUser.select(cascade=True).where(
             GroupMemberUser.user == USER.id):
-        yield from Groups(groups).rtree(gmu.group)
+        yield from Groups(groups).lineage(gmu.group)
 
 
 def get_base_charts() -> ModelSelect:
