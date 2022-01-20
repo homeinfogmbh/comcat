@@ -14,7 +14,7 @@ setup(
     author_email='<info@homeinfo.de>',
     maintainer='Richard Neumann',
     maintainer_email='<r.neumann@homeinfo.de>',
-    requires=[
+    install_requires=[
         'authlib',
         'ccmessenger',
         'cmslib',
