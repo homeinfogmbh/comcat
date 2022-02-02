@@ -2,6 +2,8 @@
 
 from his import Application
 
+import ccmessenger
+
 from comcat.his import content
 from comcat.his import damage_report
 from comcat.his import group
@@ -36,7 +38,7 @@ ROUTES = (
 ERRORS = {
     **errors.ERRORS,
     **marketplace.ERRORS,
-    **messenger.ERRORS,
+    **ccmessenger.ERRORS,
     **tenantcalendar.ERRORS,
     **tenantforum.ERRORS
 }

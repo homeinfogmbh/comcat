@@ -1,6 +1,6 @@
 """Smartphone app endpoints."""
 
-from itertools import chain
+import ccmessenger
 
 from comcat.app import account
 from comcat.app import charts
@@ -46,7 +46,7 @@ ERRORS = {
     **damage_report.ERRORS,
     **local_news.ERRORS,
     **marketplace.ERRORS,
-    **messenger.ERRORS,
+    **ccmessenger.ERRORS,
     **related_files.ERRORS,
     **tenantcalendar.ERRORS,
     **tenantforum.ERRORS

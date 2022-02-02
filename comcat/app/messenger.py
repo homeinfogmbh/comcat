@@ -2,70 +2,49 @@
 
 from flask import request
 
-from ccmessenger import ERRORS
-from ccmessenger import get_attachment
-from ccmessenger import get_user_message
+from ccmessenger import get_customer_messages
 from ccmessenger import get_user_messages
-from ccmessenger import Attachment
-from ccmessenger import Message
-from comcatlib import REQUIRE_OAUTH, USER
-from filedb import File
-from wsgilib import Binary, JSON, JSONMessage
+from ccmessenger import UserMessage
+from comcatlib import REQUIRE_OAUTH, CUSTOMER, USER
+from wsgilib import JSON, JSONMessage
 
 
-__all__ = ['ERRORS', 'ROUTES']
-
-
-@REQUIRE_OAUTH('comcat')
-def list_messages() -> JSON:
-    """Lists messages of the current user."""
-
-    return JSON([message.to_json() for message in get_user_messages(USER.id)])
+__all__ = ['ROUTES']
 
 
 @REQUIRE_OAUTH('comcat')
-def add_message() -> JSONMessage:
-    """Adds a new message."""
+def sent_messages() -> JSON:
+    """Lists messages sent by the current user."""
 
-    if (reply_to := request.json.get('replyTo')) is not None:
-        reply_to = get_user_message(reply_to, user=USER.id)
-
-    message = Message(parent=reply_to, user=USER.id, text=request.json['text'])
-    message.save()
-    return JSONMessage('Messge added.', id=message.id, status=201)
+    return JSON([
+        message.to_json() for message in get_user_messages(sender=USER.id)
+    ])
 
 
 @REQUIRE_OAUTH('comcat')
-def get_attachment_(ident: int) -> Binary:
-    """Returns attachment data."""
+def received_messages() -> JSON:
+    """Lists messages sent to the current user."""
 
-    return Binary(get_attachment(ident, user=USER.id).file.bytes)
+    return JSON([
+        message.to_json() for message in get_customer_messages(
+            recipient=USER.id
+        )
+    ])
 
 
 @REQUIRE_OAUTH('comcat')
-def add_attachment(ident: int) -> JSONMessage:
-    """Adds a new attachment."""
+def send_message() -> JSONMessage:
+    """Sends a new message."""
 
-    attachment = Attachment(
-        message=get_user_message(ident, USER.id, own=True),
-        file=File.from_bytes(request.get_data(), save=True)
+    message = UserMessage(
+        sender=USER.id, recipient=CUSTOMER.id, text=request.json['text']
     )
-    attachment.save()
-    return JSONMessage('Attachment added.', id=attachment.id, status=201)
-
-
-@REQUIRE_OAUTH('comcat')
-def delete_attachment(ident: int) -> JSONMessage:
-    """Deletes an attachment."""
-
-    get_attachment(ident, user=USER.id, own=True).delete_instance()
-    return JSONMessage('Attachment deleted.', status=200)
+    message.save()
+    return JSONMessage('Message sent.', id=message.id, status=201)
 
 
 ROUTES = [
-    (['GET'], '/messenger/message', list_messages),
-    (['POST'], '/messenger/message', add_message),
-    (['GET'], '/messenger/attachment/<int:ident>', get_attachment_),
-    (['POST'], '/messenger/attachment/<int:ident>', add_attachment),
-    (['DELETE'], '/messenger/attachment/<int:ident>', delete_attachment)
+    (['GET'], '/messenger/sent', sent_messages),
+    (['GET'], '/messenger/received', received_messages),
+    (['POST'], '/messenger/send', send_message)
 ]
