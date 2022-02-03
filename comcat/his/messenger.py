@@ -3,8 +3,10 @@
 from flask import request
 
 from ccmessenger import get_customer_messages
+from ccmessenger import get_user_message
 from ccmessenger import get_user_messages
 from ccmessenger import CustomerMessage
+from ccmessenger import UserMessage
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
 
@@ -64,9 +66,42 @@ def send_message() -> JSONMessage:
     return JSONMessage('Message sent.', id=message.id, status=201)
 
 
+@authenticated
+@authorized('comcat')
+def delete_own_message(ident: int) -> JSONMessage:
+    """Deletes a sent message."""
+
+    try:
+        message = CustomerMessage.get(
+            (CustomerMessage.id == ident)
+            & (CustomerMessage.customer == CUSTOMER.id)
+        )
+    except CustomerMessage.DoesNotExist:
+        return JSONMessage('No such message.', status=404)
+
+    message.delete_instance()
+    return JSONMessage('Message deleted.', status=200)
+
+
+@authenticated
+@authorized('comcat')
+def delete_user_message(ident: int) -> JSONMessage:
+    """Deletes a user message."""
+
+    try:
+        message = get_user_message(ident, recipient=CUSTOMER.id)
+    except UserMessage.DoesNotExist:
+        return JSONMessage('No such message.', status=404)
+
+    message.delete_instance()
+    return JSONMessage('Message deleted.', status=200)
+
+
 ROUTES = [
     (['GET'], '/messenger/sent', sent_messages),
     (['GET'], '/messenger/received', received_messages),
     (['GET'], '/messenger/conversation/<int:user>', show_conversation),
-    (['POST'], '/messenger/send', send_message)
+    (['POST'], '/messenger/send', send_message),
+    (['DELETE'], '/messenger/delete-own/<int:ident>', delete_own_message),
+    (['DELETE'], '/messenger/delete-user-msg/<int:ident>', delete_user_message)
 ]
