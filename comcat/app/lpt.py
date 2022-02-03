@@ -12,7 +12,7 @@ __all__ = ['ROUTES']
 
 @REQUIRE_OAUTH('comcat')
 def get_home_departures() -> JSON:
-    """Returns the departures of the tenenemt address."""
+    """Returns the departures of the tenement address."""
 
     stops = get_departures(TENEMENT.address)
     return JSON(stops.to_json())
