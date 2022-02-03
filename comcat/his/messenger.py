@@ -2,6 +2,7 @@
 
 from flask import request
 
+from ccmessenger import get_customer_message
 from ccmessenger import get_customer_messages
 from ccmessenger import get_user_message
 from ccmessenger import get_user_messages
@@ -72,10 +73,7 @@ def delete_own_message(ident: int) -> JSONMessage:
     """Deletes a sent message."""
 
     try:
-        message = CustomerMessage.get(
-            (CustomerMessage.id == ident)
-            & (CustomerMessage.customer == CUSTOMER.id)
-        )
+        message = get_customer_message(ident, sender=CUSTOMER.id)
     except CustomerMessage.DoesNotExist:
         return JSONMessage('No such message.', status=404)
 
