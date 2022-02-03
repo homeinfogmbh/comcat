@@ -43,8 +43,24 @@ def send_message() -> JSONMessage:
     return JSONMessage('Message sent.', id=message.id, status=201)
 
 
+@REQUIRE_OAUTH('comcat')
+def delete_message(ident: int) -> JSONMessage:
+    """Deletes a sent message."""
+
+    try:
+        message = UserMessage.get(
+            (UserMessage.id == ident) & (UserMessage.user == USER.id)
+        )
+    except UserMessage.DoesNotExist:
+        return JSONMessage('No such message.', status=404)
+
+    message.delete_instance()
+    return JSONMessage('Message deleted.', status=200)
+
+
 ROUTES = [
     (['GET'], '/messenger/sent', sent_messages),
     (['GET'], '/messenger/received', received_messages),
-    (['POST'], '/messenger/send', send_message)
+    (['POST'], '/messenger/send', send_message),
+    (['DELETE'], '/messenger/delete/<int:ident>', delete_message)
 ]
