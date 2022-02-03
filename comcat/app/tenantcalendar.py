@@ -5,9 +5,9 @@ from flask import request
 from comcatlib import REQUIRE_OAUTH, USER, TENEMENT
 from tenantcalendar import ERRORS
 from tenantcalendar import UserEvent
-from tenantcalendar import list_customer_events
-from tenantcalendar import list_user_events
+from tenantcalendar import get_events_for
 from tenantcalendar import get_own_event
+from tenantcalendar import list_user_events
 from wsgilib import JSON, JSONMessage, get_datetime
 
 
@@ -22,8 +22,9 @@ def _list_customer_events() -> JSON:
     """Lists customer events."""
 
     return JSON([
-        customer_event.to_json() for customer_event in list_customer_events(
-            TENEMENT.customer, start=get_datetime('start'),
+        customer_event.to_json() for customer_event in get_events_for(
+            USER,
+            start=get_datetime('start'),
             end=get_datetime('end')
         )
     ])
