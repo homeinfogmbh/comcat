@@ -257,5 +257,5 @@ ROUTES = [
     ('DELETE', '/tenantcalendar/membership/group/<int:ident>',
      remove_group_membership),
     ('DELETE', '/tenantcalendar/membership/user/<int:ident>',
-     remove_group_membership)
+     remove_user_membership)
 ]
