@@ -5,7 +5,7 @@ from json import load
 
 from flask import session
 
-from comcatlib import init_app
+from comcatlib import init_oauth_endpoints
 from wsgilib import Application
 
 
@@ -29,10 +29,9 @@ with open('/usr/local/etc/comcat.secret', 'r') as keyfile:
     APPLICATION.secret_key = keyfile.read().strip()
 
 
-
 @APPLICATION.before_first_request
 def before_first_request():
     """Initializes the app."""
 
-    init_app(APPLICATION)
+    init_oauth_endpoints(APPLICATION)
     session.clear()
