@@ -14,7 +14,11 @@ from comcat.app.functions import get_comcat_customer
 __all__ = ['ROUTES']
 
 
-@recaptcha(get_config)
+@recaptcha(
+    lambda: get_config()['recaptcha'],
+    lambda: request.json.pop('response'),
+    lambda: request.remote_addr
+)
 @require_json(dict)
 def register() -> JSONMessage:
     """Register a new user."""

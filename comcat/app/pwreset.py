@@ -23,7 +23,11 @@ __all__ = ['ROUTES']
 PASSWORD_RESET_SENT = JSONMessage('Password reset sent.', status=200)
 
 
-@recaptcha(get_config)
+@recaptcha(
+    lambda: get_config()['recaptcha'],
+    lambda: request.json.pop('response'),
+    lambda: request.remote_addr
+)
 def request_pw_reset() -> JSONMessage:
     """Request a password reset."""
 
@@ -44,7 +48,11 @@ def request_pw_reset() -> JSONMessage:
     return PASSWORD_RESET_SENT
 
 
-@recaptcha(get_config)
+@recaptcha(
+    lambda: get_config()['recaptcha'],
+    lambda: request.json.pop('response'),
+    lambda: request.remote_addr
+)
 def confirm_pw_reset() -> JSONMessage:
     """Confirm a password reset."""
 
