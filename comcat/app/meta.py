@@ -30,11 +30,8 @@ def get_url() -> str:
 def get_qr_code() -> Binary:
     """Returns a QR code of the user's initialization nonce."""
 
-    format = request.args.get('format', 'png')  # pylint: disable=W0622
-    qrcode = make(get_url())
-
     with BytesIO() as buf:
-        qrcode.save(buf, format=format)
+        make(get_url()).save(buf, format=request.args.get('format', 'png'))
         return Binary(buf.read())
 
 
