@@ -37,7 +37,8 @@ def get_base_charts() -> ModelSelect:
 
     return BaseChart.select(cascade=True).join_from(
         BaseChart, UserBaseChart, join_type=JOIN.LEFT_OUTER).join_from(
-        BaseChart, GroupBaseChart, join_type=JOIN.LEFT_OUTER).where(condition)
+        BaseChart, GroupBaseChart, join_type=JOIN.LEFT_OUTER
+    ).where(condition)
 
 
 def get_menus(base_chart: BaseChart) -> ModelSelect:
