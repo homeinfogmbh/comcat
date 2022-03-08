@@ -37,11 +37,13 @@ class GroupTree:
 
         if recursive:
             children = [
-                group.to_json(recursive=True) for group in self.children]
+                group.to_json(recursive=True) for group in self.children
+            ]
         else:
             children = [
                 group.group.to_json(parent=False, skip=('customer',))
-                for group in self.children]
+                for group in self.children
+            ]
 
         json['children'] = children
         json['users'] = [user.to_json() for user in self.users]
