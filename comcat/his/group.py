@@ -63,7 +63,8 @@ def add() -> JSONMessage:
     try:
         group_member_user = GroupMemberUser.get(
             (GroupMemberUser.group == group)
-            & (GroupMemberUser.user == user))
+            & (GroupMemberUser.user == user)
+        )
     except GroupMemberUser.DoesNotExist:
         group_member_user = GroupMemberUser(group=group, user=user)
         group_member_user.save()
