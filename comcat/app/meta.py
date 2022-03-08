@@ -42,12 +42,11 @@ def get_qr_code() -> Binary:
 def user_info() -> JSON:
     """Returns the user information."""
 
-    json = {
+    return JSON({
         'id': USER.id,
         'tenement': USER.tenement.id,
         'customer': USER.tenement.customer_id
-    }
-    return JSON(json)
+    })
 
 
 ROUTES = [
