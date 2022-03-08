@@ -18,7 +18,7 @@ __all__ = ['ROUTES', 'ERRORS']
 
 @REQUIRE_OAUTH('comcat')
 def list_() -> JSON:
-    """Lists avilable offers."""
+    """Lists available offers."""
 
     offers = get_offers(customer=TENEMENT.customer)
     return JSON([offer.to_json() for offer in offers])
