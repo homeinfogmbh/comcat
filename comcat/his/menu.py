@@ -4,7 +4,7 @@ from flask import request
 
 from cmslib import get_base_chart
 from comcatlib.orm.menu import Menu, MenuBaseChart
-from his import authenticated, authorized
+from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
 
 from comcat.his.functions import get_menu_base_chart, get_menu_base_charts
@@ -34,7 +34,7 @@ def get(ident: int) -> JSON:
 def add() -> JSONMessage:
     """Adds a base chart menu."""
 
-    base_chart = get_base_chart(request.json.pop('baseChart'))
+    base_chart = get_base_chart(request.json.pop('baseChart'), CUSTOMER.id)
     menu = Menu(request.json.pop('menu'))
     mbc = MenuBaseChart(base_chart=base_chart, menu=menu)
     mbc.save()

@@ -165,7 +165,7 @@ def add_deployment_membership() -> JSONMessage:
 
     dce = add_to_deployment(
         get_customer_event(request.json['event'], CUSTOMER.id),
-        get_deployment(request.json['deployment'])
+        get_deployment(request.json['deployment'], CUSTOMER.id)
     )
     return JSONMessage('Event added to deployment.', id=dce.id, status=201)
 
@@ -177,7 +177,7 @@ def add_group_membership() -> JSONMessage:
 
     gce = add_to_group(
         get_customer_event(request.json['event'], CUSTOMER.id),
-        get_group(request.json['group'])
+        get_group(request.json['group'], CUSTOMER.id)
     )
     return JSONMessage('Event added to group.', id=gce.id, status=201)
 

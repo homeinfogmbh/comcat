@@ -1,10 +1,9 @@
 """Management of charts assigned to ComCat accounts."""
 
-from typing import Iterable
-
 from flask import request
+from peewee import Select
 
-from cmslib import BaseChart, get_base_chart, get_chart
+from cmslib import CHART_TYPE, BaseChart, get_base_chart, get_chart
 from comcatlib import User, UserBaseChart
 from his import CUSTOMER, authenticated, authorized
 from mdb import Tenement
@@ -16,7 +15,7 @@ from comcat.his.functions import get_user
 __all__ = ['ROUTES']
 
 
-def list_ubc(user: int = None) -> Iterable[UserBaseChart]:
+def list_ubc(user: int = None) -> Select:
     """Yields the user's base charts of the
     current customer for the respective user.
     """
@@ -58,11 +57,12 @@ def add() -> JSONMessage:
     """Adds the chart to the respective user."""
 
     user = get_user(request.json.pop('user'))
-    base_chart = get_base_chart(request.json.pop('baseChart'))
+    base_chart = get_base_chart(request.json.pop('baseChart'), CUSTOMER.id)
     user_base_chart = UserBaseChart.from_json(request.json, user, base_chart)
     user_base_chart.save()
-    return JSONMessage('User base chart added.', id=user_base_chart.id,
-                       status=201)
+    return JSONMessage(
+        'User base chart added.', id=user_base_chart.id, status=201
+    )
 
 
 @authenticated
@@ -73,8 +73,9 @@ def patch(ident: int) -> JSONMessage:
     user_base_chart = get_ubc(ident)
     user_base_chart.patch_json(request.json)
     user_base_chart.save()
-    return JSONMessage('User base chart patched.', id=user_base_chart.id,
-                       status=200)
+    return JSONMessage(
+        'User base chart patched.', id=user_base_chart.id, status=200
+    )
 
 
 @authenticated
@@ -84,16 +85,17 @@ def delete(ident: int) -> JSONMessage:
 
     user_base_chart = get_ubc(ident)
     user_base_chart.delete_instance()
-    return JSONMessage('User base chart deleted.', id=user_base_chart.id,
-                       status=200)
+    return JSONMessage(
+        'User base chart deleted.', id=user_base_chart.id, status=200
+    )
 
 
 @authenticated
 @authorized('comcat')
-def chart_user_base_charts(ident: int) -> JSONMessage:
+def chart_user_base_charts(ident: int) -> JSON:
     """Returns a list of UserBaseChart for the given chart."""
 
-    chart = get_chart(ident)
+    chart = get_chart(ident, CUSTOMER.id, CHART_TYPE)
     user_base_charts = UserBaseChart.select().where(
         UserBaseChart.base_chart == chart.base)
     users_base_charts = [ubc.to_json() for ubc in user_base_charts]
