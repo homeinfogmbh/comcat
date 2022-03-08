@@ -13,9 +13,11 @@ __all__ = ['ROUTES', 'ERRORS']
 
 ERRORS = {
     AccessToken.DoesNotExist: lambda _: JSONMessage(
-        'News not enabled.', status=403),
+        'News not enabled.', status=403
+    ),
     Article.DoesNotExist: lambda _: JSONMessage(
-        'No such news article.', status=404),
+        'No such news article.', status=404
+    ),
     Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404)
 }
 
