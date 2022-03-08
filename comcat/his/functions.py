@@ -44,18 +44,18 @@ def get_address(address: Union[int, list[str]]) -> Address:
     if isinstance(address, int):
         return Address.select().where(Address.id == address).get()
 
-    if isinstance(address, list):
-        if len(address) != 4:
-            raise InvalidAddress()
+    if not isinstance(address, list):
+        raise InvalidAddress()
 
-        address = Address.add(*address)
+    if len(address) != 4:
+        raise InvalidAddress()
 
-        if not address.id:
-            address.save()
+    address = Address.add(*address)
 
-        return address
+    if not address.id:
+        address.save()
 
-    raise InvalidAddress()
+    return address
 
 
 def get_customer(ident: int) -> Customer:
