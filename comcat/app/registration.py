@@ -33,8 +33,10 @@ def register() -> JSONMessage:
             request.json['name'], request.json['email'],
             request.json['tenantId'], customer
         )
-    except AlreadyRegistered:
-        return JSONMessage('You are already registered.', status=400)
+    except AlreadyRegistered as error:
+        return JSONMessage(
+            'You are already registered.', email=error.email, status=400
+        )
 
     user_registration.save()
     return JSONMessage('User registered.', status=201)

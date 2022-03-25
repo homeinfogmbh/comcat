@@ -12,8 +12,8 @@ __all__ = ['ERRORS']
 
 
 ERRORS = {
-    AlreadyRegistered: lambda _: JSONMessage(
-        'Already registered.', status=409
+    AlreadyRegistered: lambda error: JSONMessage(
+        'Already registered.', email=error.email, status=409
     ),
     JSONMessage: lambda message: message,
     QuotaExceeded: lambda error: JSONMessage(
