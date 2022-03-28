@@ -7,7 +7,7 @@ from flask import request
 from his import CUSTOMER, admin, authenticated, authorized
 from wsgilib import JSON, JSONMessage, XML
 
-from comcatlib import Presentation, Settings, User, genpw
+from comcatlib import Presentation, Settings, User
 
 from comcat.functions import logout
 from comcat.his.functions import get_tenement, get_users, with_user
@@ -35,17 +35,6 @@ def get(user: User) -> JSON:
 
 @authenticated
 @authorized('comcat')
-@with_user
-def resetpw(user: User) -> JSONMessage:
-    """Generates a new, random password for the respective user."""
-
-    user.passwd = passwd = genpw()
-    user.save()
-    return JSONMessage('Password reset.', passwd=passwd, status=200)
-
-
-@authenticated
-@authorized('comcat')
 @admin
 def add() -> JSONMessage:
     """Adds a new ComCat user."""
@@ -54,7 +43,9 @@ def add() -> JSONMessage:
         return JSONMessage('User quota exceeded.', status=403)
 
     tenement = get_tenement(request.json.pop('tenement'))
-    user, passwd = User.from_json(request.json, tenement, skip={'created'})
+    user, passwd = User.from_json(
+        request.json, tenement, skip={'created', 'passwd'}
+    )
     user.save()
     return JSONMessage('User added.', id=user.id, passwd=passwd, status=201)
 
@@ -71,7 +62,9 @@ def patch(user: User) -> JSONMessage:
     if tenement is not None:
         tenement = get_tenement(tenement)
 
-    user.patch_json(request.json, tenement=tenement, skip={'created'})
+    user.patch_json(
+        request.json, tenement=tenement, skip={'created', 'passwd'}
+    )
     user.save()
     return JSONMessage('User patched.', status=200)
 
@@ -114,7 +107,6 @@ def logout_(user: User) -> JSONMessage:
 ROUTES = [
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
-    ('GET', '/user/<int:ident>/pwgen', resetpw),
     ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
