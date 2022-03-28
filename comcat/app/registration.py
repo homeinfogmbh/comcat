@@ -6,7 +6,10 @@ from mdb import Customer
 from recaptcha import recaptcha
 from wsgilib import JSONMessage, require_json
 
-from comcatlib import AlreadyRegistered, UserRegistration, get_config
+from comcatlib import AlreadyRegistered
+from comcatlib import UserRegistration
+from comcatlib import get_config
+from comcatlib import notify_user
 
 from comcat.app.functions import get_comcat_customer
 
@@ -39,6 +42,7 @@ def register() -> JSONMessage:
         )
 
     user_registration.save()
+    notify_user(user_registration.email)
     return JSONMessage('User registered.', status=201)
 
 
