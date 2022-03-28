@@ -4,11 +4,13 @@ from uuid import UUID
 
 from flask import request
 
+from comcatlib import NonceUsed
 from comcatlib import PasswordResetPending
 from comcatlib import get_config
 from comcatlib import PasswordResetNonce
 from comcatlib import User
-from comcatlib import reset_password
+from comcatlib import genpw
+from comcatlib import send_new_password
 from comcatlib import send_password_reset_email
 from recaptcha import recaptcha
 from wsgilib import JSONMessage
@@ -56,13 +58,21 @@ def confirm_pw_reset() -> JSONMessage:
     """Confirm a password reset."""
 
     try:
-        uuid = UUID(request.json['nonce'])
+        nonce = UUID(request.json['nonce'])
     except (KeyError, TypeError):
         return JSONMessage('No nonce provided.', status=400)
     except ValueError:
         return JSONMessage('Invalid UUID provided.', status=400)
 
-    return reset_password(uuid)
+    try:
+        nonce = PasswordResetNonce.use(nonce)
+    except NonceUsed:
+        return JSONMessage('Invalid nonce.')
+
+    nonce.user.passwd = passwd = genpw()
+    nonce.user.save()
+    send_new_password(nonce.user, passwd)
+    return JSONMessage('New password sent.')
 
 
 ROUTES = [
