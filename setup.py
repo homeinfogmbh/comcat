@@ -28,6 +28,7 @@ setup(
         'lptlib',
         'marketplace',
         'mdb',
+        'notificationlib',
         'peewee',
         'peeweeplus',
         'qrcode',

@@ -4,6 +4,7 @@ from his import Application
 
 import ccmessenger
 
+from comcat.his import contact_emails
 from comcat.his import content
 from comcat.his import damage_report
 from comcat.his import group
@@ -23,6 +24,7 @@ __all__ = ['APPLICATION']
 
 APPLICATION = Application('comcat')
 ROUTES = (
+    *contact_emails.ROUTES,
     *content.ROUTES,
     *damage_report.ROUTES,
     *group.ROUTES,
