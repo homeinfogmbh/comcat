@@ -4,10 +4,10 @@ from typing import Union
 
 from flask import request
 
-from his import CUSTOMER, admin, authenticated, authorized
+from his import admin, authenticated, authorized
 from wsgilib import JSON, JSONMessage, XML
 
-from comcatlib import Presentation, Settings, User
+from comcatlib import Presentation, User
 
 from comcat.functions import logout
 from comcat.his.functions import get_tenement, get_users, with_user
@@ -31,23 +31,6 @@ def get(user: User) -> JSON:
     """Returns the respective ComCat user."""
 
     return JSON(user.to_json(cascade=True))
-
-
-@authenticated
-@authorized('comcat')
-@admin
-def add() -> JSONMessage:
-    """Adds a new ComCat user."""
-
-    if not Settings.for_customer(CUSTOMER.id).allocate_user():
-        return JSONMessage('User quota exceeded.', status=403)
-
-    tenement = get_tenement(request.json.pop('tenement'))
-    user, passwd = User.from_json(
-        request.json, tenement, skip={'created', 'passwd'}
-    )
-    user.save()
-    return JSONMessage('User added.', id=user.id, passwd=passwd, status=201)
 
 
 @authenticated
@@ -107,7 +90,6 @@ def logout_(user: User) -> JSONMessage:
 ROUTES = [
     ('GET', '/user', list_),
     ('GET', '/user/<int:ident>', get),
-    ('POST', '/user', add),
     ('PATCH', '/user/<int:ident>', patch),
     ('DELETE', '/user/<int:ident>', delete),
     ('GET', '/user/<int:ident>/presentation', get_presentation),
