@@ -1,7 +1,7 @@
 """Common functions."""
 
 from functools import wraps
-from typing import Callable, Iterator
+from typing import Annotated, Callable, Iterator
 
 from peewee import ModelSelect
 
@@ -38,7 +38,7 @@ __all__ = [
 ]
 
 
-def get_address(address: list[str]) -> Address:
+def get_address(address: Annotated[list[str], 4]) -> Address:
     """Returns the specified address.
 
     Do NOT allow getting addresses by ID to mitigate sniffing!
