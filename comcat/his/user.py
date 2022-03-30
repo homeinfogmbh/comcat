@@ -45,12 +45,9 @@ def patch(user: User) -> JSONMessage:
     if tenement is not None:
         tenement = get_tenement(tenement)
 
-    try:
-        user.patch_json(
-            request.json, tenement=tenement, skip={'created', 'passwd'}
-        )
-    except ValueError as error:
-        return JSONMessage('Invalid data.', reason=str(error), status=400)
+    user.patch_json(
+        request.json, tenement=tenement, skip={'created', 'passwd'}
+    )
 
     user.save()
     return JSONMessage('User patched.', status=200)
