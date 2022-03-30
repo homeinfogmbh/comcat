@@ -45,7 +45,7 @@ ERRORS = {
         status=400
     ),
     NonUniqueValue: lambda error: JSONMessage(
-        'Non-unique vbalue',
+        'Non-unique value',
         key=error.key,
         value=error.value,
         status=400
