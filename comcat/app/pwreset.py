@@ -49,11 +49,11 @@ def request_pw_reset() -> JSONMessage:
     return PASSWORD_RESET_SENT
 
 
-@recaptcha(
-    lambda: get_config()['recaptcha'],
-    lambda: request.json.pop('response'),
-    lambda: request.remote_addr
-)
+#@recaptcha(
+#    lambda: get_config()['recaptcha'],
+#    lambda: request.json.pop('response'),
+#    lambda: request.remote_addr
+#)
 def confirm_pw_reset() -> JSONMessage:
     """Confirm a password reset."""
 
