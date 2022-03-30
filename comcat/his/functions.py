@@ -1,7 +1,7 @@
 """Common functions."""
 
 from functools import wraps
-from typing import Callable, Iterator, Union
+from typing import Callable, Iterator
 
 from peewee import ModelSelect
 
@@ -38,19 +38,13 @@ __all__ = [
 ]
 
 
-def get_address(address: Union[int, list[str]]) -> Address:
+def get_address(address: list[str]) -> Address:
     """Returns the specified address."""
 
-    if isinstance(address, int):
-        return Address.select().where(Address.id == address).get()
-
-    if not isinstance(address, list):
-        raise InvalidAddress()
-
-    if len(address) != 4:
-        raise InvalidAddress()
-
-    address = Address.add(*address)
+    try:
+        address = Address.add(*address)
+    except (TypeError, ValueError):
+        raise InvalidAddress() from None
 
     if not address.id:
         address.save()
