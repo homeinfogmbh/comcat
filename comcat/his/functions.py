@@ -39,7 +39,10 @@ __all__ = [
 
 
 def get_address(address: list[str]) -> Address:
-    """Returns the specified address."""
+    """Returns the specified address.
+
+    Do NOT allow getting addresses by ID to mitigate sniffing!
+    """
 
     try:
         address = Address.add(*address)
