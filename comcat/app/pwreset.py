@@ -67,7 +67,7 @@ def confirm_pw_reset() -> JSONMessage:
     try:
         nonce = PasswordResetNonce.use(nonce)
     except NonceUsed:
-        return JSONMessage('Invalid nonce.')
+        return JSONMessage('Invalid nonce.', status=400)
 
     nonce.user.passwd = passwd = genpw()
     nonce.user.save()
