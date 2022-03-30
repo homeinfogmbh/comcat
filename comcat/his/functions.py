@@ -68,14 +68,16 @@ def get_group_member_users() -> ModelSelect:
     """Selects group <-> user mappings."""
 
     return GroupMemberUser.select(cascade=True).where(
-        Tenement.customer == CUSTOMER.id)
+        Tenement.customer == CUSTOMER.id
+    )
 
 
 def get_groups_tree() -> Iterator[GroupTree]:
     """Returns the management tree."""
 
     for root_group in Group.select(cascade=True).where(
-            (Group.customer == CUSTOMER.id) & (Group.parent >> None)):
+            (Group.customer == CUSTOMER.id) & (Group.parent >> None)
+    ):
         yield GroupTree(root_group)
 
 
@@ -89,7 +91,8 @@ def get_menu_base_charts() -> ModelSelect:
     """Yields base chart menus for the given base chart."""
 
     return MenuBaseChart.select(cascade=True).where(
-        BaseChart.customer == CUSTOMER.id)
+        BaseChart.customer == CUSTOMER.id
+    )
 
 
 def get_tenement(ident: int) -> Tenement:
@@ -102,7 +105,8 @@ def get_tenements() -> ModelSelect:
     """Yields tenements of the current user."""
 
     return Tenement.select(cascade=True).where(
-        Tenement.customer == CUSTOMER.id)
+        Tenement.customer == CUSTOMER.id
+    )
 
 
 def get_user(ident: int) -> User:
@@ -127,21 +131,24 @@ def get_user_registrations() -> ModelSelect:
     """Selects user registrations of the current customer."""
 
     return UserRegistration.select(cascade=True).where(
-        UserRegistration.customer == CUSTOMER.id)
+        UserRegistration.customer == CUSTOMER.id
+    )
 
 
 def get_user_damage_report(ident: int) -> UserDamageReport:
     """Returns a damage report with the given ID."""
 
     return get_user_damage_reports().where(
-        UserDamageReport.id == ident).get()
+        UserDamageReport.id == ident
+    ).get()
 
 
 def get_user_damage_reports() -> ModelSelect:
     """Yields damage reports for the current user."""
 
     return UserDamageReport.select().join(User).join(Tenement).where(
-        Tenement.customer == CUSTOMER.id)
+        Tenement.customer == CUSTOMER.id
+    )
 
 
 def with_user(function: Callable) -> Callable:
