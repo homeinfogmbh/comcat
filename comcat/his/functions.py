@@ -59,13 +59,13 @@ def get_customer(ident: int) -> Customer:
 
 
 def get_group_member_user(ident: int) -> GroupMemberUser:
-    """Returns the requested group <> user mapping."""
+    """Returns the requested group <-> user mapping."""
 
     return get_group_member_users().where(GroupMemberUser.id == ident).get()
 
 
 def get_group_member_users() -> ModelSelect:
-    """Selects group <> user mappings."""
+    """Selects group <-> user mappings."""
 
     return GroupMemberUser.select(cascade=True).where(
         Tenement.customer == CUSTOMER.id)
