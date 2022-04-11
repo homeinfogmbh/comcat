@@ -3,7 +3,7 @@
 from flask import request
 from peewee import IntegrityError
 
-from his import authenticated, authorized, root
+from his import CUSTOMER, authenticated, authorized
 from mdb import Tenement
 from wsgilib import JSON, JSONMessage
 
@@ -21,7 +21,9 @@ __all__ = ['ROUTES']
 def list_() -> JSON:
     """Lists available tenements."""
 
-    return JSON([tenement.to_json() for tenement in get_tenements()])
+    return JSON([
+        tenement.to_json() for tenement in get_tenements(CUSTOMER.id)
+    ])
 
 
 @authenticated
@@ -29,12 +31,11 @@ def list_() -> JSON:
 def get(ident: int) -> JSON:
     """Gets the respective tenement."""
 
-    return JSON(get_tenement(ident).to_json())
+    return JSON(get_tenement(ident, CUSTOMER.id).to_json())
 
 
 @authenticated
 @authorized('comcat')
-@root
 def add() -> JSONMessage:
     """Adds a tenement."""
 
@@ -47,11 +48,24 @@ def add() -> JSONMessage:
 
 @authenticated
 @authorized('comcat')
-@root
+def patch(ident: int) -> JSONMessage:
+    """Modifies a tenement."""
+
+    tenement = get_tenement(ident, CUSTOMER.id)
+    tenement.patch_json(
+        request.json,
+        only={'rental_unit', 'living_unit', 'annotation'}
+    )
+    tenement.save()
+    return JSONMessage('Tenement patched.', status=200)
+
+
+@authenticated
+@authorized('comcat')
 def delete(ident: int) -> JSONMessage:
     """Deletes a tenement."""
 
-    tenement = get_tenement(ident)
+    tenement = get_tenement(ident, CUSTOMER.id)
     address = tenement.address
 
     try:
@@ -74,5 +88,6 @@ ROUTES = [
     ('GET', '/tenement', list_),
     ('GET', '/tenement/<int:ident>', get),
     ('POST', '/tenement', add),
+    ('PATCH', '/tenement', patch),
     ('DELETE', '/tenement/<int:ident>', delete)
 ]
