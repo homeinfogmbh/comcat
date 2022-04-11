@@ -81,7 +81,8 @@ def delete(ident: int) -> JSONMessage:
         address_deleted = True
 
     return JSONMessage(
-        'Tenement deleted.', address_deleted=address_deleted, status=200)
+        'Tenement deleted.', address_deleted=address_deleted, status=200
+    )
 
 
 ROUTES = [
