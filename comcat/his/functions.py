@@ -1,7 +1,7 @@
 """Common functions."""
 
 from functools import wraps
-from typing import Annotated, Callable, Iterator
+from typing import Annotated, Callable, Iterator, Union
 
 from peewee import ModelSelect
 
@@ -98,17 +98,17 @@ def get_menu_base_charts() -> ModelSelect:
     )
 
 
-def get_tenement(ident: int) -> Tenement:
+def get_tenement(ident: int, customer: Union[Customer, int]) -> Tenement:
     """Returns the given tenement by ID for the current customer."""
 
-    return get_tenements().where(Tenement.id == ident).get()
+    return get_tenements(customer).where(Tenement.id == ident).get()
 
 
-def get_tenements() -> ModelSelect:
+def get_tenements(customer: Union[Customer, int]) -> ModelSelect:
     """Yields tenements of the current user."""
 
     return Tenement.select(cascade=True).where(
-        Tenement.customer == CUSTOMER.id
+        Tenement.customer == customer
     )
 
 
