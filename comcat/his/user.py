@@ -43,7 +43,7 @@ def patch(user: User) -> JSONMessage:
     tenement = request.json.pop('tenement', None)
 
     if tenement is not None:
-        tenement = get_tenement(CUSTOMER.id, tenement)
+        tenement = get_tenement(tenement, CUSTOMER.id)
 
     user.patch_json(
         request.json, tenement=tenement, skip={'created', 'passwd'}
