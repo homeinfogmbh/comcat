@@ -90,6 +90,6 @@ ROUTES = [
     ('GET', '/tenement', list_),
     ('GET', '/tenement/<int:ident>', get),
     ('POST', '/tenement', add),
-    ('PATCH', '/tenement', patch),
+    ('PATCH', '/tenement/<int:ident>', patch),
     ('DELETE', '/tenement/<int:ident>', delete)
 ]
