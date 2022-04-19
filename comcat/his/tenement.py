@@ -52,10 +52,11 @@ def patch(ident: int) -> JSONMessage:
     """Modifies a tenement."""
 
     tenement = get_tenement(ident, CUSTOMER.id)
-    tenement.patch_json(
-        request.json,
-        only={'rental_unit', 'living_unit', 'annotation'}
-    )
+
+    if (address := request.json.pop('address', None)) is not None:
+        tenement.address = get_address(address)
+
+    tenement.patch_json(request.json)
     tenement.save()
     return JSONMessage('Tenement patched.', status=200)
 
