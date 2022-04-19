@@ -4,7 +4,7 @@ from typing import Union
 
 from flask import request
 
-from his import admin, authenticated, authorized
+from his import CUSTOMER, admin, authenticated, authorized
 from wsgilib import JSON, JSONMessage, XML
 
 from comcatlib import Presentation, User
@@ -43,7 +43,7 @@ def patch(user: User) -> JSONMessage:
     tenement = request.json.pop('tenement', None)
 
     if tenement is not None:
-        tenement = get_tenement(tenement)
+        tenement = get_tenement(CUSTOMER.id, tenement)
 
     user.patch_json(
         request.json, tenement=tenement, skip={'created', 'passwd'}
