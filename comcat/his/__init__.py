@@ -22,7 +22,7 @@ from comcat.his import errors
 __all__ = ['APPLICATION']
 
 
-APPLICATION = Application('comcat')
+APPLICATION = Application('comcat', debug=True)
 ROUTES = (
     *contact_emails.ROUTES,
     *content.ROUTES,
