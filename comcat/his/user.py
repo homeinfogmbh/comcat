@@ -10,7 +10,8 @@ from wsgilib import JSON, JSONMessage, XML
 from comcatlib import Presentation, User
 
 from comcat.functions import logout
-from comcat.his.functions import get_tenement, get_users, with_user
+from comcat.his.decorators import with_user
+from comcat.his.functions import get_tenement, get_users
 
 
 __all__ = ['ROUTES']
@@ -21,7 +22,9 @@ __all__ = ['ROUTES']
 def list_() -> JSON:
     """Lists ComCat users."""
 
-    return JSON([user.to_json(cascade=True) for user in get_users()])
+    return JSON([
+        user.to_json(cascade=True) for user in get_users(CUSTOMER.id)
+    ])
 
 
 @authenticated

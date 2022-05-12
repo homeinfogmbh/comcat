@@ -66,8 +66,11 @@ def add_customer_event() -> JSONMessage:
         request.json, CUSTOMER.id, only=CUSTOMER_FIELDS
     )
     customer_event.save()
-    return JSONMessage('Customer event added.', id=customer_event.id,
-                       status=201)
+    return JSONMessage(
+        'Customer event added.',
+        id=customer_event.id,
+        status=201
+    )
 
 
 @authenticated
@@ -189,7 +192,7 @@ def add_user_membership() -> JSONMessage:
 
     uce = add_to_user(
         get_customer_event(request.json['event'], CUSTOMER.id),
-        get_user(request.json['user'])
+        get_user(request.json['user'], CUSTOMER.id)
     )
     return JSONMessage('Event added to user.', id=uce.id, status=201)
 

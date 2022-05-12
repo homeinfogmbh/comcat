@@ -13,7 +13,9 @@ __all__ = ['ROUTES', 'ERRORS']
 def list_() -> JSON:
     """Lists offers."""
 
-    return JSON([offer.to_json() for offer in get_offers(customer=CUSTOMER.id)])
+    return JSON([
+        offer.to_json() for offer in get_offers(customer=CUSTOMER.id)
+    ])
 
 
 @authenticated

@@ -24,7 +24,7 @@ __all__ = ['ROUTES']
 def list_() -> JSON:
     """Lists group <> user mappings."""
 
-    return JSON([gmu.to_json() for gmu in get_group_member_users()])
+    return JSON([gmu.to_json() for gmu in get_group_member_users(CUSTOMER.id)])
 
 
 @authenticated
@@ -32,7 +32,7 @@ def list_() -> JSON:
 def get(ident: int) -> JSON:
     """Returns the respective group <> user mapping."""
 
-    return JSON(get_group_member_user(ident).to_json())
+    return JSON(get_group_member_user(ident, CUSTOMER.id).to_json())
 
 
 @authenticated
@@ -40,7 +40,7 @@ def get(ident: int) -> JSON:
 def groups_tree() -> JSON:
     """Returns a tree view of the groups."""
 
-    return JSON([tree.to_json() for tree in get_groups_tree()])
+    return JSON([tree.to_json() for tree in get_groups_tree(CUSTOMER.id)])
 
 
 @authenticated
@@ -60,7 +60,7 @@ def add() -> JSONMessage:
     """Adds the ComCat user to the respective group."""
 
     group = get_group(request.json.pop('group'), CUSTOMER.id)
-    user = get_user(request.json.pop('user'))
+    user = get_user(request.json.pop('user'), CUSTOMER.id)
 
     try:
         group_member_user = GroupMemberUser.get(
@@ -80,7 +80,7 @@ def add() -> JSONMessage:
 def delete(ident: int) -> JSONMessage:
     """Deletes the respective user from the group."""
 
-    get_group_member_user(ident).delete_instance()
+    get_group_member_user(ident, CUSTOMER.id).delete_instance()
     return JSONMessage('Group member user deleted.', status=200)
 
 

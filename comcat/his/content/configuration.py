@@ -55,7 +55,7 @@ def add() -> JSONMessage:
 
     user_configuration = UserConfiguration.from_json(
         request.json,
-        get_user(request.json.pop('user')),
+        get_user(request.json.pop('user'), CUSTOMER.id),
         get_configuration(request.json.pop('configuration'), CUSTOMER.id)
     )
     user_configuration.save()

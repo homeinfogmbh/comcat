@@ -1,7 +1,6 @@
 """Common functions."""
 
-from functools import wraps
-from typing import Annotated, Callable, Iterator, Union
+from typing import Annotated, Iterator, Union
 
 from peewee import ModelSelect
 
@@ -12,7 +11,6 @@ from comcatlib import MenuBaseChart
 from comcatlib import User
 from comcatlib import UserDamageReport
 from comcatlib import UserRegistration
-from his import CUSTOMER
 from mdb import Address, Customer, Tenement
 
 from comcat.his.grouptree import GroupTree
@@ -37,8 +35,7 @@ __all__ = [
     'get_user_registration',
     'get_user_registrations',
     'get_user_damage_reports',
-    'get_user_damage_report',
-    'with_user'
+    'get_user_damage_report'
 ]
 
 
@@ -80,25 +77,30 @@ def get_customer(ident: int) -> Customer:
     return Customer.select(cascade=True).where(Customer.id == ident).get()
 
 
-def get_group_member_user(ident: int) -> GroupMemberUser:
+def get_group_member_user(
+        ident: int,
+        customer: Union[Customer, int]
+) -> GroupMemberUser:
     """Returns the requested group <-> user mapping."""
 
-    return get_group_member_users().where(GroupMemberUser.id == ident).get()
+    return get_group_member_users(customer).where(
+        GroupMemberUser.id == ident
+    ).get()
 
 
-def get_group_member_users() -> ModelSelect:
+def get_group_member_users(customer: Union[Customer, int]) -> ModelSelect:
     """Selects group <-> user mappings."""
 
     return GroupMemberUser.select(cascade=True).where(
-        Tenement.customer == CUSTOMER.id
+        Tenement.customer == customer
     )
 
 
-def get_groups_tree() -> Iterator[GroupTree]:
+def get_groups_tree(customer: Union[Customer, int]) -> Iterator[GroupTree]:
     """Returns the management tree."""
 
     for root_group in Group.select(cascade=True).where(
-            (Group.customer == CUSTOMER.id) & (Group.parent >> None)
+            (Group.customer == customer) & (Group.parent >> None)
     ):
         yield GroupTree(root_group)
 
@@ -115,17 +117,22 @@ def get_menus(customer: Union[Customer, int]) -> ModelSelect:
     return Menu.select().where(Menu.customer == customer)
 
 
-def get_menu_base_chart(ident: int) -> MenuBaseChart:
+def get_menu_base_chart(
+        ident: int,
+        customer: Union[Customer, int]
+) -> MenuBaseChart:
     """Returns the respective base chart menu."""
 
-    return get_menu_base_charts().where(MenuBaseChart.id == ident).get()
+    return get_menu_base_charts(customer).where(
+        MenuBaseChart.id == ident
+    ).get()
 
 
-def get_menu_base_charts() -> ModelSelect:
+def get_menu_base_charts(customer: Union[Customer, int]) -> ModelSelect:
     """Yields base chart menus for the given base chart."""
 
     return MenuBaseChart.select(cascade=True).where(
-        BaseChart.customer == CUSTOMER.id
+        BaseChart.customer == customer
     )
 
 
@@ -143,56 +150,51 @@ def get_tenements(customer: Union[Customer, int]) -> ModelSelect:
     )
 
 
-def get_user(ident: int) -> User:
+def get_user(ident: int, customer: Union[Customer, int]) -> User:
     """Returns the respective ComCat user of the current customer."""
 
-    return get_users().where(User.id == ident).get()
+    return get_users(customer).where(User.id == ident).get()
 
 
-def get_users() -> ModelSelect:
+def get_users(customer: Union[Customer, int]) -> ModelSelect:
     """Yields ComCat users of the current customer."""
 
-    return User.select(cascade=True).where(Tenement.customer == CUSTOMER.id)
+    return User.select(cascade=True).where(Tenement.customer == customer)
 
 
-def get_user_registration(ident: int) -> UserRegistration:
+def get_user_registration(
+        ident: int,
+        customer: Union[Customer, int]
+) -> UserRegistration:
     """Returns the selected user registration."""
 
-    return get_user_registrations().where(UserRegistration.id == ident).get()
+    return get_user_registrations(customer).where(
+        UserRegistration.id == ident
+    ).get()
 
 
-def get_user_registrations() -> ModelSelect:
+def get_user_registrations(customer: Union[Customer, int]) -> ModelSelect:
     """Selects user registrations of the current customer."""
 
     return UserRegistration.select(cascade=True).where(
-        UserRegistration.customer == CUSTOMER.id
+        UserRegistration.customer == customer
     )
 
 
-def get_user_damage_report(ident: int) -> UserDamageReport:
+def get_user_damage_report(
+        ident: int,
+        customer: Union[Customer, int]
+) -> UserDamageReport:
     """Returns a damage report with the given ID."""
 
-    return get_user_damage_reports().where(
+    return get_user_damage_reports(customer).where(
         UserDamageReport.id == ident
     ).get()
 
 
-def get_user_damage_reports() -> ModelSelect:
+def get_user_damage_reports(customer: Union[Customer, int]) -> ModelSelect:
     """Yields damage reports for the current user."""
 
     return UserDamageReport.select().join(User).join(Tenement).where(
-        Tenement.customer == CUSTOMER.id
+        Tenement.customer == customer
     )
-
-
-def with_user(function: Callable) -> Callable:
-    """Decorator to run the respective function
-    with a user as first argument.
-    """
-
-    @wraps(function)
-    def wrapper(ident: int, *args, **kwargs):
-        """Wraps the original function."""
-        return function(get_user(ident), *args, **kwargs)
-
-    return wrapper

@@ -19,7 +19,7 @@ __all__ = ['ROUTES']
 def list_() -> JSON:
     """Lists user registrations."""
 
-    return JSON([ur.to_json() for ur in get_user_registrations()])
+    return JSON([ur.to_json() for ur in get_user_registrations(CUSTOMER.id)])
 
 
 @authenticated
@@ -28,7 +28,7 @@ def list_() -> JSON:
 def accept(ident: int) -> JSONMessage:
     """Accept a registration."""
 
-    user_registration = get_user_registration(ident)
+    user_registration = get_user_registration(ident, CUSTOMER.id)
     tenement = get_tenement(request.json.get('tenement'), CUSTOMER.id)
     user, passwd = user_registration.confirm(tenement)
     user.save()
@@ -41,7 +41,7 @@ def accept(ident: int) -> JSONMessage:
 def deny(ident: int) -> JSONMessage:
     """Deny a registration."""
 
-    user_registration = get_user_registration(ident)
+    user_registration = get_user_registration(ident, CUSTOMER.id)
     user_registration.delete_instance()
     return JSONMessage('User registration denied.', status=200)
 

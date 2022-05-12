@@ -56,7 +56,7 @@ def list_(user: int) -> JSON:
 def add() -> JSONMessage:
     """Adds the chart to the respective user."""
 
-    user = get_user(request.json.pop('user'))
+    user = get_user(request.json.pop('user'), CUSTOMER.id)
     base_chart = get_base_chart(request.json.pop('baseChart'), CUSTOMER.id)
     user_base_chart = UserBaseChart.from_json(request.json, user, base_chart)
     user_base_chart.save()

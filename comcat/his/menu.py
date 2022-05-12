@@ -18,7 +18,7 @@ __all__ = ['ROUTES']
 def list_() -> JSON:
     """Lists menus of the respective base chart."""
 
-    return JSON([mbc.to_json() for mbc in get_menu_base_charts()])
+    return JSON([mbc.to_json() for mbc in get_menu_base_charts(CUSTOMER.id)])
 
 
 @authenticated
@@ -26,7 +26,7 @@ def list_() -> JSON:
 def get(ident: int) -> JSON:
     """Returns the menus of the respective base chart."""
 
-    return JSON(get_menu_base_chart(ident).to_json())
+    return JSON(get_menu_base_chart(ident, CUSTOMER.id).to_json())
 
 
 @authenticated
@@ -46,7 +46,7 @@ def add() -> JSONMessage:
 def delete(ident: int) -> JSONMessage:
     """Removes the base chart menu with the given ID."""
 
-    get_menu_base_chart(ident).delete_instance()
+    get_menu_base_chart(ident, CUSTOMER.id).delete_instance()
     return JSONMessage('Base chart menu deleted.', status=200)
 
 

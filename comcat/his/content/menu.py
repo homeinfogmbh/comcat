@@ -52,7 +52,7 @@ def add() -> JSONMessage:
 
     user_menu = UserMenu.from_json(
         request.json,
-        get_user(request.json.pop('user')),
+        get_user(request.json.pop('user'), CUSTOMER.id),
         get_menu(request.json.pop('menu'), CUSTOMER.id)
     )
     user_menu.save()

@@ -60,7 +60,7 @@ def send_message() -> JSONMessage:
 
     message = CustomerMessage(
         sender=CUSTOMER.id,
-        recipient=get_user(request.json.get('user')),
+        recipient=get_user(request.json.get('user'), CUSTOMER.id),
         text=request.json['text']
     )
     message.save()
