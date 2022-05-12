@@ -8,6 +8,8 @@ from comcatlib import User, UserMenu
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
 
+from comcat.his.functions import get_user, get_menu
+
 
 __all__ = ['ROUTES']
 
@@ -19,7 +21,7 @@ def list_user_menus(user: int) -> Iterable[UserMenu]:
         (User.id == user) & (User.customer == CUSTOMER.id))
 
 
-def get_user_menu(ident: int) -> Iterable:
+def get_user_menu(ident: int) -> UserMenu:
     """Returns the respective UserMenu for the current customer context."""
 
     return UserMenu.select(cascade=True).where(
@@ -48,7 +50,11 @@ def list_(user: int) -> JSON:
 def add() -> JSONMessage:
     """Adds the menu to the respective account."""
 
-    user_menu = UserMenu.from_json(request.json)
+    user_menu = UserMenu.from_json(
+        request.json,
+        get_user(request.json.pop('user')),
+        get_menu(request.json.pop('menu'), CUSTOMER.id)
+    )
     user_menu.save()
     return JSONMessage('User menu added.', id=user_menu.id, status=201)
 

@@ -5,7 +5,7 @@ from typing import Annotated, Callable, Iterator, Union
 
 from peewee import ModelSelect
 
-from cmslib import BaseChart, Group
+from cmslib import BaseChart, Configuration, Group, Menu
 from comcatlib import GroupMemberUser
 from comcatlib import InvalidAddress
 from comcatlib import MenuBaseChart
@@ -20,10 +20,14 @@ from comcat.his.grouptree import GroupTree
 
 __all__ = [
     'get_address',
+    'get_configuration',
+    'get_configurations',
     'get_customer',
     'get_group_member_user',
     'get_group_member_users',
     'get_groups_tree',
+    'get_menu',
+    'get_menus',
     'get_menu_base_chart',
     'get_menu_base_charts',
     'get_tenement',
@@ -55,6 +59,21 @@ def get_address(address: Annotated[list[str], 4]) -> Address:
     return address
 
 
+def get_configuration(
+        ident: int,
+        customer: Union[Customer, int]
+) -> Configuration:
+    """Returns the selected configuration."""
+
+    return get_configurations(customer).where(Configuration.id == ident).get()
+
+
+def get_configurations(customer: Union[Customer, int]) -> ModelSelect:
+    """Selects configurations of the given customer."""
+
+    return Configuration.select().where(Configuration.customer == customer)
+
+
 def get_customer(ident: int) -> Customer:
     """Returns the specified customer."""
 
@@ -82,6 +101,18 @@ def get_groups_tree() -> Iterator[GroupTree]:
             (Group.customer == CUSTOMER.id) & (Group.parent >> None)
     ):
         yield GroupTree(root_group)
+
+
+def get_menu(ident: int, customer: Union[Customer, int]) -> Menu:
+    """Returns the selected menu."""
+
+    return get_menus(customer).where(Menu.id == ident).get()
+
+
+def get_menus(customer: Union[Customer, int]) -> ModelSelect:
+    """Selects menus of the given customer."""
+
+    return Menu.select().where(Menu.customer == customer)
 
 
 def get_menu_base_chart(ident: int) -> MenuBaseChart:

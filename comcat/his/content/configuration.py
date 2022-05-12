@@ -8,6 +8,8 @@ from comcatlib import User, UserConfiguration
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage
 
+from comcat.his.functions import get_configuration, get_user
+
 
 __all__ = ['ROUTES']
 
@@ -16,7 +18,8 @@ def list_user_configs(user: int) -> Iterable[UserConfiguration]:
     """Lists configuration assignments of the given user."""
 
     return UserConfiguration.select(cascade=True).where(
-        (User.id == user) & (User.customer == CUSTOMER.id))
+        (User.id == user) & (User.customer == CUSTOMER.id)
+    )
 
 
 def get_user_config(ident: int) -> UserConfiguration:
@@ -50,10 +53,17 @@ def list_(user: int) -> JSON:
 def add() -> JSONMessage:
     """Adds the configuration to the respective user."""
 
-    user_configuration = UserConfiguration.from_json(request.json)
+    user_configuration = UserConfiguration.from_json(
+        request.json,
+        get_user(request.json.pop('user')),
+        get_configuration(request.json.pop('configuration'), CUSTOMER.id)
+    )
     user_configuration.save()
-    return JSONMessage('User configuration added.', id=user_configuration.id,
-                       status=201)
+    return JSONMessage(
+        'User configuration added.',
+        id=user_configuration.id,
+        status=201
+    )
 
 
 @authenticated
@@ -63,8 +73,11 @@ def delete(ident: int) -> JSONMessage:
 
     user_configuration = get_user_config(ident)
     user_configuration.delete_instance()
-    return JSONMessage('User configuration deleted.', id=user_configuration.id,
-                       status=200)
+    return JSONMessage(
+        'User configuration deleted.',
+        id=user_configuration.id,
+        status=200
+    )
 
 
 ROUTES = (

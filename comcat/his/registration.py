@@ -3,7 +3,7 @@
 from flask import request
 
 from comcatlib import notify_user
-from his import authenticated, authorized
+from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage, require_json
 
 from comcat.his.functions import get_tenement
@@ -29,7 +29,7 @@ def accept(ident: int) -> JSONMessage:
     """Accept a registration."""
 
     user_registration = get_user_registration(ident)
-    tenement = get_tenement(request.json.get('tenement'))
+    tenement = get_tenement(request.json.get('tenement'), CUSTOMER.id)
     user, passwd = user_registration.confirm(tenement)
     user.save()
     notify_user(user.email, passwd)

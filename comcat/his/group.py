@@ -6,7 +6,7 @@ from flask import request
 
 from cmslib import get_group
 from comcatlib import GroupMemberUser
-from his import authenticated, authorized
+from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage, require_json
 
 from comcat.his.functions import get_group_member_user
@@ -48,7 +48,9 @@ def groups_tree() -> JSON:
 def groups_subtree(ident: int) -> JSON:
     """Lists the groups."""
 
-    return JSON(GroupTree(get_group(ident)).to_json(recursive=False))
+    return JSON(
+        GroupTree(get_group(ident, CUSTOMER.id)).to_json(recursive=False)
+    )
 
 
 @authenticated
@@ -57,7 +59,7 @@ def groups_subtree(ident: int) -> JSON:
 def add() -> JSONMessage:
     """Adds the ComCat user to the respective group."""
 
-    group = get_group(request.json.pop('group'))
+    group = get_group(request.json.pop('group'), CUSTOMER.id)
     user = get_user(request.json.pop('user'))
 
     try:
