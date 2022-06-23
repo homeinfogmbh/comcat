@@ -33,6 +33,8 @@ def accept(ident: int) -> JSONMessage:
 
     try:
         user, passwd = user_registration.confirm(tenement)
+    except ValueError as error:
+        return JSONMessage('Invalid value.', error=str(error), status=400)
     except DuplicateUser:
         return JSONMessage('User already exists.', status=400)
 
