@@ -2,7 +2,7 @@
 
 from flask import request
 
-from comcatlib import notify_user
+from comcatlib import DuplicateUser, notify_user
 from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON, JSONMessage, require_json
 
@@ -30,7 +30,12 @@ def accept(ident: int) -> JSONMessage:
 
     user_registration = get_user_registration(ident, CUSTOMER.id)
     tenement = get_tenement(request.json.get('tenement'), CUSTOMER.id)
-    user, passwd = user_registration.confirm(tenement)
+
+    try:
+        user, passwd = user_registration.confirm(tenement)
+    except DuplicateUser:
+        return JSONMessage('User already exists.', status=400)
+
     user.save()
     notify_user(user.email, passwd)
     return JSONMessage('Added user.', id=user.id, status=201)
