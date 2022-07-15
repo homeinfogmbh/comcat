@@ -16,6 +16,7 @@ from comcat.app import meta
 from comcat.app import pwreset
 from comcat.app import registration
 from comcat.app import related_files
+from comcat.app import reporting
 from comcat.app import tenantcalendar
 from comcat.app import tenantforum
 from comcat.app.common import APPLICATION
@@ -38,6 +39,7 @@ ROUTES = [
     *pwreset.ROUTES,
     *registration.ROUTES,
     *related_files.ROUTES,
+    *reporting.ROUTES,
     *tenantcalendar.ROUTES,
     *tenantforum.ROUTES
 ]
