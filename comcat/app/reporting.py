@@ -13,6 +13,9 @@ from tenantforum import get_topic, get_response
 from wsgilib import JSONMessage
 
 
+__all__ = ['ROUTES']
+
+
 @REQUIRE_OAUTH('comcat')
 def report() -> JSONMessage:
     """Report user-generated content."""
