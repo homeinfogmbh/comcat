@@ -64,4 +64,4 @@ def report() -> JSONMessage:
     return JSONMessage('No valid report target selected.', status=400)
 
 
-ROUTES = [('GET', '/report', report)]
+ROUTES = [('POST', '/report', report)]
