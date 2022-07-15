@@ -33,6 +33,7 @@ setup(
         'peeweeplus',
         'qrcode',
         'recaptcha',
+        'reportlib',
         'tenantcalendar',
         'tenantforum',
         'wsgilib'
