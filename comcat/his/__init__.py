@@ -12,6 +12,7 @@ from comcat.his import marketplace
 from comcat.his import menu
 from comcat.his import messenger
 from comcat.his import registration
+from comcat.his import reporting
 from comcat.his import tenantcalendar
 from comcat.his import tenantforum
 from comcat.his import tenement
@@ -32,6 +33,7 @@ ROUTES = (
     *menu.ROUTES,
     *messenger.ROUTES,
     *registration.ROUTES,
+    *reporting.ROUTES,
     *tenantcalendar.ROUTES,
     *tenantforum.ROUTES,
     *tenement.ROUTES,
