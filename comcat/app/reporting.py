@@ -54,10 +54,13 @@ def report() -> JSONMessage:
         )
         return JSONMessage('Response reported.', status=200)
 
-    if 'event' in request.json:
+    if 'userEvent' in request.json:
         report_user_event(
             USER.id,
-            get_user_event(request.json['event'], customer=TENEMENT.customer),
+            get_user_event(
+                request.json['userEvent'],
+                customer=TENEMENT.customer
+            ),
             title=title,
             text=text,
             image=image
