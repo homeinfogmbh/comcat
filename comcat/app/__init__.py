@@ -7,6 +7,7 @@ from comcat.app import charts
 from comcat.app import contactform
 from comcat.app import damage_report
 from comcat.app import errors
+from comcat.app import fcm
 from comcat.app import local_news
 from comcat.app import logout
 from comcat.app import lpt
@@ -30,6 +31,7 @@ ROUTES = [
     *charts.ROUTES,
     *contactform.ROUTES,
     *damage_report.ROUTES,
+    *fcm.ROUTES,
     *local_news.ROUTES,
     *logout.ROUTES,
     *lpt.ROUTES,
