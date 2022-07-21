@@ -1,6 +1,8 @@
 """Firebase Cloud Messaging."""
 
-from comcatlib import REQUIRE_OAUTH, USER, add_token, delete_tokens
+from flask import request
+
+from comcatlib import REQUIRE_OAUTH, USER, FCMToken, delete_tokens
 from wsgilib import JSONMessage
 
 
@@ -11,8 +13,9 @@ __all__ = ['ROUTES']
 def _add_token() -> JSONMessage:
     """Adds a new FCM token for the current user."""
 
-    token = add_token(USER.id)
-    return JSONMessage('Token added.', token=token, status=201)
+    token = FCMToken(user=USER.id, token=request.json['token'])
+    token.save()
+    return JSONMessage('Token added.', status=201)
 
 
 @REQUIRE_OAUTH('comcat')
