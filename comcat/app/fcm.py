@@ -15,7 +15,7 @@ def _add_token() -> JSONMessage:
 
     token = FCMToken(user=USER.id, token=request.json['token'])
     token.save()
-    return JSONMessage('Token added.', status=201)
+    return JSONMessage('Token added.', id=token.id, status=201)
 
 
 @REQUIRE_OAUTH('comcat')
