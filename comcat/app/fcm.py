@@ -10,7 +10,7 @@ __all__ = ['ROUTES']
 
 
 @REQUIRE_OAUTH('comcat')
-def _add_token() -> JSONMessage:
+def add_token() -> JSONMessage:
     """Adds a new FCM token for the current user."""
 
     token = FCMToken(user=USER.id, token=request.json['token'])
@@ -19,7 +19,7 @@ def _add_token() -> JSONMessage:
 
 
 @REQUIRE_OAUTH('comcat')
-def _delete_token(token: str) -> JSONMessage:
+def delete_token(token: str) -> JSONMessage:
     """Deletes an FCM token for the current user."""
 
     delete_tokens(USER.id, token)
@@ -27,6 +27,6 @@ def _delete_token(token: str) -> JSONMessage:
 
 
 ROUTES = [
-    (['POST'], '/fcm', _add_token),
-    (['DELETE'], '/fcm/<token>', _delete_token),
+    (['POST'], '/fcm', add_token),
+    (['DELETE'], '/fcm/<token>', delete_token),
 ]
