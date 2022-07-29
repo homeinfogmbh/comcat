@@ -4,7 +4,7 @@ from comcatlib import REQUIRE_OAUTH
 from hisfs import ERRORS, File
 from wsgilib import Binary
 
-from comcat.app.charts import get_base_charts
+from comcat.charts import get_base_charts
 
 
 __all__ = ['ROUTES', 'ERRORS']

@@ -12,7 +12,7 @@ from comcatlib import UserDamageReport
 from damage_report import DamageReport, email
 from wsgilib import JSON, JSONMessage
 
-from comcat.app.functions import get_damage_reports, get_damage_report
+from comcat.functions import get_damage_reports, get_damage_report
 
 
 __all__ = ['ROUTES']

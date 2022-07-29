@@ -12,7 +12,7 @@ from comcatlib import get_config
 from comcatlib import notify_customer
 from comcatlib import notify_user
 
-from comcat.app.functions import get_comcat_customer
+from comcat.functions import get_comcat_customer
 
 
 __all__ = ['ROUTES']

@@ -15,7 +15,7 @@ from comcatlib import send_password_reset_email
 from recaptcha import recaptcha
 from wsgilib import JSONMessage
 
-from comcat.app.functions import get_user_by_email
+from comcat.functions import get_user_by_email
 
 
 __all__ = ['ROUTES']

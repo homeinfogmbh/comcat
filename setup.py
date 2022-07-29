@@ -23,7 +23,6 @@ setup(
         'filedb',
         'flask',
         'hinews',
-        'his',
         'hisfs',
         'lptlib',
         'marketplace',

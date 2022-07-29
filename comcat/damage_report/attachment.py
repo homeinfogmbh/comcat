@@ -7,8 +7,8 @@ from damage_report import Attachment
 from filedb import File
 from wsgilib import Binary, JSONMessage
 
-from comcat.app.functions import get_attachment
-from comcat.app.functions import get_user_damage_report
+from comcat.functions import get_attachment
+from comcat.functions import get_user_damage_report
 
 
 __all__ = ['ROUTES']
