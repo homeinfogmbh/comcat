@@ -39,10 +39,7 @@ setup(
     ],
     packages=[
         'comcat',
-        'comcat.app',
-        'comcat.app.damage_report',
-        'comcat.his',
-        'comcat.his.content'
+        'comcat.damage_report'
     ],
     description='HOMEINFO ComCat.'
 )
