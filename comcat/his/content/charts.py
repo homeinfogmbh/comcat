@@ -68,7 +68,7 @@ def add() -> JSONMessage:
 @authenticated
 @authorized('comcat')
 def patch(ident: int) -> JSONMessage:
-    """Adds the chart to the respective user."""
+    """Alter the respective user <-> base chart mapping."""
 
     user_base_chart = get_ubc(ident)
     user_base_chart.patch_json(request.json)
