@@ -15,7 +15,7 @@ __all__ = ['APPLICATION']
 with open('/usr/local/etc/comcat.d/cors.json', 'r') as cors:
     CORS = load(cors)
 
-APPLICATION = Application('comcat', cors=CORS)
+APPLICATION = Application('comcat', cors=CORS, debug=True)
 APPLICATION.config['SESSION_TYPE'] = 'filesystem'
 APPLICATION.config['OAUTH2_REFRESH_TOKEN_GENERATOR'] = True
 APPLICATION.config['OAUTH2_TOKEN_EXPIRES_IN'] = {
