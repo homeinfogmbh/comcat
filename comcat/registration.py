@@ -3,7 +3,7 @@
 from flask import request
 
 from mdb import Customer
-from recaptcha import recaptcha
+from mtcaptcha import mtcaptcha
 from wsgilib import JSONMessage, require_json
 
 from comcatlib import AlreadyRegistered
@@ -18,10 +18,9 @@ from comcat.functions import get_comcat_customer
 __all__ = ['ROUTES']
 
 
-@recaptcha(
-    lambda: get_config()['recaptcha'],
+@mtcaptcha(
     lambda: request.json.pop('response'),
-    lambda: request.remote_addr
+    lambda: get_config().get('mtcaptcha', 'private_key')
 )
 @require_json(dict)
 def register() -> JSONMessage:

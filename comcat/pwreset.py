@@ -12,7 +12,7 @@ from comcatlib import User
 from comcatlib import genpw
 from comcatlib import send_new_password
 from comcatlib import send_password_reset_email
-from recaptcha import recaptcha
+from mtcaptcha import mtcaptcha
 from wsgilib import JSONMessage
 
 from comcat.functions import get_user_by_email
@@ -24,10 +24,9 @@ __all__ = ['ROUTES']
 PASSWORD_RESET_SENT = JSONMessage('Password reset sent.', status=200)
 
 
-@recaptcha(
-    lambda: get_config()['recaptcha'],
+@mtcaptcha(
     lambda: request.json.pop('response'),
-    lambda: request.remote_addr
+    lambda: get_config().get('mtcaptcha', 'private_key')
 )
 def request_pw_reset() -> JSONMessage:
     """Request a password reset."""
@@ -49,11 +48,6 @@ def request_pw_reset() -> JSONMessage:
     return PASSWORD_RESET_SENT
 
 
-#@recaptcha(
-#    lambda: get_config()['recaptcha'],
-#    lambda: request.json.pop('response'),
-#    lambda: request.remote_addr
-#)
 def confirm_pw_reset() -> JSONMessage:
     """Confirm a password reset."""
 
