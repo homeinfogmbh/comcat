@@ -46,7 +46,8 @@ def get_menus(base_chart: BaseChart) -> ModelSelect:
     """Yields the menus for the base chart."""
 
     return MenuBaseChart.select(cascade=True).where(
-        MenuBaseChart.base_chart == base_chart)
+        MenuBaseChart.base_chart == base_chart
+    )
 
 
 def jsonify_base_chart(base_chart: BaseChart) -> dict:
