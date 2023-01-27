@@ -6,6 +6,9 @@ from newslib import articles
 from wsgilib import Binary, JSON
 
 
+__all__ = ['ROUTES']
+
+
 @REQUIRE_OAUTH('comcat')
 def list_articles() -> JSON:
     """List news articles that the customer may access."""

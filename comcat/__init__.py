@@ -14,6 +14,7 @@ from comcat import lpt
 from comcat import marketplace
 from comcat import messenger
 from comcat import meta
+from comcat import news
 from comcat import pwreset
 from comcat import registration
 from comcat import related_files
@@ -38,6 +39,7 @@ ROUTES = [
     *marketplace.ROUTES,
     *messenger.ROUTES,
     *meta.ROUTES,
+    *news.ROUTES,
     *pwreset.ROUTES,
     *registration.ROUTES,
     *related_files.ROUTES,

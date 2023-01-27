@@ -5,6 +5,7 @@ from comcatlib import QuotaExceeded
 from comcatlib import UserDamageReport
 from comcatlib import UserExpired
 from comcatlib import UserLocked
+from filedb import File
 from peeweeplus import FieldNotNullable
 from peeweeplus import FieldValueError
 from peeweeplus import InvalidKeys
@@ -32,6 +33,10 @@ ERRORS = {
         key=error.key,
         value=str(error.value),
         status=400
+    ),
+    File.DoesNotExist: lambda error: JSONMessage(
+        'No such file.',
+        status=404
     ),
     InvalidKeys: lambda error: JSONMessage(
         'Invalid keys.',
