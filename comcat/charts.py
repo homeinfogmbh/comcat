@@ -36,7 +36,8 @@ def get_base_charts() -> ModelSelect:
     condition &= BaseChart.trashed == 0
 
     return BaseChart.select(cascade=True).join_from(
-        BaseChart, UserBaseChart, join_type=JOIN.LEFT_OUTER).join_from(
+        BaseChart, UserBaseChart, join_type=JOIN.LEFT_OUTER
+    ).join_from(
         BaseChart, GroupBaseChart, join_type=JOIN.LEFT_OUTER
     ).where(condition)
 
