@@ -28,6 +28,7 @@ setup(
         'marketplace',
         'mdb',
         'mtcaptcha',
+        'newslib',
         'notificationlib',
         'peewee',
         'peeweeplus',
