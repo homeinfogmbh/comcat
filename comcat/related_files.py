@@ -7,7 +7,7 @@ from wsgilib import Binary
 from comcat.charts import get_base_charts
 
 
-__all__ = ['ROUTES', 'ERRORS']
+__all__ = ["ROUTES", "ERRORS"]
 
 
 def get_file(ident: int):
@@ -25,11 +25,11 @@ def get_file(ident: int):
     raise File.DoesNotExist()
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get(ident):
     """Gets a data-related hisfs file."""
 
     return Binary(get_file(ident).bytes)
 
 
-ROUTES = [(['GET'], '/related-file/<int:ident>', get)]
+ROUTES = [(["GET"], "/related-file/<int:ident>", get)]

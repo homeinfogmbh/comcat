@@ -13,10 +13,10 @@ from marketplace import get_image
 from wsgilib import Binary, JSON, JSONMessage
 
 
-__all__ = ['ROUTES', 'ERRORS']
+__all__ = ["ROUTES", "ERRORS"]
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def list_() -> JSON:
     """Lists available offers."""
 
@@ -24,7 +24,7 @@ def list_() -> JSON:
     return JSON([offer.to_json() for offer in offers])
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get(ident: int) -> JSON:
     """Returns the respective offer."""
 
@@ -32,24 +32,24 @@ def get(ident: int) -> JSON:
     return JSON(offer.to_json())
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def add() -> JSONMessage:
     """Adds a new offer."""
 
     offer = add_offer(request.json, USER.id)
-    return JSONMessage('Offer added.', id=offer.id, status=201)
+    return JSONMessage("Offer added.", id=offer.id, status=201)
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def delete(ident: int) -> JSONMessage:
     """Deletes an offer."""
 
     offer = get_offer(ident, user=USER.id)
     offer.delete_instance()
-    return JSONMessage('Offer deleted.', status=200)
+    return JSONMessage("Offer deleted.", status=200)
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get_img(ident: int) -> Binary:
     """Returns an Image."""
 
@@ -57,7 +57,7 @@ def get_img(ident: int) -> Binary:
     return Binary(image.file.bytes)
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def add_img(offer: int, index: int) -> JSONMessage:
     """Adds an Image."""
 
@@ -67,25 +67,25 @@ def add_img(offer: int, index: int) -> JSONMessage:
         image = add_image(offer, request.get_data(), index)
     except IntegrityError as error:
         code, msg = error.args
-        return JSONMessage('Integrity error.', code=code, msg=msg, status=500)
+        return JSONMessage("Integrity error.", code=code, msg=msg, status=500)
 
-    return JSONMessage('Image added.', id=image.id, status=201)
+    return JSONMessage("Image added.", id=image.id, status=201)
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def delete_img(ident: int) -> JSONMessage:
     """Deletes an Image."""
 
     get_image(ident, user=USER.id).delete_instance()
-    return JSONMessage('image deleted.', status=200)
+    return JSONMessage("image deleted.", status=200)
 
 
 ROUTES = [
-    (['GET'], '/marketplace', list_),
-    (['GET'], '/marketplace/<int:ident>', get),
-    (['POST'], '/marketplace', add),
-    (['DELETE'], '/marketplace/<int:ident>', delete),
-    (['GET'], '/marketplace/image/<int:ident>', get_img),
-    (['POST'], '/marketplace/<int:offer>/image/<int:index>', add_img),
-    (['DELETE'], '/marketplace/image/<int:ident>', delete_img)
+    (["GET"], "/marketplace", list_),
+    (["GET"], "/marketplace/<int:ident>", get),
+    (["POST"], "/marketplace", add),
+    (["DELETE"], "/marketplace/<int:ident>", delete),
+    (["GET"], "/marketplace/image/<int:ident>", get_img),
+    (["POST"], "/marketplace/<int:offer>/image/<int:index>", add_img),
+    (["DELETE"], "/marketplace/image/<int:ident>", delete_img),
 ]

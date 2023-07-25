@@ -11,10 +11,10 @@ from comcat.functions import get_attachment
 from comcat.functions import get_user_damage_report
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get(ident: int) -> Binary:
     """Returns the respective attachment data."""
 
@@ -22,7 +22,7 @@ def get(ident: int) -> Binary:
     return Binary(attachment.file.bytes)
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def post(ident: int) -> JSONMessage:
     """Adds an attachment for the given damage report."""
 
@@ -33,20 +33,20 @@ def post(ident: int) -> JSONMessage:
     file.save()
     attachment = Attachment(damage_report=damage_report, file=file)
     attachment.save()
-    return JSONMessage('Attachment added.', id=attachment.id, status=201)
+    return JSONMessage("Attachment added.", id=attachment.id, status=201)
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def delete(ident: int) -> JSONMessage:
     """Removes the respective attachment."""
 
     attachment = get_attachment(ident)
     attachment.delete_instance()
-    return JSONMessage('Attachment deleted.', status=200)
+    return JSONMessage("Attachment deleted.", status=200)
 
 
 ROUTES = (
-    (['GET'], '/damage-report/attachment/<int:ident>', get),
-    (['POST'], '/damage-report/<int:ident>/attachment', post),
-    (['DELETE'], '/damage-report/attachment/<int:ident>', delete)
+    (["GET"], "/damage-report/attachment/<int:ident>", get),
+    (["POST"], "/damage-report/<int:ident>/attachment", post),
+    (["DELETE"], "/damage-report/attachment/<int:ident>", delete),
 )

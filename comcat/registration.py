@@ -15,36 +15,36 @@ from comcatlib import notify_user
 from comcat.functions import get_comcat_customer
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
 @mtcaptcha(
-    lambda: request.json.pop('response'),
-    lambda: get_config().get('mtcaptcha', 'private_key')
+    lambda: request.json.pop("response"),
+    lambda: get_config().get("mtcaptcha", "private_key"),
 )
 @require_json(dict)
 def register() -> JSONMessage:
     """Register a new user."""
 
     try:
-        customer = get_comcat_customer(request.json.pop('customer'))
+        customer = get_comcat_customer(request.json.pop("customer"))
     except Customer.DoesNotExist:
-        return JSONMessage('No such customer.', status=404)
+        return JSONMessage("No such customer.", status=404)
 
     try:
         user_registration = UserRegistration.add(
-            request.json['name'], request.json['email'],
-            request.json['tenantId'], customer
+            request.json["name"],
+            request.json["email"],
+            request.json["tenantId"],
+            customer,
         )
     except AlreadyRegistered as error:
-        return JSONMessage(
-            'You are already registered.', email=error.email, status=400
-        )
+        return JSONMessage("You are already registered.", email=error.email, status=400)
 
     user_registration.save()
     notify_user(user_registration.email)
     notify_customer(user_registration)
-    return JSONMessage('User registered.', status=201)
+    return JSONMessage("User registered.", status=201)
 
 
-ROUTES = [(['POST'], '/register', register)]
+ROUTES = [(["POST"], "/register", register)]

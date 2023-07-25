@@ -11,10 +11,10 @@ from wsgilib import Binary, JSON
 from comcatlib import REQUIRE_OAUTH, USER, genpw
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
-URL = 'de.homeinfo.comcat://register/{uid}/{passwd}'
+URL = "de.homeinfo.comcat://register/{uid}/{passwd}"
 
 
 def get_url() -> str:
@@ -26,27 +26,26 @@ def get_url() -> str:
     return URL.format(uid=user.id, passwd=urlencode(passwd))
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get_qr_code() -> Binary:
     """Returns a QR code of the user's initialization nonce."""
 
     with BytesIO() as buf:
-        make(get_url()).save(buf, format=request.args.get('format', 'png'))
+        make(get_url()).save(buf, format=request.args.get("format", "png"))
         return Binary(buf.read())
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def user_info() -> JSON:
     """Returns the user information."""
 
-    return JSON({
-        'id': USER.id,
-        'tenement': USER.tenement.id,
-        'customer': USER.tenement.customer_id
-    })
+    return JSON(
+        {
+            "id": USER.id,
+            "tenement": USER.tenement.id,
+            "customer": USER.tenement.customer_id,
+        }
+    )
 
 
-ROUTES = [
-    (['GET'], '/init/qrcode', get_qr_code),
-    (['GET'], '/user', user_info)
-]
+ROUTES = [(["GET"], "/init/qrcode", get_qr_code), (["GET"], "/user", user_info)]

@@ -24,7 +24,7 @@ from comcat import tenantforum
 from comcat.common import APPLICATION
 
 
-__all__ = ['APPLICATION']
+__all__ = ["APPLICATION"]
 
 
 ROUTES = [
@@ -45,7 +45,7 @@ ROUTES = [
     *related_files.ROUTES,
     *reporting.ROUTES,
     *tenantcalendar.ROUTES,
-    *tenantforum.ROUTES
+    *tenantforum.ROUTES,
 ]
 ERRORS = {
     **errors.ERRORS,
@@ -55,7 +55,7 @@ ERRORS = {
     **ccmessenger.ERRORS,
     **related_files.ERRORS,
     **tenantcalendar.ERRORS,
-    **tenantforum.ERRORS
+    **tenantforum.ERRORS,
 }
 
 

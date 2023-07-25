@@ -8,17 +8,13 @@ from mdb import Address
 from wsgilib import Binary, JSON, JSONMessage
 
 
-__all__ = ['ROUTES', 'ERRORS']
+__all__ = ["ROUTES", "ERRORS"]
 
 
 ERRORS = {
-    AccessToken.DoesNotExist: lambda _: JSONMessage(
-        'News not enabled.', status=403
-    ),
-    Article.DoesNotExist: lambda _: JSONMessage(
-        'No such news article.', status=404
-    ),
-    Image.DoesNotExist: lambda _: JSONMessage('No such image.', status=404)
+    AccessToken.DoesNotExist: lambda _: JSONMessage("News not enabled.", status=403),
+    Article.DoesNotExist: lambda _: JSONMessage("No such news article.", status=404),
+    Image.DoesNotExist: lambda _: JSONMessage("No such image.", status=404),
 }
 
 
@@ -29,7 +25,7 @@ def _get_address() -> Union[Address, JSONMessage]:
     if AccessToken.get(AccessToken.customer == CUSTOMER.id):
         return ADDRESS
 
-    return JSONMessage('Access token is falsy.', status=500)
+    return JSONMessage("Access token is falsy.", status=500)
 
 
 def _get_city() -> str:
@@ -61,7 +57,7 @@ def _get_local_news_image(image_id: int) -> Image:
     return select.where(condition).get()
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get_local_news_article(article_id: int) -> JSON:
     """Get a single local news article."""
 
@@ -69,7 +65,7 @@ def get_local_news_article(article_id: int) -> JSON:
     return JSON(article.to_json(preview=True))
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get_local_news_articles() -> JSON:
     """Lists local news."""
 
@@ -77,7 +73,7 @@ def get_local_news_articles() -> JSON:
     return JSON([article.to_json(preview=True) for article in articles])
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def get_local_news_image(image_id: int) -> Binary:
     """Returns a local news image."""
 
@@ -85,12 +81,12 @@ def get_local_news_image(image_id: int) -> Binary:
 
     try:
         return Binary(image.watermarked)
-    except OSError:     # Not an image.
+    except OSError:  # Not an image.
         return Binary(image.data)
 
 
 ROUTES = [
-    (['GET'], '/local-news', get_local_news_articles),
-    (['GET'], '/local-news/<int:article_id>', get_local_news_article),
-    (['GET'], '/local-news/image/<int:image_id>', get_local_news_image)
+    (["GET"], "/local-news", get_local_news_articles),
+    (["GET"], "/local-news/<int:article_id>", get_local_news_article),
+    (["GET"], "/local-news/image/<int:image_id>", get_local_news_image),
 ]

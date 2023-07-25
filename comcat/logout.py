@@ -6,15 +6,15 @@ from comcatlib import REQUIRE_OAUTH, logout
 from wsgilib import JSONMessage
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
-@REQUIRE_OAUTH('comcat')
+@REQUIRE_OAUTH("comcat")
 def logout_() -> JSONMessage:
     """Removes all tokens of a user."""
 
     logout(current_token.user)
-    return JSONMessage('Tokens deleted.', status=200)
+    return JSONMessage("Tokens deleted.", status=200)
 
 
-ROUTES = [(['DELETE'], '/logout', logout_)]
+ROUTES = [(["DELETE"], "/logout", logout_)]
